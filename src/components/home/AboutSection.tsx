@@ -1,0 +1,6 @@
+import { ArrowRight, CheckCircle2, Play } from 'lucide-react'
+import { Link } from 'react-router-dom'
+
+export function AboutSection() {
+  return <section className="about-section"><div className="about-collage"><div className="about-image-main"/><div className="about-image-small"/><span className="about-years"><strong>20</strong> años<br/>de experiencia</span></div><div className="about-copy"><span className="kicker">SOBRE NEXO</span><h2>Especialistas en maquinaria industrial y prevención.</h2><p>Formamos a particulares y empresas con programas que se adaptan a las necesidades reales de cada puesto.</p><div className="about-values"><article><CheckCircle2/><div><strong>Compromiso</strong><span>Proyectos personalizados y orientación antes, durante y después del curso.</span></div></article><article><CheckCircle2/><div><strong>Excelencia</strong><span>Formadores expertos, instalaciones profesionales y maquinaria actual.</span></div></article></div><div className="about-actions"><Link className="primary" to="/nosotros">Quiero saber más <ArrowRight size={18}/></Link><a className="video-link" href="https://www.youtube.com" target="_blank" rel="noreferrer"><Play size={15} fill="currentColor"/> Ver vídeo corporativo</a></div></div></section>
+}
