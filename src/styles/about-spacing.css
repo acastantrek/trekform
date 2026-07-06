@@ -1,4 +1,4 @@
-.about-page-hero {
+﻿.about-page-hero {
   padding: clamp(72px, 9vw, 130px) max(6vw, 24px);
 }
 .about-page-hero > div {
@@ -216,5 +216,6 @@
   color: #fff;
 }
 .nav .enabled-link.active {
-  color: #ffaa17;
+  color: #d7ff7c;
 }
+

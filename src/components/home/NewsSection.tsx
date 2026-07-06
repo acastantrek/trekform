@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { news } from '../../data/news'
 
 export function NewsSection() {
@@ -9,9 +10,9 @@ export function NewsSection() {
           <span className="kicker">BLOG TREKFORM</span>
           <h2>Últimas noticias</h2>
         </div>
-        <button type="button" disabled className="disabled-link">
+        <Link to="/blog">
           Visita nuestro blog <ArrowRight size={18} />
-        </button>
+        </Link>
       </div>
       <div className="news-grid">
         {news.slice(0, 3).map((item) => (
@@ -21,9 +22,9 @@ export function NewsSection() {
               {item.date} · {item.category}
             </span>
             <h3>{item.title}</h3>
-            <button type="button" disabled className="read-more disabled-link">
+            <Link to={`/blog/${item.slug}`} className="read-more">
               Leer artículo <ArrowRight size={16} />
-            </button>
+            </Link>
           </article>
         ))}
       </div>

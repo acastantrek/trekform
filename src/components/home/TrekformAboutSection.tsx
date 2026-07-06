@@ -1,4 +1,6 @@
-import { ArrowRight, CheckCircle2, Play } from 'lucide-react'
+﻿import { ArrowRight, CheckCircle2, Play } from 'lucide-react'
+import { Link } from 'react-router-dom'
+
 export function TrekformAboutSection() {
   return (
     <section className="about-section">
@@ -36,12 +38,12 @@ export function TrekformAboutSection() {
           </article>
         </div>
         <div className="about-actions">
-          <button type="button" disabled className="primary disabled-link">
+          <Link to="/cursos-trekform" className="primary">
             Quiero saber más <ArrowRight size={18} />
-          </button>
-          <button type="button" disabled className="video-link disabled-link">
+          </Link>
+          <Link to="/contacto" className="video-link">
             <Play size={15} fill="currentColor" /> Vídeo corporativo Trekform
-          </button>
+          </Link>
         </div>
       </div>
     </section>

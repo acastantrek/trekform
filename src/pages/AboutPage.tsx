@@ -1,4 +1,4 @@
-import {
+﻿import {
   BriefcaseBusiness,
   Building2,
   CalendarClock,
@@ -8,6 +8,7 @@ import {
   ShieldCheck,
   Zap,
 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
 const strengths = [
   {
@@ -180,10 +181,11 @@ export function AboutPage() {
       <section className="about-cta">
         <span>¡POR TU SEGURIDAD, ESCOGE TREKFORM!</span>
         <h2>Formación para avanzar con seguridad.</h2>
-        <button type="button" disabled className="disabled-link">
+        <Link to="/cursos-trekform" className="primary">
           Descubre nuestros cursos
-        </button>
+        </Link>
       </section>
     </>
   )
 }
+

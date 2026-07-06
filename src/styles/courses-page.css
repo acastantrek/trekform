@@ -1,11 +1,11 @@
-.courses-page-hero {
+﻿.courses-page-hero {
   min-height: 430px;
   padding: clamp(75px, 9vw, 130px) max(7vw, 24px);
   display: flex;
   align-items: center;
   color: #fff;
   background:
-    linear-gradient(90deg, #101c30ed, #101c305c),
+    linear-gradient(90deg, #0b1220f0, #17233b8c),
     url('https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1800&q=85')
       center/cover;
 }
@@ -16,7 +16,7 @@
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 1.8px;
-  color: #ffaa17;
+  color: #d7ff7c;
 }
 .courses-page-hero h1 {
   font-size: clamp(54px, 7vw, 96px);
@@ -32,31 +32,67 @@
 .courses-page-hero p i {
   width: 22px;
   height: 1px;
-  background: #ffaa17;
+  background: #d7ff7c;
 }
 .catalog-section {
   padding: clamp(75px, 8vw, 120px) max(6vw, 24px);
-  background: #f7f6f2;
+  background:
+    radial-gradient(circle at top left, rgba(215, 255, 124, 0.08), transparent 22%),
+    #f8f3ea;
 }
 .catalog-toolbar {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr auto;
   align-items: center;
-  justify-content: space-between;
-  gap: 30px;
-  background: #101c30;
+  gap: 16px 24px;
+  background: linear-gradient(135deg, #0b1220, #111827 55%, #0b1220);
   color: #fff;
   padding: 25px 30px;
+  border-radius: 28px;
+  box-shadow: var(--shadow);
 }
-.catalog-toolbar > div:first-child {
+.catalog-toolbar-title {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 .catalog-toolbar label {
-  font: 700 18px 'Manrope';
+  font: 700 18px 'Inter Tight', sans-serif;
 }
 .catalog-toolbar svg {
-  color: #ffaa17;
+  color: #d7ff7c;
+}
+.catalog-toolbar-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0 14px;
+  border-radius: 16px;
+}
+.catalog-toolbar-search svg {
+  flex: none;
+}
+.catalog-toolbar-search input {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  padding: 14px 0;
+  outline: none;
+}
+.catalog-toolbar-search input::placeholder {
+  color: #9aa6b2;
+}
+.clear-search {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  color: #fff;
 }
 .select-wrap {
   position: relative;
@@ -65,11 +101,12 @@
 .select-wrap select {
   width: 100%;
   appearance: none;
-  border: 1px solid #566073;
-  background: #1c2a3f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
   color: #fff;
   padding: 14px 45px 14px 16px;
   outline: none;
+  border-radius: 16px;
 }
 .select-wrap > svg {
   position: absolute;
@@ -84,20 +121,21 @@
   flex-wrap: wrap;
   gap: 8px;
   padding: 28px 0;
-  border-bottom: 1px solid #d5d8d7;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
 }
 .category-pills button {
-  border: 1px solid #cbd0cf;
-  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: rgba(255, 255, 255, 0.68);
   padding: 10px 14px;
   color: #52616b;
   font-size: 12px;
   font-weight: 700;
+  border-radius: 999px;
 }
 .category-pills button:hover,
 .category-pills button.active {
-  border-color: #eb7615;
-  background: #eb7615;
+  border-color: #ff7a59;
+  background: linear-gradient(135deg, #ff7a59, #ffb86b);
   color: #fff;
 }
 .catalog-summary {
@@ -112,7 +150,7 @@
 }
 .catalog-summary p strong {
   font-size: 24px;
-  color: #101c30;
+  color: #0b1220;
   margin-right: 5px;
 }
 .catalog-summary > span {
@@ -120,7 +158,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: #eb7615;
+  color: #ff7a59;
 }
 .catalog-grid {
   display: grid;
@@ -128,15 +166,19 @@
   gap: 24px;
 }
 .catalog-card {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   min-width: 0;
+  border-radius: 26px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 16px 40px rgba(11, 18, 32, 0.08);
   transition:
     transform 0.25s,
     box-shadow 0.25s;
 }
 .catalog-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 45px #101c3017;
+  box-shadow: 0 28px 60px rgba(11, 18, 32, 0.12);
 }
 .catalog-image {
   height: 240px;
@@ -147,7 +189,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(0.78);
+  filter: saturate(0.84);
   transition: 0.35s;
 }
 .catalog-card:hover img {
@@ -159,8 +201,8 @@
   right: 0;
   top: 0;
   padding: 12px 14px;
-  background: #ffaa17;
-  color: #101c30;
+  background: linear-gradient(135deg, #d7ff7c, #bff3d1);
+  color: #0b1220;
   font-weight: 800;
 }
 .catalog-card-body {
@@ -171,7 +213,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1.2px;
-  color: #eb7615;
+  color: #ff7a59;
 }
 .catalog-card-body h2 {
   font-size: 22px;
@@ -179,10 +221,11 @@
   margin: 11px 0 25px;
   min-height: 56px;
 }
-.catalog-card-body button {
+.catalog-card-body button,
+.catalog-card-body .catalog-course-link {
   width: 100%;
   border: 0;
-  border-top: 1px solid #e3e5e2;
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
   background: transparent;
   padding: 15px 0 0;
   display: flex;
@@ -192,17 +235,20 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  color: #101c30;
+  color: #0b1220;
 }
 .catalog-empty {
   text-align: center;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.9);
   padding: 70px 25px;
+  border-radius: 26px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: var(--shadow);
 }
 .catalog-empty svg {
   width: 40px;
   height: 40px;
-  color: #eb7615;
+  color: #ff7a59;
 }
 .catalog-empty h2 {
   font-size: 30px;
@@ -217,7 +263,7 @@
   justify-content: space-between;
   margin-top: 45px;
   padding-top: 28px;
-  border-top: 1px solid #d4d7d5;
+  border-top: 1px solid rgba(15, 23, 42, 0.1);
 }
 .catalog-pagination > span {
   font-size: 12px;
@@ -230,13 +276,14 @@
 .catalog-pagination button {
   min-width: 38px;
   height: 38px;
-  border: 1px solid #cbd0cf;
-  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: rgba(255, 255, 255, 0.66);
   font-size: 12px;
+  border-radius: 12px;
 }
 .catalog-pagination button.active {
-  background: #101c30;
-  border-color: #101c30;
+  background: linear-gradient(135deg, #0f1724, #1f2b44);
+  border-color: #0f1724;
   color: #fff;
 }
 .catalog-pagination button:disabled {
@@ -246,6 +293,12 @@
 @media (max-width: 1000px) {
   .catalog-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .catalog-toolbar {
+    grid-template-columns: 1fr;
+  }
+  .select-wrap {
+    min-width: 0;
   }
 }
 @media (max-width: 700px) {
@@ -263,10 +316,6 @@
     align-items: stretch;
     flex-direction: column;
     padding: 22px;
-  }
-  .select-wrap {
-    min-width: 0;
-    width: 100%;
   }
   .category-pills {
     flex-wrap: nowrap;
@@ -307,3 +356,4 @@
     flex-wrap: wrap;
   }
 }
+

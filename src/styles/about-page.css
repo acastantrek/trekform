@@ -1,11 +1,11 @@
-.about-page-hero {
+﻿.about-page-hero {
   min-height: 430px;
   padding: 80px 7vw;
   display: flex;
   align-items: center;
   color: #fff;
   background:
-    linear-gradient(90deg, #101c30e8, #101c3060),
+    linear-gradient(90deg, #0b1220ee, #17233bd8 55%, #0b1220a6),
     url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1800&q=85')
       center/cover;
 }
@@ -17,7 +17,7 @@
   font-weight: 800;
   letter-spacing: 1.8px;
   text-transform: uppercase;
-  color: #ffaa17;
+  color: #d7ff7c;
 }
 .about-page-hero h1 {
   font-size: clamp(56px, 8vw, 105px);
@@ -32,7 +32,7 @@
 .about-page-hero p i {
   width: 22px;
   height: 1px;
-  background: #ffaa17;
+  background: #d7ff7c;
 }
 .who-section {
   padding: 115px 7vw;
@@ -40,7 +40,9 @@
   grid-template-columns: 1fr 1fr;
   gap: 9vw;
   align-items: center;
-  background: #f7f6f2;
+  background:
+    radial-gradient(circle at top right, rgba(255, 122, 89, 0.08), transparent 26%),
+    #f8f3ea;
 }
 .who-image {
   height: 590px;
@@ -63,14 +65,14 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  background: #eb7615;
+  background: linear-gradient(135deg, #ff7a59, #ffb86b);
   color: #fff;
   font-size: 11px;
   font-weight: 800;
   text-transform: uppercase;
 }
 .who-image > span strong {
-  font: 800 55px 'Manrope';
+  font: 800 55px 'Fraunces', serif;
   line-height: 1;
 }
 .who-copy h2,
@@ -95,13 +97,13 @@
 }
 .who-progress strong {
   font-size: 25px;
-  color: #eb7615;
+  color: #ff7a59;
 }
 .who-progress > i {
   display: block;
   height: 7px;
   margin-top: 12px;
-  background: linear-gradient(90deg, #eb7615 90%, #dfe2e1 90%);
+  background: linear-gradient(90deg, #ff7a59 90%, rgba(15, 23, 42, 0.1) 90%);
 }
 .success-section {
   padding: 110px 7vw;
@@ -119,13 +121,14 @@
 }
 .strength-grid article {
   padding: 42px;
-  background: #f7f6f2;
+  background: rgba(248, 243, 234, 0.88);
   min-height: 250px;
+  border-radius: 26px;
 }
 .strength-grid svg {
   width: 38px;
   height: 38px;
-  color: #eb7615;
+  color: #ff7a59;
 }
 .strength-grid h3 {
   font-size: 21px;
@@ -139,7 +142,7 @@
 .team-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  background: #101c30;
+  background: linear-gradient(135deg, #0b1220, #111827 55%, #0b1220);
   color: #fff;
   align-items: center;
 }
@@ -168,8 +171,8 @@
   left: 0;
   bottom: 0;
   padding: 18px 24px;
-  background: #ffaa17;
-  color: #101c30;
+  background: linear-gradient(135deg, #d7ff7c, #bff3d1);
+  color: #0b1220;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -182,7 +185,7 @@
   display: grid;
   grid-template-columns: 0.75fr 1.25fr;
   gap: 9vw;
-  background: #f7f6f2;
+  background: #faf7f0;
 }
 .faq-heading p {
   color: #687782;
@@ -192,11 +195,11 @@
   border-top: 1px solid #d6d8d7;
 }
 .faq-list details {
-  border-bottom: 1px solid #d6d8d7;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.1);
 }
 .faq-list summary {
   padding: 23px 0;
-  font: 700 16px 'Manrope';
+  font: 700 16px 'Fraunces', serif;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -207,7 +210,7 @@
   display: none;
 }
 .faq-list details[open] summary {
-  color: #eb7615;
+  color: #ff7a59;
 }
 .faq-list details[open] summary svg {
   transform: rotate(180deg);
@@ -221,8 +224,8 @@
 .about-cta {
   text-align: center;
   padding: 90px 20px;
-  background: #ffaa17;
-  color: #101c30;
+  background: linear-gradient(135deg, #d7ff7c, #c2f0d7 60%, #f8efbf);
+  color: #0b1220;
 }
 .about-cta > span {
   font-size: 11px;
@@ -235,13 +238,15 @@
 }
 .about-cta button {
   border: 0;
-  background: #101c30;
+  background: linear-gradient(135deg, #0f1724, #1f2b44);
   color: #fff;
   padding: 16px 24px;
   font-weight: 700;
+  border-radius: 999px;
+  box-shadow: var(--shadow);
 }
 .nav .enabled-link {
-  color: #ffaa17;
+  color: #d7ff7c;
 }
 .footer-nav a {
   color: #fff;
@@ -294,3 +299,4 @@
     height: 430px;
   }
 }
+

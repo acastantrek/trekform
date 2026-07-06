@@ -8,14 +8,14 @@ export function CourseCatalog() {
   const [category, setCategory] = useState('Todos')
   const [query, setQuery] = useState('')
   const courseCategories = useMemo(
-    () => ['Todos', ...new Set(courses.map((course) => course.category))],
+    () => ['Todos', ...new Set(courses.flatMap((course) => course.categories))],
     [courses],
   )
   const filteredCourses = useMemo(
     () =>
       courses.filter(
         (course) =>
-          (category === 'Todos' || course.category === category) &&
+          (category === 'Todos' || course.categories.includes(category)) &&
           course.title.toLocaleLowerCase('es').includes(query.trim().toLocaleLowerCase('es')),
       ),
     [category, courses, query],

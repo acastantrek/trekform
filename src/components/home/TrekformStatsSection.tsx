@@ -1,10 +1,13 @@
-import { ArrowRight } from 'lucide-react'
+﻿import { ArrowRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
+
 const stats = [
   { value: '20+', label: 'Años de experiencia' },
   { value: '200K+', label: 'Alumnos formados' },
   { value: '4.000+', label: 'Empresas' },
   { value: '18.000+', label: 'Cursos impartidos' },
 ]
+
 export function TrekformStatsSection() {
   return (
     <section className="stats-section">
@@ -14,9 +17,9 @@ export function TrekformStatsSection() {
           <h2>Trekform en números</h2>
         </div>
         <p>La calidad en las formaciones es nuestra diferencia.</p>
-        <button type="button" disabled className="disabled-link">
+        <Link to="/contacto">
           Dossier corporativo <ArrowRight size={18} />
-        </button>
+        </Link>
       </div>
       <div className="stats-grid">
         {stats.map((stat) => (

@@ -1,4 +1,4 @@
-import { Mail, MapPin, Phone } from 'lucide-react'
+﻿import { Mail, MapPin, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { TrekformLogo } from '../common/TrekformLogo'
 
@@ -12,7 +12,13 @@ const cities = [
   'Vigo',
   'Gran Canaria',
 ]
-const links = ['¿Quiénes somos?', 'Cursos', 'Inscripciones', 'Blog', 'Contacto']
+const links = [
+  { label: 'Quiénes somos', to: '/quienes-somos' },
+  { label: 'Cursos', to: '/cursos-trekform' },
+  { label: 'Inscripciones', to: '/inscripciones' },
+  { label: 'Blog', to: '/blog' },
+  { label: 'Contacto', to: '/contacto' },
+] as const
 
 export function StaticFooter() {
   return (
@@ -33,21 +39,11 @@ export function StaticFooter() {
         <div>
           <h4>Enlaces de interés</h4>
           <div className="footer-nav">
-            {links.map((label) =>
-              label === '¿Quiénes somos?' ? (
-                <Link key={label} to="/quienes-somos">
-                  {label}
-                </Link>
-              ) : label === 'Cursos' ? (
-                <Link key={label} to="/cursos-trekform">
-                  {label}
-                </Link>
-              ) : (
-                <button type="button" disabled className="disabled-link" key={label}>
-                  {label}
-                </button>
-              ),
-            )}
+            {links.map(({ label, to }) => (
+              <Link key={label} to={to}>
+                {label}
+              </Link>
+            ))}
           </div>
         </div>
         <div>

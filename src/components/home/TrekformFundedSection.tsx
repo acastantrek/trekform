@@ -1,4 +1,6 @@
-import { ArrowRight, BadgeEuro, FileCheck2, Users } from 'lucide-react'
+﻿import { ArrowRight, BadgeEuro, FileCheck2, Users } from 'lucide-react'
+import { Link } from 'react-router-dom'
+
 export function TrekformFundedSection() {
   return (
     <section className="funded-section">
@@ -24,9 +26,9 @@ export function TrekformFundedSection() {
             <Users /> Formación adaptada a la empresa
           </li>
         </ul>
-        <button type="button" disabled className="disabled-link">
+        <Link to="/contacto">
           Solicitar información <ArrowRight size={18} />
-        </button>
+        </Link>
       </div>
       <div className="funded-visual">
         <div>

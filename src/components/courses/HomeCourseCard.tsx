@@ -1,4 +1,5 @@
 import { ArrowRight, Clock3, MapPin } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import type { Course } from '../../types/course'
 
 export function HomeCourseCard({ course, index }: { course: Course; index: number }) {
@@ -20,9 +21,9 @@ export function HomeCourseCard({ course, index }: { course: Course; index: numbe
             {course.duration}
           </span>
         </div>
-        <button type="button" disabled className="disabled-link">
+        <Link to={`/cursos-trekform/${course.slug}`}>
           Ver curso <ArrowRight size={18} />
-        </button>
+        </Link>
       </div>
     </article>
   )

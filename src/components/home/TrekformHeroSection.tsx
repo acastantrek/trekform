@@ -1,5 +1,6 @@
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+﻿import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
 const slides = [
   {
@@ -27,6 +28,7 @@ export function TrekformHeroSection() {
   const slide = slides[current]
   const move = (step: number) =>
     setCurrent((index) => (index + step + slides.length) % slides.length)
+
   return (
     <section
       className="home-slider"
@@ -41,12 +43,12 @@ export function TrekformHeroSection() {
         <h1>{slide.title}</h1>
         <p>{slide.text}</p>
         <div className="hero-actions">
-          <button type="button" disabled className="primary disabled-link">
+          <Link to="/cursos-trekform" className="primary">
             Descubre nuestros cursos <ArrowRight size={20} />
-          </button>
-          <button type="button" disabled className="hero-secondary disabled-link">
+          </Link>
+          <Link to="/contacto" className="hero-secondary">
             Contacta con nosotros
-          </button>
+          </Link>
         </div>
       </div>
       <div className="slider-controls">

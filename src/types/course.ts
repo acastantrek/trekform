@@ -1,8 +1,9 @@
 export interface Course {
-  id: number
+  id: string
   slug: string
   title: string
   category: string
+  categories: string[]
   place: string
   duration: string
   image: string

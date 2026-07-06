@@ -1,12 +1,20 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { ArrowRight, Menu, Phone, ShieldCheck, X } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { TrekformLogo } from '../common/TrekformLogo'
 
-const links = ['Inicio', '¿Quiénes somos?', 'Cursos', 'Inscripciones', 'Blog', 'Contacto']
+const links = [
+  { label: 'Inicio', to: '/' },
+  { label: 'Quiénes somos', to: '/quienes-somos' },
+  { label: 'Cursos', to: '/cursos-trekform' },
+  { label: 'Inscripciones', to: '/inscripciones' },
+  { label: 'Blog', to: '/blog' },
+  { label: 'Contacto', to: '/contacto' },
+] as const
 
 export function StaticHeader() {
   const [isOpen, setIsOpen] = useState(false)
+
   return (
     <>
       <div className="topline">
@@ -18,54 +26,21 @@ export function StaticHeader() {
           <span>
             <Phone size={15} /> 93 264 05 32
           </span>
-          <span className="top-sep">L–J 9:00–18:00 · V 9:00–15:00</span>
+          <span className="top-sep">L-J 9:00-18:00 · V 9:00-15:00</span>
         </div>
       </div>
       <header className="nav-wrap">
         <TrekformLogo />
         <nav className={`nav${isOpen ? ' open' : ''}`} aria-label="Navegación principal">
-          {links.map((label) =>
-            label === 'Inicio' ? (
-              <NavLink
-                key={label}
-                end
-                className="enabled-link"
-                to="/"
-                onClick={() => setIsOpen(false)}
-              >
-                {label}
-              </NavLink>
-            ) : label === '¿Quiénes somos?' ? (
-              <NavLink
-                key={label}
-                className="enabled-link"
-                to="/quienes-somos"
-                onClick={() => setIsOpen(false)}
-              >
-                {label}
-              </NavLink>
-            ) : label === 'Cursos' ? (
-              <NavLink
-                key={label}
-                className="enabled-link"
-                to="/cursos-trekform"
-                onClick={() => setIsOpen(false)}
-              >
-                {label}
-              </NavLink>
-            ) : (
-              <button type="button" disabled key={label} className="disabled-link">
-                {label}
-              </button>
-            ),
-          )}
-          <button type="button" disabled className="mobile-cta disabled-link">
-            ¡Inscríbete ahora!
-          </button>
+          {links.map(({ label, to }) => (
+            <NavLink key={label} className="enabled-link" to={to} onClick={() => setIsOpen(false)}>
+              {label}
+            </NavLink>
+          ))}
         </nav>
-        <button type="button" disabled className="nav-cta disabled-link">
+        <NavLink className="nav-cta" to="/inscripciones">
           ¡Inscríbete ahora! <ArrowRight size={17} />
-        </button>
+        </NavLink>
         <button
           className="menu"
           type="button"

@@ -1,0 +1,1 @@
+-- Historical migration already recorded remotely. Superseded by reset_create_mvp.
