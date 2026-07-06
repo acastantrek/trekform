@@ -1,0 +1,309 @@
+.courses-page-hero {
+  min-height: 430px;
+  padding: clamp(75px, 9vw, 130px) max(7vw, 24px);
+  display: flex;
+  align-items: center;
+  color: #fff;
+  background:
+    linear-gradient(90deg, #101c30ed, #101c305c),
+    url('https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1800&q=85')
+      center/cover;
+}
+.courses-page-hero > div {
+  max-width: 950px;
+}
+.courses-page-hero > div > span {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  color: #ffaa17;
+}
+.courses-page-hero h1 {
+  font-size: clamp(54px, 7vw, 96px);
+  line-height: 0.96;
+  margin: 18px 0 25px;
+}
+.courses-page-hero p {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+}
+.courses-page-hero p i {
+  width: 22px;
+  height: 1px;
+  background: #ffaa17;
+}
+.catalog-section {
+  padding: clamp(75px, 8vw, 120px) max(6vw, 24px);
+  background: #f7f6f2;
+}
+.catalog-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+  background: #101c30;
+  color: #fff;
+  padding: 25px 30px;
+}
+.catalog-toolbar > div:first-child {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.catalog-toolbar label {
+  font: 700 18px 'Manrope';
+}
+.catalog-toolbar svg {
+  color: #ffaa17;
+}
+.select-wrap {
+  position: relative;
+  min-width: 310px;
+}
+.select-wrap select {
+  width: 100%;
+  appearance: none;
+  border: 1px solid #566073;
+  background: #1c2a3f;
+  color: #fff;
+  padding: 14px 45px 14px 16px;
+  outline: none;
+}
+.select-wrap > svg {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  width: 18px;
+}
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 28px 0;
+  border-bottom: 1px solid #d5d8d7;
+}
+.category-pills button {
+  border: 1px solid #cbd0cf;
+  background: transparent;
+  padding: 10px 14px;
+  color: #52616b;
+  font-size: 12px;
+  font-weight: 700;
+}
+.category-pills button:hover,
+.category-pills button.active {
+  border-color: #eb7615;
+  background: #eb7615;
+  color: #fff;
+}
+.catalog-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 0 20px;
+}
+.catalog-summary p {
+  margin: 0;
+  color: #65747d;
+}
+.catalog-summary p strong {
+  font-size: 24px;
+  color: #101c30;
+  margin-right: 5px;
+}
+.catalog-summary > span {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #eb7615;
+}
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.catalog-card {
+  background: #fff;
+  min-width: 0;
+  transition:
+    transform 0.25s,
+    box-shadow 0.25s;
+}
+.catalog-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px #101c3017;
+}
+.catalog-image {
+  height: 240px;
+  position: relative;
+  overflow: hidden;
+}
+.catalog-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.78);
+  transition: 0.35s;
+}
+.catalog-card:hover img {
+  transform: scale(1.035);
+  filter: saturate(1);
+}
+.catalog-image > span {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 12px 14px;
+  background: #ffaa17;
+  color: #101c30;
+  font-weight: 800;
+}
+.catalog-card-body {
+  padding: 24px;
+}
+.catalog-card-body small {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: #eb7615;
+}
+.catalog-card-body h2 {
+  font-size: 22px;
+  line-height: 1.25;
+  margin: 11px 0 25px;
+  min-height: 56px;
+}
+.catalog-card-body button {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid #e3e5e2;
+  background: transparent;
+  padding: 15px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #101c30;
+}
+.catalog-empty {
+  text-align: center;
+  background: #fff;
+  padding: 70px 25px;
+}
+.catalog-empty svg {
+  width: 40px;
+  height: 40px;
+  color: #eb7615;
+}
+.catalog-empty h2 {
+  font-size: 30px;
+  margin: 20px 0 8px;
+}
+.catalog-empty p {
+  color: #687782;
+}
+.catalog-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 45px;
+  padding-top: 28px;
+  border-top: 1px solid #d4d7d5;
+}
+.catalog-pagination > span {
+  font-size: 12px;
+  color: #73808a;
+}
+.catalog-pagination > div {
+  display: flex;
+  gap: 6px;
+}
+.catalog-pagination button {
+  min-width: 38px;
+  height: 38px;
+  border: 1px solid #cbd0cf;
+  background: transparent;
+  font-size: 12px;
+}
+.catalog-pagination button.active {
+  background: #101c30;
+  border-color: #101c30;
+  color: #fff;
+}
+.catalog-pagination button:disabled {
+  cursor: not-allowed;
+  color: #9aa2a6;
+}
+@media (max-width: 1000px) {
+  .catalog-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .courses-page-hero {
+    min-height: 360px;
+    padding: 70px 22px;
+  }
+  .courses-page-hero h1 {
+    font-size: 50px;
+  }
+  .catalog-section {
+    padding: 70px 22px;
+  }
+  .catalog-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 22px;
+  }
+  .select-wrap {
+    min-width: 0;
+    width: 100%;
+  }
+  .category-pills {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 22px;
+  }
+  .category-pills button {
+    white-space: nowrap;
+  }
+  .catalog-grid {
+    grid-template-columns: 1fr;
+  }
+  .catalog-image {
+    height: 250px;
+  }
+  .catalog-summary {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .catalog-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 20px;
+  }
+}
+@media (max-width: 380px) {
+  .courses-page-hero h1 {
+    font-size: 42px;
+  }
+  .catalog-toolbar label {
+    font-size: 16px;
+  }
+  .catalog-card-body {
+    padding: 21px;
+  }
+  .catalog-pagination > div {
+    flex-wrap: wrap;
+  }
+}
