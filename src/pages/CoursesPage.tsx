@@ -14,7 +14,7 @@
   User,
   Users,
 } from 'lucide-react'
-import type { ReactNode } from 'react'
+import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCourses } from '../hooks/useCourses'
@@ -58,9 +58,14 @@ function normalize(value: string) {
     .replace(/[\u0300-\u036f]/g, '')
 }
 
+const fallbackDurationHours = [3, 6, 12, 20]
+
 function getCourseMeta(course: Course, index: number) {
   const durationMatch = course.duration.match(/\d+/)
-  const duration = durationMatch ? `${durationMatch[0]} h` : index % 4 === 0 ? '6 h' : '8 h'
+  const durationHours = durationMatch
+    ? Number(durationMatch[0])
+    : fallbackDurationHours[index % fallbackDurationHours.length]
+  const duration = `${durationHours} h`
   const price = [120, 130, 140, 120, 150, 110, 100, 25][index % 8]
   const city = ['Barcelona', 'Madrid', 'Valencia', 'Sevilla'][index % 4]
   const modality = course.category.toLowerCase().includes('online') ? 'Online' : 'Presencial'
@@ -70,6 +75,7 @@ function getCourseMeta(course: Course, index: number) {
       : index % 3 === 1
         ? 'Diploma homologado'
         : 'Certificado PRL'
+  const bonificable = index % 3 === 1
   const nextDates =
     index % 5 === 0
       ? ['Inicio inmediato']
@@ -77,7 +83,35 @@ function getCourseMeta(course: Course, index: number) {
         ? ['02 Jun', '09 Jun', '16 Jun']
         : ['03 Jun', '10 Jun', '17 Jun']
 
-  return { duration, price, city, modality, certificate, dates: nextDates }
+  return { duration, durationHours, price, city, modality, certificate, bonificable, dates: nextDates }
+}
+
+function matchesDurationFilter(filter: string, hours: number) {
+  switch (filter) {
+    case 'Hasta 4 horas':
+      return hours <= 4
+    case '4 - 8 horas':
+      return hours > 4 && hours <= 8
+    case '8 - 16 horas':
+      return hours > 8 && hours <= 16
+    case '+16 horas':
+      return hours > 16
+    default:
+      return true
+  }
+}
+
+function matchesCertificationFilter(filter: string, meta: ReturnType<typeof getCourseMeta>) {
+  switch (filter) {
+    case 'Carnet / Diploma homologado':
+      return meta.certificate === 'Carnet homologado' || meta.certificate === 'Diploma homologado'
+    case 'Bonificable FUNDAE':
+      return meta.bonificable
+    case 'PRL':
+      return meta.certificate === 'Certificado PRL'
+    default:
+      return true
+  }
 }
 
 export function CoursesPage() {
@@ -89,6 +123,8 @@ export function CoursesPage() {
   const [date, setDate] = useState(dates[0])
   const [price, setPrice] = useState(prices[0])
   const [clientType, setClientType] = useState(clientTypes[0])
+  const [durationFilters, setDurationFilters] = useState<string[]>([])
+  const [certificationFilters, setCertificationFilters] = useState<string[]>([])
   const [page, setPage] = useState(1)
 
   const catalogCategories = useMemo(() => {
@@ -96,11 +132,26 @@ export function CoursesPage() {
     return ['Todos', ...categoryOrder.filter((item) => available.has(item))]
   }, [allCourses])
 
+  const courseMetaById = useMemo(() => {
+    const map = new Map<string, ReturnType<typeof getCourseMeta>>()
+    allCourses.forEach((course, index) => {
+      map.set(course.id, getCourseMeta(course, index))
+    })
+    return map
+  }, [allCourses])
+
+  const toggleFilterValue = (setter: Dispatch<SetStateAction<string[]>>, value: string) => {
+    setter((current) =>
+      current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
+    )
+    setPage(1)
+  }
+
   const filteredCourses = useMemo(() => {
     const query = normalize(search.trim())
 
-    return allCourses.filter((course, index) => {
-      const meta = getCourseMeta(course, index)
+    return allCourses.filter((course) => {
+      const meta = courseMetaById.get(course.id)!
       const matchesCategory = category === 'Todos' || course.categories.includes(category)
       const matchesCity = city === cities[0] || meta.city === city
       const matchesModality = modality === modalities[0] || meta.modality === modality
@@ -109,8 +160,22 @@ export function CoursesPage() {
         (price === prices[1] && meta.price <= 50) ||
         (price === prices[2] && meta.price > 50 && meta.price <= 120) ||
         (price === prices[3] && meta.price > 120)
+      const matchesDuration =
+        durationFilters.length === 0 ||
+        durationFilters.some((filter) => matchesDurationFilter(filter, meta.durationHours))
+      const matchesCertification =
+        certificationFilters.length === 0 ||
+        certificationFilters.some((filter) => matchesCertificationFilter(filter, meta))
 
-      if (!matchesCategory || !matchesCity || !matchesModality || !matchesPrice) return false
+      if (
+        !matchesCategory ||
+        !matchesCity ||
+        !matchesModality ||
+        !matchesPrice ||
+        !matchesDuration ||
+        !matchesCertification
+      )
+        return false
       if (!query) return true
 
       const haystack = normalize(
@@ -129,7 +194,17 @@ export function CoursesPage() {
 
       return haystack.includes(query)
     })
-  }, [allCourses, category, city, modality, price, search])
+  }, [
+    allCourses,
+    courseMetaById,
+    category,
+    city,
+    modality,
+    price,
+    durationFilters,
+    certificationFilters,
+    search,
+  ])
 
   const totalPages = Math.max(1, Math.ceil(filteredCourses.length / pageSize))
   const visibleCourses = filteredCourses.slice((page - 1) * pageSize, page * pageSize)
@@ -147,6 +222,8 @@ export function CoursesPage() {
     setDate(dates[0])
     setPrice(prices[0])
     setClientType(clientTypes[0])
+    setDurationFilters([])
+    setCertificationFilters([])
     setPage(1)
   }
 
@@ -286,17 +363,25 @@ export function CoursesPage() {
               ))}
             </FilterGroup>
             <FilterGroup title="Duración">
-              {durations.map((item, index) => (
+              {durations.map((item) => (
                 <label key={item}>
-                  <input type="checkbox" defaultChecked={index === 1} />
+                  <input
+                    type="checkbox"
+                    checked={durationFilters.includes(item)}
+                    onChange={() => toggleFilterValue(setDurationFilters, item)}
+                  />
                   <span>{item}</span>
                 </label>
               ))}
             </FilterGroup>
             <FilterGroup title="Certificación">
-              {certifications.map((item, index) => (
+              {certifications.map((item) => (
                 <label key={item}>
-                  <input type="checkbox" defaultChecked={index === 0} />
+                  <input
+                    type="checkbox"
+                    checked={certificationFilters.includes(item)}
+                    onChange={() => toggleFilterValue(setCertificationFilters, item)}
+                  />
                   <span>{item}</span>
                 </label>
               ))}
@@ -342,7 +427,7 @@ export function CoursesPage() {
               <div className="catalog-grid">
                 {visibleCourses.map((course, index) => {
                   const absoluteIndex = (page - 1) * pageSize + index
-                  const meta = getCourseMeta(course, absoluteIndex)
+                  const meta = courseMetaById.get(course.id)!
 
                   return (
                     <article className="catalog-card" key={course.id}>
@@ -354,7 +439,7 @@ export function CoursesPage() {
                           alt={course.title}
                         />
                         <span>{course.category}</span>
-                        {absoluteIndex % 3 === 1 ? <b>Bonificable</b> : null}
+                        {meta.bonificable ? <b>Bonificable</b> : null}
                         {absoluteIndex === 0 ? <em>Más demandado</em> : null}
                       </div>
                       <div className="catalog-card-body">
