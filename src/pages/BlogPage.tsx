@@ -112,7 +112,7 @@ export function BlogPage() {
             <div className="blog-pagination">
               <span>
                 {(page - 1) * pageSize + 1} a {Math.min(page * pageSize, filtered.length)} de{' '}
-                {Math.max(filtered.length, 1025)}
+                {filtered.length}
               </span>
               <div>
                 {Array.from({ length: Math.min(5, totalPages) }, (_, index) => index + 1).map(
