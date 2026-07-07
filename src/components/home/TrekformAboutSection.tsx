@@ -7,6 +7,7 @@ export function TrekformAboutSection() {
       <div className="about-collage">
         <div className="about-image-main" />
         <div className="about-image-small" />
+        <div className="about-image-accent" />
         <span className="about-years">
           <strong>20</strong> años
           <br />
@@ -15,15 +16,18 @@ export function TrekformAboutSection() {
       </div>
       <div className="about-copy">
         <span className="kicker">SOBRE TREKFORM</span>
-        <h2>Líderes en formación de maquinaria industrial y prevención de riesgos laborales.</h2>
+        <h2>
+          Líderes en formación de maquinaria industrial{' '}
+          <span>y prevención de riesgos laborales.</span>
+        </h2>
         <div className="about-values">
           <article>
             <CheckCircle2 />
             <div>
               <strong>Compromiso</strong>
               <span>
-                Proyectos personalizados y adaptados a las necesidades formativas reales de cada
-                cliente.
+                Ofrecemos proyectos totalmente personalizados para todos nuestros clientes,
+                adaptándonos a sus necesidades formativas reales.
               </span>
             </div>
           </article>
@@ -32,7 +36,8 @@ export function TrekformAboutSection() {
             <div>
               <strong>Excelencia</strong>
               <span>
-                Equipo técnico altamente cualificado para garantizar la calidad de cada formación.
+                Contamos con un equipo técnico altamente cualificado, lo que nos permite ofrecer la
+                mejor calidad en todas nuestras formaciones.
               </span>
             </div>
           </article>
@@ -42,7 +47,7 @@ export function TrekformAboutSection() {
             Quiero saber más <ArrowRight size={18} />
           </Link>
           <Link to="/contacto" className="video-link">
-            <Play size={15} fill="currentColor" /> Vídeo corporativo Trekform
+            <Play size={15} fill="currentColor" /> Video Corporativo Trekform
           </Link>
         </div>
       </div>

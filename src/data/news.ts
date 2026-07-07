@@ -1,11 +1,19 @@
 export const news = [
   {
+    slug: 'seguridad-laboral-industrial-activo-humano',
+    title: 'Seguridad laboral industrial: el activo humano',
+    date: '03 Jul 2026',
+    category: 'Prevención',
+    image:
+      'https://cloudflare.shopincdn.ovh/trekform/cache/images/img_blogs/1170x636_q91_cr0_fix1/seguridad_laboral_indusrial_trekform.jpg',
+  },
+  {
     slug: 'carretillero-baleares',
     title: 'Curso de carretillero en Baleares: formación en un solo día',
     date: '01 Jul 2026',
     category: 'Maquinaria',
     image:
-      'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=900&q=85',
+      'https://cloudflare.shopincdn.ovh/trekform/cache/images/img_blogs/1170x636_q91_cr0_fix1/carretillero_trekform_en_baleares.jpg',
   },
   {
     slug: 'que-son-trabajos-altura',
@@ -13,7 +21,7 @@ export const news = [
     date: '26 Jun 2026',
     category: 'Seguridad',
     image:
-      'https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=900&q=85',
+      'https://cloudflare.shopincdn.ovh/trekform/cache/images/img_blogs/1170x636_q91_cr0_fix1/conoce_un_poco_mejor_los_trabajos_en_altura_trekform.jpg',
   },
   {
     slug: 'primeros-auxilios-vallecas',

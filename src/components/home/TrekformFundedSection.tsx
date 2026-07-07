@@ -6,9 +6,11 @@ export function TrekformFundedSection() {
     <section className="funded-section">
       <div className="funded-copy">
         <span className="kicker">FORMACIÓN BONIFICADA</span>
-        <h2>Gestión de la formación bonificada</h2>
+        <h2>
+          Gestión de la formación <span>bonificada</span>
+        </h2>
         <p>
-          Trekform actúa como entidad organizadora de acciones formativas de la Fundación Estatal
+          TREKFORM actúa como entidad organizadora de acciones formativas de la Fundación Estatal
           para la Formación en el Empleo.
         </p>
         <p>

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+﻿import { useMemo, useState } from 'react'
 import {
   ArrowRight,
   CalendarDays,
@@ -165,8 +165,8 @@ const sessions: CourseSession[] = [
 const steps = [
   { icon: Search, title: 'Encuentra tu curso', text: 'Filtra por ubicación, curso y fecha.' },
   { icon: UserRoundCheck, title: 'Completa tus datos', text: 'Identifícate y reserva tu plaza.' },
-  { icon: CreditCard, title: 'Pago 100% seguro', text: 'Finaliza la matrícula online.' },
-  { icon: MailCheck, title: 'Recibe la confirmación', text: 'Te enviaremos horario y dirección.' },
+  { icon: CreditCard, title: 'Pago seguro', text: 'Finaliza la matrícula online.' },
+  { icon: MailCheck, title: 'Confirmación', text: 'Recibe horario, dirección y detalles.' },
 ]
 
 const statusText: Record<SessionStatus, string> = {
@@ -210,28 +210,42 @@ export function RegistrationPage() {
   return (
     <div className="registration-page">
       <section className="registration-hero">
-        <div>
+        <div className="registration-hero-copy">
           <span className="registration-kicker">FORMACIÓN ABIERTA · MATRÍCULA ONLINE</span>
-          <h1>Tu próxima formación empieza aquí.</h1>
+          <h1>
+            Reserva tu próxima formación <span>Trekform</span>
+          </h1>
           <p>
-            Consulta las próximas convocatorias, elige la que mejor encaja contigo y reserva tu
-            plaza.
+            Consulta convocatorias, filtra por ciudad, curso y fecha, y reserva plaza en la
+            formación que mejor encaja contigo o con tu equipo.
           </p>
-          <a
-            className="registration-calendar"
-            href="https://drive.google.com/file/d/0B7Ghcuo4WDYtYTlrWGxtXzhnNTg/edit"
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Download size={18} /> Descargar calendario de cursos
-          </a>
+          <div className="registration-hero-actions">
+            <a href="#registration-sessions">
+              Ver convocatorias <ArrowRight size={18} />
+            </a>
+            <a
+              href="https://drive.google.com/file/d/0B7Ghcuo4WDYtYTlrWGxtXzhnNTg/edit"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Download size={18} /> Descargar calendario
+            </a>
+          </div>
+        </div>
+        <div className="registration-hero-media">
+          <img
+            src="https://trekform.com/trekform/uploads/assets/images/backgrounds/home_operario_carretillas_elevadoras_trekform.jpg"
+            alt="Inscripciones Trekform"
+          />
         </div>
       </section>
 
       <section className="registration-process" aria-labelledby="process-title">
         <div className="registration-section-heading">
           <span>UN PROCESO SENCILLO</span>
-          <h2 id="process-title">Inscríbete en cuatro pasos</h2>
+          <h2 id="process-title">
+            Inscríbete <span>en cuatro pasos</span>
+          </h2>
         </div>
         <div className="registration-steps">
           {steps.map(({ icon: Icon, title, text }, index) => (
@@ -245,11 +259,17 @@ export function RegistrationPage() {
         </div>
       </section>
 
-      <section className="registration-list" aria-labelledby="sessions-title">
+      <section
+        className="registration-list"
+        id="registration-sessions"
+        aria-labelledby="sessions-title"
+      >
         <div className="registration-list-intro">
           <div>
             <span>PRÓXIMAS CONVOCATORIAS</span>
-            <h2 id="sessions-title">Elige dónde y cuándo formarte</h2>
+            <h2 id="sessions-title">
+              Elige dónde <span>y cuándo formarte</span>
+            </h2>
           </div>
           <p>
             La disponibilidad se actualiza regularmente. Selecciona una convocatoria para continuar
@@ -282,17 +302,15 @@ export function RegistrationPage() {
             allLabel="Todos"
             onChange={(value) => updateFilter(setMonth, value)}
           />
+          <button type="button" onClick={clearFilters} className="registration-clear">
+            Limpiar filtros
+          </button>
         </div>
 
         <div className="registration-results-bar">
           <p>
             <strong>{filtered.length}</strong> convocatorias encontradas
           </p>
-          {(province !== 'Todas' || course !== 'Todos' || month !== 'Todos') && (
-            <button type="button" onClick={clearFilters}>
-              Limpiar filtros
-            </button>
-          )}
         </div>
 
         {filtered.length > 0 ? (
@@ -358,7 +376,9 @@ export function RegistrationPage() {
         <div>
           <Check size={26} />
           <span>¿Necesitas ayuda para elegir?</span>
-          <h2>Nuestro equipo te asesora.</h2>
+          <h2>
+            Nuestro equipo <span>te asesora.</span>
+          </h2>
         </div>
         <div>
           <p>

@@ -11,3 +11,24 @@
 @import './blog-page.css';
 @import './contact-page-v2.css';
 @import './course-detail-page.css';
+
+:where(body, button, input, select, textarea) {
+  font-family: 'Inter Tight', sans-serif;
+}
+
+:where(h1, h2, h3, h4, h5, h6) {
+  font-family: 'Inter Tight', sans-serif !important;
+  text-transform: uppercase !important;
+}
+
+:where(h1, h2, h3, h4, h5, h6) span {
+  color: #ffaa17;
+}
+
+:where(.logo, .not-found > span, .contact-page > div > a) {
+  font-family: 'Inter Tight', sans-serif !important;
+}
+
+:where(.blog-hero h1, .course-detail-session-date strong) {
+  text-transform: uppercase !important;
+}

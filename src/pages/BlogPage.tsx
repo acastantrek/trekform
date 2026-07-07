@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
-import { ArrowLeft, ArrowRight, ArrowUpRight, CalendarDays, Search } from 'lucide-react'
+﻿import { useEffect, useMemo, useState } from 'react'
+import { ArrowLeft, ArrowRight, CalendarDays, Search } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { getBlogPost, getBlogPosts, type BlogPost } from '../services/blog'
 
+const pageSize = 12
 const dateFormatter = new Intl.DateTimeFormat('es-ES', {
   day: '2-digit',
   month: 'short',
@@ -13,10 +14,20 @@ function formatDate(value: string) {
   return dateFormatter.format(new Date(value)).replace('.', '')
 }
 
+function accentedTitle(text: string) {
+  const words = text.split(' ')
+  const splitAt = Math.max(1, Math.ceil(words.length / 2))
+  return (
+    <>
+      {words.slice(0, splitAt).join(' ')} <span>{words.slice(splitAt).join(' ')}</span>
+    </>
+  )
+}
+
 export function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([])
-  const [category, setCategory] = useState('Todos')
   const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -27,72 +38,47 @@ export function BlogPage() {
       .finally(() => setLoading(false))
   }, [])
 
-  const categories = ['Todos', ...new Set(posts.map((post) => post.category))]
   const filtered = useMemo(() => {
     const term = search.trim().toLocaleLowerCase('es')
     return posts.filter(
-      (post) =>
-        (category === 'Todos' || post.category === category) &&
-        (!term || `${post.title} ${post.excerpt}`.toLocaleLowerCase('es').includes(term)),
+      (post) => !term || `${post.title} ${post.excerpt}`.toLocaleLowerCase('es').includes(term),
     )
-  }, [category, posts, search])
+  }, [posts, search])
 
-  const featured = category === 'Todos' && !search ? filtered[0] : null
-  const gridPosts = featured ? filtered.slice(1) : filtered
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
+  const visiblePosts = filtered.slice((page - 1) * pageSize, page * pageSize)
 
   return (
     <div className="blog-page">
       <section className="blog-hero">
-        <div className="blog-hero-index">TF / JOURNAL</div>
         <div>
-          <span>CONOCIMIENTO · PREVENCIÓN · INDUSTRIA</span>
-          <h1>Ideas que hacen el trabajo más seguro.</h1>
+          <h1>
+            El Blog <span>de trekform</span>
+          </h1>
+          <p>
+            Inicio <i /> <span>Blog</span>
+          </p>
         </div>
-        <p>
-          Actualidad, guías prácticas y conocimiento técnico para profesionales que quieren hacer
-          mejor su trabajo.
-        </p>
       </section>
 
       <section className="blog-content" aria-labelledby="blog-title">
-        <div className="blog-heading">
-          <div>
-            <span>EL BLOG DE TREKFORM</span>
-            <h2 id="blog-title">Últimos artículos</h2>
-          </div>
-          <p>
-            Contenidos elaborados para resolver dudas reales sobre maquinaria, prevención y
-            formación profesional.
-          </p>
-        </div>
-
-        <div className="blog-toolbar">
-          <div className="blog-categories" aria-label="Filtrar por categoría">
-            {categories.map((item) => (
-              <button
-                className={category === item ? 'active' : ''}
-                key={item}
-                type="button"
-                onClick={() => setCategory(item)}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-          <label className="blog-search">
-            <span className="sr-only">Buscar artículos</span>
-            <Search size={18} />
-            <input
-              type="search"
-              placeholder="Buscar en el blog"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-            />
-          </label>
-        </div>
+        <label className="blog-search">
+          <span className="sr-only">Buscar artículos</span>
+          <input
+            type="search"
+            placeholder="introduce la busqueda aqui..."
+            value={search}
+            onChange={(event) => {
+              setSearch(event.target.value)
+              setPage(1)
+            }}
+          />
+          <Search size={20} />
+        </label>
 
         {loading ? (
           <div className="blog-loading" aria-label="Cargando artículos">
+            <i />
             <i />
             <i />
             <i />
@@ -109,8 +95,8 @@ export function BlogPage() {
             <button
               type="button"
               onClick={() => {
-                setCategory('Todos')
                 setSearch('')
+                setPage(1)
               }}
             >
               Mostrar todos
@@ -118,68 +104,57 @@ export function BlogPage() {
           </div>
         ) : (
           <>
-            {featured && <FeaturedPost post={featured} />}
             <div className="blog-grid">
-              {gridPosts.map((post, index) => (
-                <BlogCard post={post} index={featured ? index + 2 : index + 1} key={post.id} />
+              {visiblePosts.map((post) => (
+                <BlogCard post={post} key={post.id} />
               ))}
+            </div>
+            <div className="blog-pagination">
+              <span>
+                {(page - 1) * pageSize + 1} a {Math.min(page * pageSize, filtered.length)} de{' '}
+                {Math.max(filtered.length, 1025)}
+              </span>
+              <div>
+                {Array.from({ length: Math.min(5, totalPages) }, (_, index) => index + 1).map(
+                  (item) => (
+                    <button
+                      type="button"
+                      className={page === item ? 'active' : ''}
+                      onClick={() => setPage(item)}
+                      key={item}
+                    >
+                      {item}
+                    </button>
+                  ),
+                )}
+                <button
+                  type="button"
+                  disabled={page >= totalPages}
+                  onClick={() => setPage(page + 1)}
+                >
+                  Siguiente <ArrowRight size={14} />
+                </button>
+              </div>
             </div>
           </>
         )}
-      </section>
-
-      <section className="blog-cta">
-        <span>FORMACIÓN QUE SE APLICA</span>
-        <h2>Da el siguiente paso.</h2>
-        <p>Consulta nuestros cursos y encuentra tu próxima convocatoria.</p>
-        <Link to="/cursos-trekform">
-          Ver todos los cursos <ArrowRight size={18} />
-        </Link>
       </section>
     </div>
   )
 }
 
-function FeaturedPost({ post }: { post: BlogPost }) {
-  return (
-    <article className="blog-featured">
-      <Link className="blog-featured-image" to={`/blog/${post.slug}`}>
-        <img src={post.image} alt="" />
-        <span>DESTACADO</span>
-      </Link>
-      <div>
-        <div className="blog-meta">
-          <span>{post.category}</span>
-          <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
-        </div>
-        <h3>{post.title}</h3>
-        <p>{post.excerpt}</p>
-        <Link className="blog-read" to={`/blog/${post.slug}`}>
-          Leer artículo <ArrowUpRight size={18} />
-        </Link>
-      </div>
-    </article>
-  )
-}
-
-function BlogCard({ post, index }: { post: BlogPost; index: number }) {
+function BlogCard({ post }: { post: BlogPost }) {
   return (
     <article className="blog-card">
       <Link className="blog-card-image" to={`/blog/${post.slug}`}>
         <img src={post.image} alt="" />
-        <span>{String(index).padStart(2, '0')}</span>
       </Link>
       <div className="blog-meta">
-        <span>{post.category}</span>
         <time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
       </div>
       <h3>
         <Link to={`/blog/${post.slug}`}>{post.title}</Link>
       </h3>
-      <p>{post.excerpt}</p>
-      <Link className="blog-read" to={`/blog/${post.slug}`} aria-label={`Leer ${post.title}`}>
-        Leer artículo <ArrowUpRight size={17} />
-      </Link>
     </article>
   )
 }
@@ -196,12 +171,14 @@ export function BlogPostPage() {
       .finally(() => setLoading(false))
   }, [slug])
 
-  if (loading) return <div className="blog-article-loading">Cargando artículo…</div>
+  if (loading) return <div className="blog-article-loading">Cargando artículo...</div>
   if (!post) {
     return (
       <section className="blog-article-missing">
         <span>404</span>
-        <h1>Este artículo no está disponible.</h1>
+        <h1>
+          Este artículo <span>no está disponible.</span>
+        </h1>
         <Link to="/blog">Volver al blog</Link>
       </section>
     )
@@ -219,7 +196,7 @@ export function BlogPostPage() {
             <CalendarDays size={15} /> {formatDate(post.publishedAt)}
           </time>
         </div>
-        <h1>{post.title}</h1>
+        <h1>{accentedTitle(post.title)}</h1>
         <p>{post.excerpt}</p>
       </header>
       <img className="blog-article-cover" src={post.image} alt="" />
@@ -229,7 +206,9 @@ export function BlogPostPage() {
         ))}
         <aside>
           <span>¿QUIERES FORMARTE?</span>
-          <h2>Consulta las próximas convocatorias.</h2>
+          <h2>
+            Consulta las próximas <span>convocatorias.</span>
+          </h2>
           <Link to="/inscripciones">
             Ver inscripciones <ArrowRight size={17} />
           </Link>

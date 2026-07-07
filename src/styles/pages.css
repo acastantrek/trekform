@@ -1,4 +1,4 @@
-﻿.sr-only {
+.sr-only {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -10,7 +10,7 @@
   border: 0;
 }
 .nav a.active {
-  color: #0f8b7b;
+  color: #eb7615;
 }
 .page-section {
   min-height: 70vh;
@@ -29,8 +29,7 @@
 .page-hero.simple {
   padding: 100px 8vw;
   background:
-    radial-gradient(circle at top right, rgba(255, 122, 89, 0.08), transparent 24%),
-    #f6f1e8;
+    radial-gradient(circle at top right, rgba(255, 122, 89, 0.08), transparent 24%), #f6f1e8;
   border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
 .page-hero.simple h1 {
@@ -45,8 +44,7 @@
   grid-template-columns: 1fr 1fr;
   min-height: 680px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(255, 250, 242, 0.96)),
-    #faf7f0;
+    linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(255, 250, 242, 0.96)), #faf7f0;
 }
 .detail-hero > div {
   padding: 90px 7vw;
@@ -98,8 +96,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 10vw;
   background:
-    radial-gradient(circle at top left, rgba(215, 255, 124, 0.1), transparent 22%),
-    #f8f3eb;
+    radial-gradient(circle at top left, rgba(235, 118, 21, 0.1), transparent 22%), #f8f3eb;
 }
 .contact-page h1 {
   font-size: clamp(48px, 6vw, 80px);
@@ -111,7 +108,9 @@
 }
 .contact-page > div > a {
   display: block;
-  font: 700 18px 'Fraunces', serif;
+  font:
+    700 18px 'Inter Tight',
+    sans-serif;
   margin: 10px 0;
 }
 .contact-page form {
@@ -140,8 +139,8 @@
 }
 .contact-page input:focus,
 .contact-page textarea:focus {
-  border-color: #0f8b7b;
-  box-shadow: 0 0 0 3px rgba(15, 139, 123, 0.12);
+  border-color: #eb7615;
+  box-shadow: 0 0 0 3px rgba(235, 118, 21, 0.14);
 }
 .contact-page button {
   justify-self: start;
@@ -156,8 +155,10 @@
   padding: 60px;
 }
 .not-found > span {
-  font: 800 clamp(80px, 15vw, 200px) 'Fraunces', serif;
-  color: #d7ff7c;
+  font:
+    800 clamp(80px, 15vw, 200px) 'Inter Tight',
+    sans-serif;
+  color: #eb7615;
   text-shadow: 2px 2px #0b1220;
 }
 .not-found h1 {
@@ -198,4 +199,3 @@
     margin-bottom: 40px;
   }
 }
-

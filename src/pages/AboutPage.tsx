@@ -1,7 +1,10 @@
 ﻿import {
+  ArrowRight,
+  Award,
   BriefcaseBusiness,
   Building2,
   CalendarClock,
+  CheckCircle2,
   ChevronDown,
   HardHat,
   MapPinned,
@@ -29,7 +32,7 @@ const strengths = [
   {
     icon: Building2,
     title: 'Gran estructura profesional',
-    text: 'Gestión simultánea de un alto volumen de cursos manteniendo los estándares de calidad.',
+    text: 'Gestión simultánea de un alto volumen de cursos manteniendo estándares de calidad.',
   },
   {
     icon: HardHat,
@@ -38,7 +41,7 @@ const strengths = [
   },
   {
     icon: BriefcaseBusiness,
-    title: 'Experiencia en grandes empresas',
+    title: 'Experiencia en empresas',
     text: 'Planes a medida para pymes, organizaciones y grandes cuentas.',
   },
 ]
@@ -47,7 +50,7 @@ const faqs = [
   {
     question: '¿Dónde puedo realizar el curso?',
     answer:
-      'Impartimos formación abierta y a medida en todo el territorio nacional, incluyendo Barcelona, Madrid, Zaragoza, Valencia, Tarragona, Canarias, Mallorca, Sevilla, Bilbao, Lleida y Pontevedra.',
+      'Impartimos formación abierta y a medida en todo el territorio nacional, incluyendo Barcelona, Madrid, Zaragoza, Valencia, Canarias, Sevilla, Bilbao y Pontevedra.',
   },
   {
     question: '¿Puedo bonificar mi formación si soy empresa?',
@@ -64,39 +67,64 @@ const faqs = [
     answer:
       'No tiene una caducidad legal fija, aunque se recomienda actualizar la formación cada cuatro o cinco años.',
   },
-  {
-    question: '¿Qué tipo de carretilla se puede conducir con el carnet?',
-    answer:
-      'La formación puede incluir carretillas frontales, retráctiles, apiladores, recogepedidos y transpaletas.',
-  },
-  {
-    question: '¿Cuándo es obligatoria la formación de trabajos en altura?',
-    answer:
-      'Los trabajadores expuestos a tareas a más de dos metros deben recibir formación específica sobre riesgos, equipos y medidas preventivas.',
-  },
-  {
-    question: '¿Los formadores son especialistas en PRL?',
-    answer:
-      'Sí. Las formaciones son impartidas por técnicos especialistas en prevención con experiencia acreditada.',
-  },
 ]
 
 export function AboutPage() {
   return (
     <>
       <section className="about-page-hero">
-        <div>
+        <div className="about-hero-copy">
           <span>Más de 20 años formando a profesionales</span>
-          <h1>¿Quiénes somos?</h1>
+          <h1>
+            Tu partner en formación <span>y seguridad laboral</span>
+          </h1>
           <p>
-            Inicio <i /> ¿Quiénes somos?
+            Somos especialistas en prevención de riesgos laborales y manejo de maquinaria
+            industrial. Formamos a particulares y empresas con una metodología práctica, certificada
+            y orientada al trabajo real.
           </p>
+          <div className="about-hero-actions">
+            <Link to="/cursos-trekform">
+              Ver cursos <ArrowRight size={18} />
+            </Link>
+            <Link to="/contacto">Solicitar información</Link>
+          </div>
+        </div>
+        <div className="about-hero-media">
+          <img
+            src="https://trekform.com/trekform/uploads/assets/images/Sobre_nosotros/carretilla-trekform-2.jpg"
+            alt="Formación Trekform"
+          />
         </div>
       </section>
+
+      <section className="about-proof-strip">
+        <article>
+          <Award />
+          <strong>20+</strong>
+          <span>Años de experiencia</span>
+        </article>
+        <article>
+          <HardHat />
+          <strong>200.000+</strong>
+          <span>Alumnos formados</span>
+        </article>
+        <article>
+          <Building2 />
+          <strong>4.000+</strong>
+          <span>Empresas cliente</span>
+        </article>
+        <article>
+          <ShieldCheck />
+          <strong>18.000+</strong>
+          <span>Cursos impartidos</span>
+        </article>
+      </section>
+
       <section className="who-section">
         <div className="who-image">
           <img
-            src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?auto=format&fit=crop&w=1200&q=85"
+            src="https://trekform.com/trekform/uploads/assets/images/resources/about-one-img-2.jpg"
             alt="Equipo profesional de Trekform"
           />
           <span>
@@ -105,28 +133,38 @@ export function AboutPage() {
         </div>
         <div className="who-copy">
           <span className="kicker">CONOCE TREKFORM</span>
-          <h2>¿Quién es Trekform?</h2>
+          <h2>
+            Formación práctica <span>para trabajar con seguridad</span>
+          </h2>
           <p>
-            Somos una empresa de consultoría y formación especializada en prevención de riesgos
-            laborales y manejo de maquinaria industrial.
+            Trekform nace con una idea clara: ayudar a profesionales y empresas a trabajar de forma
+            más segura, eficiente y preparada. Combinamos formación técnica, práctica real y
+            acompañamiento administrativo para que cada curso tenga impacto en el puesto de trabajo.
           </p>
           <p>
-            Tras más de dos décadas, seguimos trabajando para ser una referencia estatal en
-            formación, seguridad y excelencia técnica.
+            Nuestra experiencia nos permite adaptar programas, calendarios y modalidades a las
+            necesidades de cada cliente, desde cursos abiertos hasta planes in-company.
           </p>
-          <div className="who-progress">
-            <div>
-              <strong>90%</strong>
-              <span>Formación práctica</span>
-            </div>
-            <i />
-          </div>
+          <ul className="who-checks">
+            <li>
+              <CheckCircle2 /> Formación homologada y certificada
+            </li>
+            <li>
+              <CheckCircle2 /> Instructores expertos en activo
+            </li>
+            <li>
+              <CheckCircle2 /> Cursos para particulares y empresas
+            </li>
+          </ul>
         </div>
       </section>
+
       <section className="success-section">
         <div className="center-heading">
           <span className="kicker">TREKFORM</span>
-          <h2>Claves de nuestro éxito</h2>
+          <h2>
+            Claves de <span>nuestro éxito</span>
+          </h2>
         </div>
         <div className="strength-grid">
           {strengths.map(({ icon: Icon, title, text }) => (
@@ -138,14 +176,21 @@ export function AboutPage() {
           ))}
         </div>
       </section>
+
       <section className="team-section">
         <div>
-          <span className="kicker light">DEPARTAMENTO DE FORMACIÓN</span>
-          <h2>Amplio equipo de instructores</h2>
+          <span className="kicker">DEPARTAMENTO DE FORMACIÓN</span>
+          <h2>
+            Un equipo técnico preparado <span>para formar en entornos reales</span>
+          </h2>
           <p>
-            Técnicos especialistas en PRL para impartir todas nuestras formaciones. Cada formador
-            cuenta con una sólida trayectoria profesional.
+            Nuestros instructores son técnicos especialistas en PRL y maquinaria industrial. Su
+            experiencia práctica permite impartir formaciones claras, útiles y alineadas con las
+            exigencias del puesto de trabajo.
           </p>
+          <Link to="/contacto">
+            Hablar con Trekform <ArrowRight size={18} />
+          </Link>
         </div>
         <div className="team-image">
           <img
@@ -157,13 +202,15 @@ export function AboutPage() {
           </span>
         </div>
       </section>
+
       <section className="faq-section">
         <div className="faq-heading">
           <span className="kicker">PREGUNTAS FRECUENTES</span>
-          <h2>Trekform responde</h2>
+          <h2>
+            Trekform <span>responde</span>
+          </h2>
           <p>
-            Resolvemos las dudas habituales sobre nuestros cursos, acreditaciones y formación para
-            empresas.
+            Resolvemos las dudas habituales sobre cursos, acreditaciones y formación para empresas.
           </p>
         </div>
         <div className="faq-list">
@@ -178,14 +225,16 @@ export function AboutPage() {
           ))}
         </div>
       </section>
+
       <section className="about-cta">
         <span>¡POR TU SEGURIDAD, ESCOGE TREKFORM!</span>
-        <h2>Formación para avanzar con seguridad.</h2>
+        <h2>
+          Formación para avanzar <span>con seguridad.</span>
+        </h2>
         <Link to="/cursos-trekform" className="primary">
-          Descubre nuestros cursos
+          Descubre nuestros cursos <ArrowRight size={18} />
         </Link>
       </section>
     </>
   )
 }
-

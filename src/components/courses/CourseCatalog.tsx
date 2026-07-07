@@ -1,10 +1,14 @@
 import { useMemo, useState } from 'react'
 import { Search } from 'lucide-react'
 import { useCourses } from '../../hooks/useCourses'
+import type { Course } from '../../types/course'
 import { HomeCourseCard } from './HomeCourseCard'
 
-export function CourseCatalog() {
-  const { courses, loading, error } = useCourses(true)
+export function CourseCatalog({ staticCourses }: { staticCourses?: Course[] }) {
+  const { courses: remoteCourses, loading, error } = useCourses(true, !staticCourses)
+  const courses = staticCourses ?? remoteCourses
+  const showLoading = !staticCourses && loading
+  const showError = !staticCourses && error
   const [category, setCategory] = useState('Todos')
   const [query, setQuery] = useState('')
   const courseCategories = useMemo(
@@ -46,13 +50,13 @@ export function CourseCatalog() {
           />
         </label>
       </div>
-      {loading ? (
+      {showLoading ? (
         <p className="empty" role="status">
           Cargando cursos...
         </p>
-      ) : error ? (
+      ) : showError ? (
         <p className="empty" role="alert">
-          {error}
+          {showError}
         </p>
       ) : (
         <div className="course-grid">

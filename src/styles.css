@@ -1,22 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,800&family=Inter+Tight:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800;900&display=swap');
 
 :root {
   font-family: 'Inter Tight', sans-serif;
   color: #162033;
   background:
-    radial-gradient(circle at top left, rgba(208, 255, 201, 0.34), transparent 26%),
-    radial-gradient(circle at top right, rgba(255, 135, 92, 0.18), transparent 24%),
-    #f4efe7;
+    radial-gradient(circle at top left, rgba(235, 118, 21, 0.34), transparent 26%),
+    radial-gradient(circle at top right, rgba(255, 135, 92, 0.18), transparent 24%), #f4efe7;
   font-synthesis: none;
   --navy: #0b1220;
-  --lime: #d7ff7c;
+  --lime: #eb7615;
   --cream: #f4efe7;
-  --orange: #ff7a59;
-  --accent: #18a999;
+  --orange: #eb7615;
+  --accent: #eb7615;
   --surface: rgba(255, 252, 247, 0.88);
   --surface-strong: #fffaf2;
   --border: rgba(15, 23, 42, 0.1);
-  --shadow: 0 24px 70px rgba(11, 18, 32, 0.12);
+  --shadow: 0 26px 60px rgba(255, 122, 89, 0.16), 0 10px 26px rgba(11, 18, 32, 0.12);
 }
 * {
   box-sizing: border-box;
@@ -29,9 +28,15 @@ body {
   min-width: 320px;
   color: var(--navy);
   background:
-    radial-gradient(circle at top left, rgba(215, 255, 124, 0.18), transparent 28%),
-    radial-gradient(circle at 90% 0%, rgba(24, 169, 153, 0.08), transparent 24%),
+    radial-gradient(circle at top left, rgba(235, 118, 21, 0.18), transparent 28%),
+    radial-gradient(circle at 90% 0%, rgba(235, 118, 21, 0.08), transparent 24%),
+    radial-gradient(rgba(11, 18, 32, 0.05) 1px, transparent 1px),
     linear-gradient(180deg, #faf6ef 0%, #f4efe7 100%);
+  background-size:
+    auto,
+    auto,
+    24px 24px,
+    auto;
   background-attachment: fixed;
   font-family: inherit;
   line-height: 1.5;
@@ -55,6 +60,20 @@ a {
     transform 0.22s ease,
     background-color 0.22s ease,
     border-color 0.22s ease;
+}
+.cityline {
+  min-height: 34px;
+  padding: 8px 5vw;
+  background: #0b1220;
+  color: rgba(255, 255, 255, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
 }
 .topline {
   height: 38px;
@@ -93,7 +112,9 @@ a {
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset;
 }
 .logo {
-  font: 800 29px 'Fraunces', serif;
+  font:
+    800 29px 'Inter Tight',
+    sans-serif;
   letter-spacing: -1.2px;
   display: flex;
   align-items: center;
@@ -111,7 +132,9 @@ a {
   font-size: 22px;
 }
 .logo small {
-  font: 700 8px 'Inter Tight', sans-serif;
+  font:
+    700 8px 'Inter Tight',
+    sans-serif;
   letter-spacing: 2px;
   text-transform: uppercase;
   position: absolute;
@@ -171,7 +194,7 @@ a {
 .primary:hover,
 .mobile-cta:hover {
   background: linear-gradient(135deg, #1a2440, #111827);
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.02);
 }
 .menu,
 .mobile-cta {
@@ -209,7 +232,7 @@ a {
 h1,
 h2,
 h3 {
-  font-family: 'Fraunces', serif;
+  font-family: 'Inter Tight', sans-serif;
   margin: 0;
   letter-spacing: -0.04em;
 }
@@ -237,12 +260,13 @@ h2 em {
   gap: 30px;
 }
 .primary {
-  background: linear-gradient(135deg, #d7ff7c, #b7f070);
+  background: linear-gradient(135deg, #eb7615, #eb7615);
   color: #0b1220;
   padding: 17px 24px;
 }
 .primary:hover {
-  background: linear-gradient(135deg, #efff9d, #c8f95c);
+  background: linear-gradient(135deg, #eb7615, #eb7615);
+  transform: translateY(-2px) scale(1.02);
 }
 .text-link {
   font-size: 13px;
@@ -394,10 +418,23 @@ h2 em {
   align-items: end;
 }
 .course-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: 110px 5vw;
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1)),
-    #faf8f3;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.1)), #faf8f3;
+}
+.course-section::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: -140px;
+  right: -120px;
+  width: 460px;
+  height: 460px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(235, 118, 21, 0.4), transparent 70%);
+  filter: blur(10px);
 }
 .section-heading {
   display: flex;
@@ -466,14 +503,16 @@ h2 em {
 .course-card {
   background: rgba(255, 255, 255, 0.88);
   border: 1px solid var(--border);
-  border-radius: 24px;
+  border-radius: 30px;
   overflow: hidden;
   box-shadow: 0 12px 34px rgba(11, 18, 32, 0.06);
   transition: 0.3s;
 }
 .course-card:hover {
   transform: translateY(-7px);
-  box-shadow: 0 30px 70px rgba(11, 18, 32, 0.12);
+  box-shadow:
+    0 34px 70px rgba(255, 122, 89, 0.16),
+    0 12px 30px rgba(11, 18, 32, 0.1);
 }
 .course-image {
   height: 245px;
@@ -492,7 +531,7 @@ h2 em {
   position: absolute;
   top: 0;
   right: 0;
-  background: linear-gradient(135deg, #ff7a59, #ffb87a);
+  background: linear-gradient(135deg, #eb7615, #ffaa17);
   padding: 12px 15px;
   font-weight: 800;
   z-index: 1;
@@ -621,7 +660,7 @@ h2 em {
   display: grid;
   grid-template-columns: 1.3fr 1fr;
   align-items: end;
-  background: linear-gradient(135deg, #d7ff7c, #bff3d1 55%, #f6e8bc);
+  background: linear-gradient(135deg, #eb7615, #eb7615 55%, #f6e8bc);
 }
 .companies > div:last-child {
   max-width: 500px;
@@ -630,14 +669,14 @@ h2 em {
   line-height: 1.6;
 }
 .companies a {
-  border-color: #94ad2e;
+  border-color: #eb7615;
   margin-top: 35px;
   max-width: 230px;
 }
 .contact {
   text-align: center;
   padding: 105px 20px;
-  background: linear-gradient(135deg, #ff7a59, #ffb86b);
+  background: linear-gradient(135deg, #eb7615, #ffaa17);
   color: var(--navy);
 }
 .contact > span {
@@ -691,6 +730,11 @@ footer > p {
   font-size: 11px;
 }
 @media (max-width: 900px) {
+  .cityline {
+    justify-content: flex-start;
+    overflow: auto;
+    flex-wrap: nowrap;
+  }
   .topline > div {
     display: none;
   }

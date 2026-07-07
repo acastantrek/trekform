@@ -15,7 +15,7 @@ export function NewsSection() {
         </Link>
       </div>
       <div className="news-grid">
-        {news.slice(0, 3).map((item) => (
+        {news.slice(0, 4).map((item) => (
           <article key={item.slug}>
             <img src={item.image} alt="" />
             <span>

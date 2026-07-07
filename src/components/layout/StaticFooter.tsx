@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom'
 import { TrekformLogo } from '../common/TrekformLogo'
 
 const cities = [
-  'Barcelona',
-  'Madrid',
-  'Sevilla',
-  'Valencia',
-  'Zaragoza',
-  'Bilbao',
-  'Vigo',
-  'Gran Canaria',
+  'BARCELONA - 93 264 05 32',
+  'MADRID - 91 737 61 66',
+  'SEVILLA - 95 544 15 23',
+  'VALENCIA - 96 066 15 25',
+  'ZARAGOZA - 87 666 00 75',
+  'BILBAO - 94 477 06 15',
+  'VIGO - 88 606 00 78',
+  'G.CANARIA - 82 815 00 08',
 ]
 const links = [
   { label: 'Quiénes somos', to: '/quienes-somos' },
@@ -26,9 +26,7 @@ export function StaticFooter() {
       <div className="footer-main">
         <div className="footer-brand">
           <TrekformLogo light />
-          <p>
-            Formación práctica en maquinaria industrial y prevención para particulares y empresas.
-          </p>
+          <p>No dudes en contactar con nuestro equipo para ampliar información.</p>
           <span>
             <Mail size={16} /> comercial@trekform.com
           </span>
@@ -59,7 +57,7 @@ export function StaticFooter() {
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© 2026 Trekform</span>
+        <span>© Copyright 2025 by Trekform.com</span>
         <span>Aviso legal · Política de privacidad · Política de cookies</span>
       </div>
     </footer>

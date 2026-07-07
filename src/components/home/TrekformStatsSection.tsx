@@ -2,23 +2,33 @@
 import { Link } from 'react-router-dom'
 
 const stats = [
-  { value: '20+', label: 'Años de experiencia' },
-  { value: '200K+', label: 'Alumnos formados' },
-  { value: '4.000+', label: 'Empresas' },
-  { value: '18.000+', label: 'Cursos impartidos' },
+  { value: '+20', label: 'Años de experiencia' },
+  { value: '+200.000', label: 'Alumnos formados' },
+  { value: '+4.000', label: 'Empresas' },
+  { value: '+18.000', label: 'Cursos impartidos' },
 ]
+
+const statsBg =
+  'https://trekform.com/trekform/uploads/assets/images/Sobre_nosotros/carretilla-trekform-2.jpg'
 
 export function TrekformStatsSection() {
   return (
-    <section className="stats-section">
+    <section
+      className="stats-section"
+      style={{
+        backgroundImage: `linear-gradient(135deg, rgba(11,18,32,.94), rgba(15,26,45,.88) 55%, rgba(11,18,32,.94)), url(${statsBg})`,
+      }}
+    >
       <div className="stats-heading">
         <div>
           <span className="kicker light">NUESTROS LOGROS</span>
-          <h2>Trekform en números</h2>
+          <h2>
+            Trekform <span>en números</span>
+          </h2>
         </div>
         <p>La calidad en las formaciones es nuestra diferencia.</p>
         <Link to="/contacto">
-          Dossier corporativo <ArrowRight size={18} />
+          DOSSIER CORPORATIVO <ArrowRight size={18} />
         </Link>
       </div>
       <div className="stats-grid">

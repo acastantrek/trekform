@@ -1,219 +1,269 @@
-﻿.registration-page {
-  background: #faf7f0;
-  color: #0b1220;
+.registration-page {
+  background: #fff;
+  color: #181818;
 }
 .registration-hero {
   min-height: 560px;
-  padding: clamp(90px, 10vw, 145px) max(7vw, 24px);
-  display: flex;
-  align-items: center;
-  color: #fff;
-  background:
-    linear-gradient(90deg, #0b1220f5 0%, #0b1220d9 48%, #0b122040 100%),
-    url('https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?auto=format&fit=crop&w=1900&q=85')
-      center/cover;
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+  align-items: stretch;
+  overflow: hidden;
+  background: #fff;
+  border-bottom: 1px solid #ececea;
 }
-.registration-hero > div {
-  max-width: 800px;
+.registration-hero-copy {
+  max-width: 760px;
+  padding: 78px 0 70px max(6vw, 38px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .registration-kicker,
 .registration-section-heading > span,
 .registration-list-intro > div > span {
-  color: #d7ff7c;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1.8px;
+  color: #eb7615;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 .registration-hero h1 {
-  max-width: 760px;
-  margin: 18px 0 24px;
-  font-size: clamp(52px, 7vw, 92px);
-  line-height: 0.98;
-  letter-spacing: -3px;
+  margin: 14px 0 20px;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: clamp(44px, 5.2vw, 74px);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.045em;
+  color: #181818;
 }
 .registration-hero p {
   max-width: 640px;
-  margin: 0 0 32px;
-  color: #dbe0e7;
+  margin: 0;
+  color: #555;
   font-size: 18px;
-  line-height: 1.7;
+  line-height: 1.55;
 }
-.registration-calendar {
-  width: fit-content;
+.registration-hero-actions {
   display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 30px;
+}
+.registration-hero-actions a,
+.load-sessions,
+.registration-help a {
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 6px;
+  display: inline-flex;
   align-items: center;
-  gap: 11px;
-  padding: 16px 20px;
-  background: #d7ff7c;
-  color: #0b1220;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  justify-content: center;
+  gap: 12px;
+  font-weight: 900;
+  font-size: 14px;
 }
-.registration-process,
-.registration-list {
-  padding: clamp(75px, 8vw, 120px) max(6vw, 24px);
+.registration-hero-actions a:first-child,
+.load-sessions {
+  background: #eb7615;
+  color: #fff;
+  border: 0;
 }
-.registration-section-heading {
-  max-width: 740px;
-  margin-bottom: 45px;
+.registration-hero-actions a:last-child {
+  border: 1px solid #eb7615;
+  color: #eb7615;
+  background: #fff;
+}
+.registration-hero-media {
+  min-height: 560px;
+  clip-path: polygon(16% 0, 100% 0, 100% 100%, 2% 100%);
+}
+.registration-hero-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.registration-process {
+  padding: 74px max(6vw, 32px) 42px;
+  background: #fff;
+}
+.registration-section-heading,
+.registration-list-intro {
+  max-width: 1430px;
+  margin: 0 auto 30px;
 }
 .registration-section-heading h2,
-.registration-list-intro h2 {
+.registration-list-intro h2,
+.registration-help h2 {
   margin: 12px 0 0;
-  font-size: clamp(36px, 4vw, 58px);
-  line-height: 1.08;
-  letter-spacing: -1.8px;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: clamp(34px, 4vw, 58px);
+  font-weight: 900;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: #181818;
 }
 .registration-steps {
+  max-width: 1430px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border: 1px solid #d9dbd8;
-  background: #fff;
+  gap: 22px;
 }
 .registration-steps article {
   position: relative;
-  min-height: 235px;
-  padding: 34px 28px;
-  border-right: 1px solid #e1e2df;
-}
-.registration-steps article:last-child {
-  border-right: 0;
+  min-height: 210px;
+  padding: 30px;
+  background: #fff;
+  border: 1px solid #e4e7e2;
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(24, 24, 24, 0.06);
 }
 .registration-steps svg {
-  color: #ff7a59;
+  color: #eb7615;
 }
 .registration-steps .step-number {
   position: absolute;
-  top: 22px;
+  top: 20px;
   right: 24px;
-  color: #e6e5e1;
+  color: #ececea;
   font:
-    800 43px/1 'Fraunces',
+    900 42px/1 'Inter Tight',
     sans-serif;
 }
 .registration-steps h3 {
-  margin: 40px 0 10px;
-  font-size: 19px;
+  margin: 38px 0 10px;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 20px;
+  letter-spacing: -0.015em;
 }
 .registration-steps p {
   margin: 0;
-  color: #6b7780;
-  font-size: 13px;
-  line-height: 1.6;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.55;
 }
 .registration-list {
-  background: #0b1220;
-  color: #fff;
+  padding: 64px max(6vw, 32px) 80px;
+  background: #f5f5f4;
 }
 .registration-list-intro {
   display: grid;
-  grid-template-columns: 1.3fr 0.7fr;
-  gap: 60px;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 42px;
   align-items: end;
-  margin-bottom: 40px;
 }
 .registration-list-intro p {
   margin: 0;
-  color: #aeb7c2;
-  font-size: 14px;
-  line-height: 1.75;
+  color: #555;
+  line-height: 1.65;
 }
 .registration-filters {
+  max-width: 1430px;
+  margin: 0 auto 16px;
   display: grid;
-  grid-template-columns: 1fr repeat(3, 1.2fr);
-  gap: 1px;
-  background: #3a4657;
-  border: 1px solid #3a4657;
+  grid-template-columns: 1fr repeat(3, 1.1fr) auto;
+  gap: 14px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #181818, #2a2a2a);
+  border-radius: 8px;
+  color: #fff;
+  box-shadow: 0 18px 44px rgba(24, 24, 24, 0.14);
 }
 .filter-title {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 20px 22px;
-  background: #ff7a59;
-  font-size: 13px;
-  font-weight: 800;
+  color: #fff;
+  font-weight: 900;
+}
+.filter-title svg {
+  color: #eb7615;
 }
 .registration-filters label {
-  padding: 13px 18px;
-  background: #1b293e;
+  display: grid;
+  gap: 7px;
 }
 .registration-filters label > span {
-  display: block;
-  margin-bottom: 5px;
-  color: #8f9aa8;
-  font-size: 9px;
-  font-weight: 800;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 10px;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.08em;
 }
 .registration-filters label > div {
   position: relative;
 }
 .registration-filters select {
   width: 100%;
+  height: 42px;
   appearance: none;
-  border: 0;
-  outline: 0;
-  background: transparent;
-  color: #fff;
-  padding: 2px 30px 2px 0;
+  border: 1px solid #d7d7d4;
+  border-radius: 4px;
+  background: #fff;
+  color: #242424;
+  padding: 0 38px 0 12px;
+  outline: none;
   font:
-    700 13px 'Fraunces',
+    800 13px 'Inter Tight',
     sans-serif;
 }
 .registration-filters option {
-  color: #0b1220;
+  background: #fff;
+  color: #242424;
 }
 .registration-filters label svg {
   position: absolute;
-  right: 0;
+  right: 12px;
   top: 50%;
   width: 16px;
-  color: #d7ff7c;
+  color: #555;
   transform: translateY(-50%);
   pointer-events: none;
 }
+.registration-clear {
+  align-self: end;
+  height: 42px;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-weight: 900;
+}
 .registration-results-bar {
-  min-height: 78px;
+  max-width: 1430px;
+  margin: 0 auto 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 .registration-results-bar p {
   margin: 0;
-  color: #aab3be;
-  font-size: 13px;
+  color: #555;
 }
 .registration-results-bar strong {
   margin-right: 5px;
-  color: #fff;
-  font-size: 22px;
-}
-.registration-results-bar button {
-  border: 0;
-  border-bottom: 1px solid #ff7a59;
-  background: transparent;
-  color: #d7ff7c;
-  padding: 5px 0;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
+  color: #181818;
+  font-size: 24px;
 }
 .session-grid {
+  max-width: 1430px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
 }
 .session-card {
   min-width: 0;
   display: grid;
-  grid-template-columns: 90px 1fr 125px;
+  grid-template-columns: 92px 1fr 142px;
   align-items: stretch;
+  overflow: hidden;
   background: #fff;
-  color: #0b1220;
+  color: #181818;
+  border: 1px solid #e4e7e2;
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgba(24, 24, 24, 0.06);
 }
 .session-date {
   display: flex;
@@ -221,21 +271,22 @@
   align-items: center;
   justify-content: center;
   border-right: 1px solid #e5e6e3;
-  background: #f2f1ed;
+  background: #fff7ef;
 }
 .session-date svg {
   margin-bottom: 8px;
-  color: #ff7a59;
+  color: #eb7615;
 }
 .session-date strong {
-  font-size: 25px;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 28px;
   line-height: 1;
 }
 .session-date span {
   margin-top: 4px;
-  color: #6b747b;
+  color: #666;
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 900;
 }
 .session-content {
   min-width: 0;
@@ -245,34 +296,30 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #557069;
-  font-size: 9px;
-  font-weight: 800;
+  color: #eb7615;
+  font-size: 10px;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
+  letter-spacing: 0.05em;
 }
 .session-status i {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: #2aa56f;
+  background: currentColor;
 }
 .session-status.last {
-  color: #b66c15;
-}
-.session-status.last i {
-  background: #eb8c1f;
+  color: #eb7615;
 }
 .session-status.full {
   color: #92999e;
 }
-.session-status.full i {
-  background: #a2a7aa;
-}
 .session-content h3 {
   margin: 10px 0 7px;
   overflow: hidden;
-  font-size: 19px;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: 21px;
+  letter-spacing: -0.015em;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -281,16 +328,16 @@
   align-items: center;
   gap: 6px;
   margin: 0;
-  color: #68757e;
-  font-size: 12px;
+  color: #666;
+  font-size: 13px;
 }
 .session-meta {
   display: flex;
   gap: 15px;
   margin-top: 16px;
-  color: #808b91;
-  font-size: 10px;
-  font-weight: 700;
+  color: #777;
+  font-size: 11px;
+  font-weight: 900;
   text-transform: uppercase;
 }
 .session-action {
@@ -299,16 +346,11 @@
   justify-content: center;
   gap: 7px;
   border: 0;
-  background: #d7ff7c;
-  color: #0b1220;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
-  transition: background 0.2s;
-}
-.session-action:hover {
-  background: #ff7a59;
+  background: #eb7615;
   color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 .session-action.is-full {
   background: #e1e2df;
@@ -316,77 +358,74 @@
   cursor: not-allowed;
 }
 .load-sessions {
-  margin: 38px auto 0;
-  display: flex;
-  align-items: center;
-  gap: 9px;
-  border: 1px solid #667181;
-  background: transparent;
-  color: #fff;
-  padding: 15px 21px;
-  font-size: 11px;
-  font-weight: 800;
-  text-transform: uppercase;
+  margin: 34px auto 0;
+  cursor: pointer;
 }
 .registration-empty {
+  max-width: 1430px;
+  margin: 0 auto;
   padding: 60px 20px;
   text-align: center;
-  border: 1px solid #3a4657;
+  border: 1px solid #e4e7e2;
+  background: #fff;
+  border-radius: 8px;
 }
 .registration-empty svg {
-  color: #d7ff7c;
+  color: #eb7615;
 }
 .registration-empty h3 {
   margin: 15px 0 7px;
 }
 .registration-empty p {
   margin: 0;
-  color: #9da7b2;
+  color: #666;
 }
 .registration-help {
-  padding: clamp(65px, 7vw, 100px) max(7vw, 24px);
+  padding: 74px max(6vw, 32px);
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 70px;
+  gap: 60px;
   align-items: end;
-  background: #ff7a59;
+  background: #181818;
+  color: #fff;
+}
+.registration-help h2 {
   color: #fff;
 }
 .registration-help > div:first-child > span {
   margin-left: 10px;
+  color: #eb7615;
   font-size: 12px;
-  font-weight: 800;
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.registration-help h2 {
-  margin: 18px 0 0;
-  font-size: clamp(42px, 5vw, 68px);
-  line-height: 1;
+  letter-spacing: 0.04em;
 }
 .registration-help p {
   max-width: 570px;
   margin: 0 0 23px;
-  color: #fff0e2;
+  color: rgba(255, 255, 255, 0.72);
   line-height: 1.7;
 }
 .registration-help a {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
+  background: #eb7615;
   color: #fff;
-  font-size: 23px;
-  font-weight: 800;
 }
-@media (max-width: 1100px) {
-  .registration-steps {
-    grid-template-columns: repeat(2, 1fr);
+@media (max-width: 1120px) {
+  .registration-hero,
+  .registration-list-intro,
+  .registration-help {
+    grid-template-columns: 1fr;
   }
-  .registration-steps article:nth-child(2) {
-    border-right: 0;
+  .registration-hero-copy {
+    padding: 64px 5vw 36px;
   }
-  .registration-steps article:nth-child(-n + 2) {
-    border-bottom: 1px solid #e1e2df;
+  .registration-hero-media {
+    min-height: 380px;
+    clip-path: none;
+  }
+  .registration-steps,
+  .session-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .registration-filters {
     grid-template-columns: 1fr 1fr;
@@ -394,69 +433,44 @@
   .filter-title {
     grid-column: 1 / -1;
   }
-  .session-grid {
-    grid-template-columns: 1fr;
-  }
 }
-@media (max-width: 700px) {
-  .registration-hero {
-    min-height: 500px;
-    padding: 85px 22px;
-  }
+@media (max-width: 720px) {
   .registration-hero h1 {
-    font-size: 50px;
-    letter-spacing: -2px;
+    font-size: 40px;
+  }
+  .registration-hero-actions a {
+    width: 100%;
   }
   .registration-process,
-  .registration-list {
-    padding: 70px 22px;
+  .registration-list,
+  .registration-help {
+    padding: 62px 22px;
   }
-  .registration-steps {
-    grid-template-columns: 1fr;
-  }
-  .registration-steps article {
-    min-height: 210px;
-    border-right: 0;
-    border-bottom: 1px solid #e1e2df;
-  }
-  .registration-steps article:last-child {
-    border-bottom: 0;
-  }
-  .registration-list-intro {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-  .registration-filters {
+  .registration-steps,
+  .registration-filters,
+  .session-grid {
     grid-template-columns: 1fr;
   }
   .filter-title {
     grid-column: auto;
   }
   .session-card {
-    grid-template-columns: 72px 1fr;
+    grid-template-columns: 78px 1fr;
   }
   .session-action {
     grid-column: 1 / -1;
     min-height: 50px;
   }
-  .registration-help {
-    grid-template-columns: 1fr;
-    gap: 25px;
-  }
 }
 @media (max-width: 420px) {
-  .registration-hero h1 {
-    font-size: 43px;
-  }
   .session-content {
     padding: 21px 16px;
   }
   .session-content h3 {
-    font-size: 17px;
+    font-size: 18px;
   }
   .session-meta {
     flex-direction: column;
     gap: 4px;
   }
 }
-

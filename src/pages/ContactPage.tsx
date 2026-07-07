@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+﻿import { useState, type FormEvent } from 'react'
 import {
   ArrowRight,
   Building2,
@@ -65,24 +65,34 @@ export function ContactPage() {
       <section className="contact-v2-hero">
         <div className="contact-v2-hero-copy">
           <span>HABLEMOS</span>
-          <h1>Tu próxima formación empieza con una conversación.</h1>
+          <h1>
+            Contacta con el equipo <span>Trekform</span>
+          </h1>
           <p>
-            Cuéntanos qué necesitas y nuestro equipo te ayudará a encontrar el curso, la fecha y la
-            modalidad adecuada.
+            Cuéntanos qué formación necesitas y te ayudaremos a encontrar el curso, la fecha y la
+            modalidad adecuada para ti o para tu empresa.
           </p>
+          <div className="contact-v2-hero-actions">
+            <a href="tel:+34932640532">
+              Llamar ahora <Phone size={18} />
+            </a>
+            <a href="mailto:comercial@trekform.com">Enviar email</a>
+          </div>
         </div>
         <div className="contact-v2-hero-image" aria-hidden="true">
-          <div>
-            <strong>20+</strong>
-            <span>años formando profesionales</span>
-          </div>
+          <img
+            src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1300&q=88"
+            alt=""
+          />
         </div>
       </section>
 
       <section className="contact-v2-main" aria-labelledby="contact-form-title">
         <div className="contact-v2-info">
           <span className="contact-v2-kicker">CONTACTO DIRECTO</span>
-          <h2>Estamos para ayudarte.</h2>
+          <h2>
+            Estamos <span>para ayudarte.</span>
+          </h2>
           <p>
             Atendemos consultas de particulares, empresas y entidades en todo el territorio
             nacional.
@@ -90,13 +100,23 @@ export function ContactPage() {
 
           <div className="contact-v2-channels">
             <a href="tel:+34932640532">
-              <i><Phone size={21} /></i>
-              <span><small>LLÁMANOS</small><strong>93 264 05 32</strong></span>
+              <i>
+                <Phone size={21} />
+              </i>
+              <span>
+                <small>LLÁMANOS</small>
+                <strong>93 264 05 32</strong>
+              </span>
               <ArrowRight size={18} />
             </a>
             <a href="mailto:comercial@trekform.com">
-              <i><Mail size={21} /></i>
-              <span><small>ESCRÍBENOS</small><strong>comercial@trekform.com</strong></span>
+              <i>
+                <Mail size={21} />
+              </i>
+              <span>
+                <small>ESCRÍBENOS</small>
+                <strong>comercial@trekform.com</strong>
+              </span>
               <ArrowRight size={18} />
             </a>
           </div>
@@ -105,8 +125,8 @@ export function ContactPage() {
             <Clock3 size={20} />
             <div>
               <strong>Horario de atención</strong>
-              <span>Lunes a jueves, 09:00–18:00</span>
-              <span>Viernes, 09:00–15:00</span>
+              <span>Lunes a jueves, 09:00-18:00</span>
+              <span>Viernes, 09:00-15:00</span>
             </div>
           </div>
         </div>
@@ -116,7 +136,9 @@ export function ContactPage() {
             <div className="contact-v2-success" role="status">
               <CheckCircle2 size={48} />
               <span>CONSULTA ENVIADA</span>
-              <h2>Gracias por contactar.</h2>
+              <h2>
+                Gracias <span>por contactar.</span>
+              </h2>
               <p>Hemos recibido tu mensaje. Nuestro equipo responderá lo antes posible.</p>
               <button type="button" onClick={() => setSubmitState('idle')}>
                 Enviar otra consulta
@@ -128,7 +150,9 @@ export function ContactPage() {
                 <MessageSquareText size={24} />
                 <div>
                   <span>FORMULARIO DE CONTACTO</span>
-                  <h2 id="contact-form-title">¿En qué podemos ayudarte?</h2>
+                  <h2 id="contact-form-title">
+                    ¿En qué podemos <span>ayudarte?</span>
+                  </h2>
                 </div>
               </div>
 
@@ -139,7 +163,13 @@ export function ContactPage() {
                 </label>
                 <label>
                   <span>Email *</span>
-                  <input name="email" type="email" autoComplete="email" placeholder="tu@email.com" required />
+                  <input
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="tu@email.com"
+                    required
+                  />
                 </label>
                 <label>
                   <span>Teléfono</span>
@@ -147,21 +177,35 @@ export function ContactPage() {
                 </label>
                 <label>
                   <span>Empresa</span>
-                  <input name="company" autoComplete="organization" placeholder="Nombre de empresa" />
+                  <input
+                    name="company"
+                    autoComplete="organization"
+                    placeholder="Nombre de empresa"
+                  />
                 </label>
                 <label className="contact-v2-subject">
                   <span>Motivo de la consulta *</span>
                   <select name="subject" defaultValue="" required>
-                    <option value="" disabled>Selecciona una opción</option>
+                    <option value="" disabled>
+                      Selecciona una opción
+                    </option>
                     <option value="Información sobre un curso">Información sobre un curso</option>
                     <option value="Formación para empresas">Formación para empresas</option>
-                    <option value="Convocatorias e inscripciones">Convocatorias e inscripciones</option>
+                    <option value="Convocatorias e inscripciones">
+                      Convocatorias e inscripciones
+                    </option>
                     <option value="Otra consulta">Otra consulta</option>
                   </select>
                 </label>
                 <label className="contact-v2-message">
                   <span>Mensaje *</span>
-                  <textarea name="message" rows={5} placeholder="Cuéntanos qué formación buscas…" minLength={10} required />
+                  <textarea
+                    name="message"
+                    rows={5}
+                    placeholder="Cuéntanos qué formación buscas..."
+                    minLength={10}
+                    required
+                  />
                 </label>
                 <label className="contact-v2-honeypot" aria-hidden="true">
                   <span>Website</span>
@@ -176,10 +220,18 @@ export function ContactPage() {
                 </label>
               </div>
 
-              {submitState === 'error' && <p className="contact-v2-error" role="alert">{error}</p>}
+              {submitState === 'error' && (
+                <p className="contact-v2-error" role="alert">
+                  {error}
+                </p>
+              )}
 
-              <button className="contact-v2-submit" type="submit" disabled={submitState === 'sending'}>
-                {submitState === 'sending' ? 'Enviando…' : 'Enviar consulta'}
+              <button
+                className="contact-v2-submit"
+                type="submit"
+                disabled={submitState === 'sending'}
+              >
+                {submitState === 'sending' ? 'Enviando...' : 'Enviar consulta'}
                 <ArrowRight size={18} />
               </button>
             </form>
@@ -190,7 +242,9 @@ export function ContactPage() {
       <section className="contact-v2-offices" aria-labelledby="offices-title">
         <div>
           <span className="contact-v2-kicker">COBERTURA NACIONAL</span>
-          <h2 id="offices-title">Más cerca de ti.</h2>
+          <h2 id="offices-title">
+            Más cerca <span>de ti.</span>
+          </h2>
         </div>
         <p>Contacta con el equipo de tu zona o consulta otras poblaciones disponibles.</p>
         <div className="contact-v2-office-grid">
@@ -209,7 +263,9 @@ export function ContactPage() {
         <Building2 size={35} />
         <div>
           <span>FORMACIÓN PARA EMPRESAS</span>
-          <h2>Diseñamos un plan adaptado a tu equipo.</h2>
+          <h2>
+            Diseñamos un plan <span>adaptado a tu equipo.</span>
+          </h2>
         </div>
         <Link to="/cursos-trekform">
           Explorar cursos <ArrowRight size={18} />

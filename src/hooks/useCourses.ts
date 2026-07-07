@@ -2,13 +2,19 @@ import { useEffect, useState } from 'react'
 import { getCourses } from '../services/courses'
 import type { Course } from '../types/course'
 
-export function useCourses(featured = false) {
+export function useCourses(featured = false, enabled = true) {
   const [courses, setCourses] = useState<Course[]>([])
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(enabled)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let active = true
+
+    if (!enabled) {
+      return () => {
+        active = false
+      }
+    }
 
     getCourses({ featured })
       .then((data) => {
@@ -25,7 +31,11 @@ export function useCourses(featured = false) {
     return () => {
       active = false
     }
-  }, [featured])
+  }, [enabled, featured])
+
+  if (!enabled) {
+    return { courses: [], loading: false, error: null }
+  }
 
   return { courses, loading, error }
 }

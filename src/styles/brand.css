@@ -1,7 +1,7 @@
-:root {
+﻿:root {
   --navy: #0b1220;
-  --lime: #d7ff7c;
-  --orange: #ff7a59;
+  --lime: #eb7615;
+  --orange: #eb7615;
   --cream: #f4efe7;
 }
 .topline {
@@ -34,7 +34,7 @@
 }
 .nav-cta,
 .mobile-cta {
-  background: linear-gradient(135deg, #ff7a59, #ffb86b) !important;
+  background: linear-gradient(135deg, #eb7615, #ffaa17) !important;
   color: #fff !important;
   border-radius: 999px;
 }
@@ -45,49 +45,49 @@
   color: #fff;
 }
 .primary {
-  background: linear-gradient(135deg, #d7ff7c, #bff3d1);
+  background: linear-gradient(135deg, #eb7615, #eb7615);
   color: #0b1220;
   border-radius: 999px;
 }
 .primary:hover {
-  background: linear-gradient(135deg, #efff9d, #d7ff7c);
+  background: linear-gradient(135deg, #eb7615, #eb7615);
 }
 .slider-content .eyebrow {
-  color: #ffb86b;
+  color: #ffaa17;
 }
 .slider-content .eyebrow i {
-  background: #ff7a59;
+  background: #eb7615;
 }
 .slider-dots button.active {
-  background: #d7ff7c;
+  background: #eb7615;
 }
 .lead-form button {
-  background: linear-gradient(135deg, #d7ff7c, #bff3d1);
+  background: linear-gradient(135deg, #eb7615, #eb7615);
   color: #0b1220;
   border-radius: 999px;
 }
 .course-image > span {
-  background: linear-gradient(135deg, #ff7a59, #ffb86b) !important;
+  background: linear-gradient(135deg, #eb7615, #ffaa17) !important;
   color: #fff;
 }
 .stats-grid strong {
-  color: #d7ff7c;
+  color: #eb7615;
 }
 .about-years {
-  background: linear-gradient(135deg, #d7ff7c, #bff3d1);
+  background: linear-gradient(135deg, #eb7615, #eb7615);
 }
 .about-values svg {
-  color: #ff7a59;
+  color: #eb7615;
 }
 .funded-section {
-  background: linear-gradient(135deg, #d7ff7c, #bff3d1 55%, #f6e8bc);
+  background: linear-gradient(135deg, #eb7615, #eb7615 55%, #f6e8bc);
 }
 .funded-visual > div {
-  background: linear-gradient(135deg, #ff7a59, #ffb86b);
+  background: linear-gradient(135deg, #eb7615, #ffaa17);
   color: #fff;
 }
 .contact {
-  background: linear-gradient(135deg, #ff7a59, #ffb86b);
+  background: linear-gradient(135deg, #eb7615, #ffaa17);
 }
 .footer-main .trekform-logo {
   margin-bottom: 20px;
@@ -96,7 +96,7 @@ footer {
   background: linear-gradient(180deg, #08111d, #0b1220);
 }
 footer h4 {
-  color: #d7ff7c;
+  color: #eb7615;
 }
 @media (max-width: 1100px) {
   .trekform-logo {
