@@ -26,8 +26,7 @@
   font-size: 13px;
   font-weight: 800;
 }
-.stats-heading button,
-.news-section .section-heading > button {
+.stats-heading button {
   border: 0;
   border-bottom: 1px solid rgba(15, 23, 42, 0.22);
   padding: 12px 0;
@@ -38,22 +37,6 @@
   gap: 20px;
   font-size: 13px;
   font-weight: 700;
-}
-.about-actions button.video-link {
-  border: 0;
-  background: transparent;
-}
-.funded-copy > a {
-  display: inline-flex;
-  align-items: center;
-  gap: 25px;
-  background: linear-gradient(135deg, #0f1724, #1f2b44);
-  color: #fff !important;
-  border: 0;
-  padding: 16px 20px;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: 999px;
 }
 .hero-secondary {
   background: transparent;

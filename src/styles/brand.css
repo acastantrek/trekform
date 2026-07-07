@@ -73,19 +73,6 @@
 .stats-grid strong {
   color: #eb7615;
 }
-.about-years {
-  background: linear-gradient(135deg, #eb7615, #eb7615);
-}
-.about-values svg {
-  color: #eb7615;
-}
-.funded-section {
-  background: linear-gradient(135deg, #eb7615, #eb7615 55%, #f6e8bc);
-}
-.funded-visual > div {
-  background: linear-gradient(135deg, #eb7615, #ffaa17);
-  color: #fff;
-}
 .contact {
   background: linear-gradient(135deg, #eb7615, #ffaa17);
 }

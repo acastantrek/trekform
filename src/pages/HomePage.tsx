@@ -1,7 +1,6 @@
 ﻿import { ArrowRight, CheckCircle2, Star } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { CourseCatalog } from '../components/courses/CourseCatalog'
-import { LeadFormSection } from '../components/home/LeadFormSection'
 import { TrekformHeroSection } from '../components/home/TrekformHeroSection'
 import { TrekformStatsSection } from '../components/home/TrekformStatsSection'
 import { homeFeaturedCourses } from '../data/homeFeaturedCourses'
@@ -11,7 +10,6 @@ export function HomePage() {
   return (
     <>
       <TrekformHeroSection />
-      <LeadFormSection />
       <section className="course-section">
         <div className="section-heading">
           <div>
