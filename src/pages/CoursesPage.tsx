@@ -458,7 +458,7 @@ export function CoursesPage() {
                           ))}
                         </div>
                         <div className="catalog-card-actions">
-                          <Link to={`/cursos-trekform/${course.slug}`}>Ver fechas</Link>
+                          <Link to={`/cursos-trekform/${course.slug}`}>Ver detalles</Link>
                           <Link to="/inscripciones">Inscribirme</Link>
                         </div>
                       </div>

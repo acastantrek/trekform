@@ -51,13 +51,16 @@ export function BlogPage() {
   return (
     <div className="blog-page">
       <section className="blog-hero">
-        <div>
+        <div className="blog-hero-copy">
           <h1>
             El Blog <span>de trekform</span>
           </h1>
           <p>
             Inicio <i /> <span>Blog</span>
           </p>
+        </div>
+        <div className="blog-hero-media" aria-hidden="true">
+          <img src="/brand/blog-hero-blogging.svg" alt="" />
         </div>
       </section>
 
