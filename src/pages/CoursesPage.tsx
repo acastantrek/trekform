@@ -35,7 +35,6 @@ const categoryOrder = [
 const cities = ['Todas las ciudades', 'Barcelona', 'Madrid', 'Valencia', 'Sevilla', 'Bilbao']
 const modalities = ['Todas las modalidades', 'Presencial', 'Online', 'Blended', 'In-company']
 const dates = ['Cualquier fecha', 'Junio 2026', 'Julio 2026', 'Agosto 2026']
-const prices = ['Todos los precios', 'Hasta 50 €', '50 € - 120 €', '+120 €']
 const clientTypes = ['Particulares y empresas', 'Particulares', 'Empresas']
 const durations = ['Hasta 4 horas', '4 - 8 horas', '8 - 16 horas', '+16 horas']
 const certifications = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
@@ -66,7 +65,6 @@ function getCourseMeta(course: Course, index: number) {
     ? Number(durationMatch[0])
     : fallbackDurationHours[index % fallbackDurationHours.length]
   const duration = `${durationHours} h`
-  const price = [120, 130, 140, 120, 150, 110, 100, 25][index % 8]
   const city = ['Barcelona', 'Madrid', 'Valencia', 'Sevilla'][index % 4]
   const modality = course.category.toLowerCase().includes('online') ? 'Online' : 'Presencial'
   const certificate =
@@ -83,7 +81,7 @@ function getCourseMeta(course: Course, index: number) {
         ? ['02 Jun', '09 Jun', '16 Jun']
         : ['03 Jun', '10 Jun', '17 Jun']
 
-  return { duration, durationHours, price, city, modality, certificate, bonificable, dates: nextDates }
+  return { duration, durationHours, city, modality, certificate, bonificable, dates: nextDates }
 }
 
 function matchesDurationFilter(filter: string, hours: number) {
@@ -121,7 +119,6 @@ export function CoursesPage() {
   const [city, setCity] = useState(cities[0])
   const [modality, setModality] = useState(modalities[0])
   const [date, setDate] = useState(dates[0])
-  const [price, setPrice] = useState(prices[0])
   const [clientType, setClientType] = useState(clientTypes[0])
   const [durationFilters, setDurationFilters] = useState<string[]>([])
   const [certificationFilters, setCertificationFilters] = useState<string[]>([])
@@ -155,11 +152,6 @@ export function CoursesPage() {
       const matchesCategory = category === 'Todos' || course.categories.includes(category)
       const matchesCity = city === cities[0] || meta.city === city
       const matchesModality = modality === modalities[0] || meta.modality === modality
-      const matchesPrice =
-        price === prices[0] ||
-        (price === prices[1] && meta.price <= 50) ||
-        (price === prices[2] && meta.price > 50 && meta.price <= 120) ||
-        (price === prices[3] && meta.price > 120)
       const matchesDuration =
         durationFilters.length === 0 ||
         durationFilters.some((filter) => matchesDurationFilter(filter, meta.durationHours))
@@ -171,7 +163,6 @@ export function CoursesPage() {
         !matchesCategory ||
         !matchesCity ||
         !matchesModality ||
-        !matchesPrice ||
         !matchesDuration ||
         !matchesCertification
       )
@@ -200,7 +191,6 @@ export function CoursesPage() {
     category,
     city,
     modality,
-    price,
     durationFilters,
     certificationFilters,
     search,
@@ -220,7 +210,6 @@ export function CoursesPage() {
     setCity(cities[0])
     setModality(modalities[0])
     setDate(dates[0])
-    setPrice(prices[0])
     setClientType(clientTypes[0])
     setDurationFilters([])
     setCertificationFilters([])
@@ -305,7 +294,6 @@ export function CoursesPage() {
             onChange={setModality}
           />
           <CatalogSelect label="Fecha / Mes" value={date} options={dates} onChange={setDate} />
-          <CatalogSelect label="Precio" value={price} options={prices} onChange={setPrice} />
           <CatalogSelect
             label="Tipo de cliente"
             value={clientType}
@@ -401,7 +389,6 @@ export function CoursesPage() {
                   Ordenar por:
                   <select defaultValue="Más relevantes">
                     <option>Más relevantes</option>
-                    <option>Precio menor</option>
                     <option>Próximas fechas</option>
                   </select>
                 </label>
@@ -470,7 +457,6 @@ export function CoursesPage() {
                             <span key={item}>{item}</span>
                           ))}
                         </div>
-                        <strong className="course-price">Desde {meta.price} €</strong>
                         <div className="catalog-card-actions">
                           <Link to={`/cursos-trekform/${course.slug}`}>Ver fechas</Link>
                           <Link to="/inscripciones">Inscribirme</Link>
