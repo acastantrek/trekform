@@ -46,18 +46,18 @@ export function TrekformHeroSection() {
 
   return (
     <section className="home-slider">
-      <div className="slider-content">
-        <span className="eyebrow">
+      <div className="slider-content" data-reveal>
+        <span className="eyebrow" data-reveal data-reveal-delay="0.02">
           <i /> FORMACIÓN QUE TE LLEVA MÁS LEJOS
         </span>
-        <h1>
+        <h1 data-reveal data-reveal-delay="0.08">
           Maquinaria industrial <span>y PRL</span>
         </h1>
-        <p>
+        <p data-reveal data-reveal-delay="0.14">
           Formación práctica y certificada para profesionales y empresas, con convocatorias en toda
           España.
         </p>
-        <div className="hero-actions">
+        <div className="hero-actions" data-reveal data-reveal-delay="0.2">
           <a href="#hero-form" className="primary">
             Solicitar información <ArrowRight size={20} />
           </a>
@@ -65,18 +65,36 @@ export function TrekformHeroSection() {
             Ver cursos <UserCheck size={18} />
           </Link>
         </div>
-        <div className="hero-proof-row">
-          <article>
+        <div className="hero-stats-row" aria-label="Cifras destacadas de Trekform" data-reveal data-reveal-delay="0.26">
+          <div data-reveal data-reveal-delay="0.04">
+            <strong>+20</strong>
+            <span>Años de experiencia</span>
+          </div>
+          <div data-reveal data-reveal-delay="0.08">
+            <strong>+200.000</strong>
+            <span>Alumnos formados</span>
+          </div>
+          <div data-reveal data-reveal-delay="0.12">
+            <strong>+4.000</strong>
+            <span>Empresas</span>
+          </div>
+          <div data-reveal data-reveal-delay="0.16">
+            <strong>+18.000</strong>
+            <span>Cursos impartidos</span>
+          </div>
+        </div>
+        <div className="hero-proof-row" data-reveal data-reveal-delay="0.32">
+          <article data-reveal data-reveal-delay="0.06">
             <ShieldCheck />
             <strong>Formación certificada</strong>
             <span>Homologada y válida en toda España</span>
           </article>
-          <article>
+          <article data-reveal data-reveal-delay="0.1">
             <Clock3 />
             <strong>Respuesta rápida</strong>
             <span>Te contactamos con una propuesta clara</span>
           </article>
-          <article>
+          <article data-reveal data-reveal-delay="0.14">
             <UserCheck />
             <strong>Para empresas y particulares</strong>
             <span>Planes abiertos o a medida</span>
@@ -84,7 +102,7 @@ export function TrekformHeroSection() {
         </div>
       </div>
 
-      <div className="home-hero-panel">
+      <div className="home-hero-panel" data-reveal data-reveal-delay="0.18">
         {submitState === 'success' ? (
           <div className="home-hero-form home-hero-success" role="status">
             <CheckCircle2 size={32} />
@@ -193,10 +211,11 @@ export function TrekformHeroSection() {
       </div>
 
       <div className="home-hero-overlay" aria-hidden="true" />
-      <div className="home-hero-badge">
+      {/* <div className="home-hero-badge">
         <CheckCircle2 size={18} />
         <span>Asesoramiento rápido y formación certificada</span>
       </div>
+      */}
     </section>
   )
 }

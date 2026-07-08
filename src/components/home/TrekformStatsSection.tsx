@@ -1,4 +1,5 @@
 ﻿import { ArrowRight } from 'lucide-react'
+import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 
 const stats = [
@@ -15,6 +16,7 @@ export function TrekformStatsSection() {
   return (
     <section
       className="stats-section"
+      data-reveal
       style={{
         backgroundImage: `linear-gradient(135deg, rgba(11,18,32,.94), rgba(15,26,45,.88) 55%, rgba(11,18,32,.94)), url(${statsBg})`,
       }}
@@ -32,8 +34,12 @@ export function TrekformStatsSection() {
         </Link>
       </div>
       <div className="stats-grid">
-        {stats.map((stat) => (
-          <div key={stat.label}>
+        {stats.map((stat, index) => (
+          <div
+            key={stat.label}
+            data-reveal
+            style={{ '--reveal-delay': `${0.05 + index * 0.06}s` } as CSSProperties}
+          >
             <strong>{stat.value}</strong>
             <span>{stat.label}</span>
           </div>

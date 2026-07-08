@@ -230,14 +230,14 @@ export function CoursesPage() {
   return (
     <>
       <section className="courses-page-hero">
-        <div className="courses-hero-content">
-          <h1>
+        <div className="courses-hero-content courses-hero-animate">
+          <h1 className="courses-hero-enter courses-hero-enter--1">
             Cursos abiertos <span>Trekform</span>
           </h1>
-          <p>
+          <p className="courses-hero-enter courses-hero-enter--2">
             Formación práctica, certificada y enfocada a tu seguridad y a tu futuro profesional.
           </p>
-          <div className="courses-hero-actions">
+          <div className="courses-hero-actions courses-hero-enter courses-hero-enter--3">
             <a href="#catalog-results" className="hero-search-link">
               Buscar curso <Search size={18} />
             </a>
@@ -251,21 +251,21 @@ export function CoursesPage() {
             </a>
           </div>
           <div className="courses-hero-metrics">
-            <span>
+            <span className="courses-hero-enter courses-hero-enter--4">
               <Award /> <strong>+20 años</strong> de experiencia
             </span>
-            <span>
+            <span className="courses-hero-enter courses-hero-enter--5">
               <Users /> <strong>+200.000</strong> alumnos formados
             </span>
-            <span>
+            <span className="courses-hero-enter courses-hero-enter--6">
               <MapPin /> <strong>Cobertura</strong> nacional
             </span>
-            <span>
+            <span className="courses-hero-enter courses-hero-enter--7">
               <BriefcaseBusiness /> <strong>Formación abierta</strong> e in-company
             </span>
           </div>
         </div>
-        <div className="courses-hero-claim">
+        <div className="courses-hero-claim courses-hero-enter courses-hero-enter--4">
           <strong>
             Por tu seguridad, escoge <span>Trekform</span>
           </strong>
@@ -488,67 +488,6 @@ export function CoursesPage() {
               </div>
             )}
 
-            <div className="catalog-company-cta">
-              <div />
-              <section>
-                <h2>¿Necesitas formación para tu empresa?</h2>
-                <p>
-                  <Check /> Formación in-company a medida
-                </p>
-                <p>
-                  <Check /> Planes formativos bonificables FUNDAE
-                </p>
-                <p>
-                  <Check /> Nos adaptamos a tus horarios y necesidades
-                </p>
-              </section>
-              <span>
-                <BriefcaseBusiness /> Asesoramiento gratuito sin compromiso
-              </span>
-              <Link to="/contacto">
-                Solicitar formación a medida <ArrowRight size={18} />
-              </Link>
-            </div>
-
-            <div className="catalog-trust-row">
-              <article>
-                <h3>Lo que opinan nuestros alumnos</h3>
-                <div className="rating-stars">
-                  {Array.from({ length: 5 }, (_, index) => (
-                    <Star key={index} fill="currentColor" />
-                  ))}
-                  <strong>4,8/5</strong>
-                </div>
-                <p>Basado en +2.300 valoraciones</p>
-              </article>
-              <article>
-                <p>
-                  “Formación muy práctica y profesores excelentes. Las instalaciones y la maquinaria
-                  en perfecto estado.”
-                </p>
-                <span>— Marta C.</span>
-              </article>
-              <article>
-                <h3>¿Por qué elegir Trekform?</h3>
-                <p>
-                  <Check /> Formación práctica con maquinaria real
-                </p>
-                <p>
-                  <Check /> Instructores expertos en activo
-                </p>
-                <p>
-                  <Check /> Instalaciones propias y homologadas
-                </p>
-              </article>
-              <article>
-                <h3>¿Tienes dudas?</h3>
-                <p>Nuestro equipo te ayuda a elegir el curso que mejor se adapta a ti.</p>
-                <Link to="/contacto">
-                  Contactar ahora <ArrowRight size={14} />
-                </Link>
-              </article>
-            </div>
-
             <div className="catalog-pagination">
               <span>
                 {filteredCourses.length === 0 ? 0 : (page - 1) * pageSize + 1} a{' '}
@@ -574,6 +513,68 @@ export function CoursesPage() {
                 </button>
               </div>
             </div>
+
+            <div className="catalog-company-cta">
+              <div className="courses-lower-enter courses-lower-enter--1" />
+              <section className="courses-lower-enter courses-lower-enter--2">
+                <h2>¿Necesitas formación para tu empresa?</h2>
+                <p>
+                  <Check /> Formación in-company a medida
+                </p>
+                <p>
+                  <Check /> Planes formativos bonificables FUNDAE
+                </p>
+                <p>
+                  <Check /> Nos adaptamos a tus horarios y necesidades
+                </p>
+              </section>
+              <span className="courses-lower-enter courses-lower-enter--3">
+                <BriefcaseBusiness /> Asesoramiento gratuito sin compromiso
+              </span>
+              <Link to="/contacto" className="courses-lower-enter courses-lower-enter--4">
+                Solicitar formación a medida <ArrowRight size={18} />
+              </Link>
+            </div>
+
+            <div className="catalog-trust-row">
+              <article className="courses-lower-enter courses-lower-enter--1">
+                <h3>Lo que opinan nuestros alumnos</h3>
+                <div className="rating-stars">
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <Star key={index} fill="currentColor" />
+                  ))}
+                  <strong>4,8/5</strong>
+                </div>
+                <p>Basado en +2.300 valoraciones</p>
+              </article>
+              <article className="courses-lower-enter courses-lower-enter--2">
+                <p>
+                  “Formación muy práctica y profesores excelentes. Las instalaciones y la maquinaria
+                  en perfecto estado.”
+                </p>
+                <span>— Marta C.</span>
+              </article>
+              <article className="courses-lower-enter courses-lower-enter--3">
+                <h3>¿Por qué elegir Trekform?</h3>
+                <p>
+                  <Check /> Formación práctica con maquinaria real
+                </p>
+                <p>
+                  <Check /> Instructores expertos en activo
+                </p>
+                <p>
+                  <Check /> Instalaciones propias y homologadas
+                </p>
+              </article>
+              <article className="courses-lower-enter courses-lower-enter--4">
+                <h3>¿Tienes dudas?</h3>
+                <p>Nuestro equipo te ayuda a elegir el curso que mejor se adapta a ti.</p>
+                <Link to="/contacto">
+                  Contactar ahora <ArrowRight size={14} />
+                </Link>
+              </article>
+            </div>
+
           </div>
         </div>
       </section>

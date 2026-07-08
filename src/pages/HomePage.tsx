@@ -1,4 +1,5 @@
 ﻿import { ArrowRight, CheckCircle2, Star } from 'lucide-react'
+import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { CourseCatalog } from '../components/courses/CourseCatalog'
 import { TrekformHeroSection } from '../components/home/TrekformHeroSection'
@@ -7,11 +8,37 @@ import { homeFeaturedCourses } from '../data/homeFeaturedCourses'
 import { news } from '../data/news'
 
 export function HomePage() {
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'))
+    if (elements.length === 0) return
+
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (media.matches) {
+      elements.forEach((element) => element.classList.add('is-visible'))
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add('is-visible')
+          observer.unobserve(entry.target)
+        })
+      },
+      { threshold: 0.18, rootMargin: '0px 0px -8% 0px' },
+    )
+
+    elements.forEach((element) => observer.observe(element))
+
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <>
       <TrekformHeroSection />
-      <section className="course-section">
-        <div className="section-heading">
+      <section className="course-section" data-reveal>
+        <div className="section-heading" data-reveal data-reveal-delay="0.05">
           <div>
             <span className="kicker">NUESTROS CURSOS DESTACADOS</span>
             <h2>
@@ -25,8 +52,8 @@ export function HomePage() {
         <CourseCatalog staticCourses={homeFeaturedCourses.slice(0, 7)} />
       </section>
       <TrekformStatsSection />
-      <section className="home-info-grid">
-        <article>
+      <section className="home-info-grid" data-reveal>
+        <article data-reveal data-reveal-delay="0.05">
           <span className="kicker">SOBRE TREKFORM</span>
           <h2>
             Tu partner en formación <span>y seguridad laboral</span>
@@ -53,7 +80,7 @@ export function HomePage() {
             Conócenos más <ArrowRight size={16} />
           </Link>
         </article>
-        <article>
+        <article data-reveal data-reveal-delay="0.12">
           <span className="kicker">LO QUE DICEN NUESTROS ALUMNOS</span>
           <div className="home-stars">
             {Array.from({ length: 5 }, (_, index) => (
@@ -75,11 +102,11 @@ export function HomePage() {
             </div>
           </div>
         </article>
-        <article>
+        <article data-reveal data-reveal-delay="0.19">
           <span className="kicker">ÚLTIMAS NOTICIAS</span>
           <div className="home-news-list">
             {news.slice(0, 3).map((item) => (
-              <Link to={`/blog/${item.slug}`} key={item.slug}>
+              <Link to={`/blog/${item.slug}`} key={item.slug} data-reveal data-reveal-delay="0.1">
                 <img src={item.image} alt="" />
                 <span>{item.title}</span>
                 <small>

@@ -2,9 +2,9 @@
   position: relative;
   min-height: 440px;
   padding: 74px max(5vw, 28px) 150px;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 40px;
   color: #fff;
   overflow: hidden;
@@ -15,8 +15,71 @@
       rgba(0, 0, 0, 0.72) 42%,
       rgba(0, 0, 0, 0.15) 100%
     ),
-    url('https://trekform.com/trekform/uploads/assets/images/backgrounds/home_operario_carretillas_elevadoras_trekform.jpg')
-      center/cover;
+    url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2200&q=90')
+      center 42%/cover;
+}
+.courses-hero-enter {
+  opacity: 0;
+  transform: translate3d(0, 34px, 0) scale(0.985);
+  animation: coursesHeroEnter 0.78s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.courses-hero-enter--1 {
+  animation-delay: 0.06s;
+}
+.courses-hero-enter--2 {
+  animation-delay: 0.14s;
+}
+.courses-hero-enter--3 {
+  animation-delay: 0.22s;
+}
+.courses-hero-enter--4 {
+  animation-delay: 0.3s;
+}
+.courses-hero-enter--5 {
+  animation-delay: 0.36s;
+}
+.courses-hero-enter--6 {
+  animation-delay: 0.42s;
+}
+.courses-hero-enter--7 {
+  animation-delay: 0.48s;
+}
+.courses-lower-enter {
+  opacity: 0;
+  transform: translate3d(0, 30px, 0);
+  animation: coursesLowerEnter 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.courses-lower-enter--1 {
+  animation-delay: 0.08s;
+}
+.courses-lower-enter--2 {
+  animation-delay: 0.16s;
+}
+.courses-lower-enter--3 {
+  animation-delay: 0.24s;
+}
+.courses-lower-enter--4 {
+  animation-delay: 0.32s;
+}
+@keyframes coursesHeroEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 34px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+@keyframes coursesLowerEnter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 30px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
 }
 .courses-page-hero::after {
   content: '';
@@ -30,6 +93,7 @@
   position: relative;
   z-index: 1;
   max-width: 760px;
+  min-width: 0;
 }
 .courses-hero-content h1 {
   max-width: 790px;
@@ -80,7 +144,7 @@
 }
 .courses-hero-metrics {
   display: grid;
-  grid-template-columns: repeat(4, auto);
+  grid-template-columns: repeat(4, minmax(0, max-content));
   gap: 28px;
   margin-top: 30px;
 }
@@ -131,7 +195,7 @@
   margin: -82px auto 14px;
   max-width: 1500px;
   display: grid;
-  grid-template-columns: 1.2fr 0.85fr 0.95fr 0.95fr;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px 20px;
   padding: 20px 32px 22px;
   color: #fff;
@@ -144,6 +208,10 @@
 .catalog-select {
   display: grid;
   gap: 7px;
+  min-width: 0;
+}
+.catalog-search-field {
+  grid-column: span 2;
 }
 .catalog-search-field > span,
 .catalog-select > span {
@@ -201,6 +269,7 @@
   gap: 9px;
   font-size: 13px;
   font-weight: 900;
+  width: 100%;
 }
 .catalog-reset {
   color: #fff;
@@ -310,6 +379,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   gap: 18px;
   margin-bottom: 12px;
 }
@@ -325,6 +395,7 @@
 .catalog-summary > div {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 8px;
 }
 .catalog-summary label {
@@ -415,6 +486,7 @@
 }
 .catalog-card-body {
   padding: 14px 15px 15px;
+  min-width: 0;
 }
 .catalog-card-body h2 {
   min-height: 52px;
@@ -560,6 +632,7 @@
   color: #111;
   font-size: 13px;
   font-weight: 900;
+  text-align: center;
 }
 .catalog-trust-row {
   display: grid;
@@ -612,8 +685,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   margin-top: 22px;
   padding: 20px 0 0;
+  gap: 14px;
 }
 .catalog-pagination > span {
   color: #6d6d69;
@@ -621,6 +696,7 @@
 }
 .catalog-pagination > div {
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
 }
 .catalog-pagination button {
@@ -642,8 +718,27 @@
   color: #9a9a96;
 }
 @media (max-width: 1280px) {
+  .courses-page-hero {
+    padding-bottom: 124px;
+  }
+  .courses-hero-metrics {
+    grid-template-columns: repeat(2, minmax(0, max-content));
+    gap: 20px 28px;
+  }
+  .courses-hero-claim {
+    right: 24px;
+    bottom: 36px;
+    min-width: min(360px, 44vw);
+    padding: 20px 28px 20px 44px;
+  }
   .catalog-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .catalog-toolbar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .catalog-search-field {
+    grid-column: span 3;
   }
   .catalog-company-cta {
     grid-template-columns: 260px 1fr;
@@ -656,13 +751,23 @@
 }
 @media (max-width: 1020px) {
   .courses-page-hero {
-    padding-bottom: 120px;
+    min-height: 520px;
+    padding: 62px 24px 40px;
+    align-items: start;
   }
-  .courses-hero-metrics {
-    grid-template-columns: repeat(2, auto);
+  .courses-hero-claim {
+    position: static;
+    min-width: 0;
+    width: min(100%, 520px);
+    margin-top: 24px;
+    padding: 18px 22px 18px 34px;
   }
   .catalog-toolbar {
     grid-template-columns: 1fr 1fr;
+    padding: 18px 22px 20px;
+  }
+  .catalog-search-field {
+    grid-column: 1 / -1;
   }
   .catalog-layout {
     grid-template-columns: 1fr;
@@ -684,8 +789,13 @@
   .courses-hero-content h1 {
     font-size: 46px;
   }
+  .courses-hero-content > p {
+    max-width: 100%;
+    font-size: 16px;
+  }
   .courses-hero-actions a {
     width: 100%;
+    min-width: 0;
   }
   .courses-hero-metrics,
   .catalog-toolbar,
@@ -695,9 +805,9 @@
     grid-template-columns: 1fr;
   }
   .courses-hero-claim {
-    right: 0;
-    bottom: 35px;
-    min-width: 90%;
+    width: 100%;
+    margin-top: 18px;
+    clip-path: none;
   }
   .catalog-section {
     padding-inline: 14px;
@@ -705,6 +815,9 @@
   .catalog-toolbar {
     margin-top: -70px;
     padding: 18px;
+  }
+  .catalog-search-field {
+    grid-column: auto;
   }
   .catalog-summary,
   .catalog-summary > div,
@@ -732,5 +845,52 @@
   .catalog-company-cta span,
   .catalog-company-cta a {
     margin-left: 0;
+  }
+  .catalog-company-cta a,
+  .catalog-card-actions a {
+    width: 100%;
+  }
+  .catalog-card-actions {
+    grid-template-columns: 1fr;
+  }
+  .catalog-pagination > div {
+    width: 100%;
+  }
+}
+@media (max-width: 420px) {
+  .courses-page-hero {
+    padding: 48px 16px 104px;
+  }
+  .courses-hero-content h1 {
+    font-size: 38px;
+  }
+  .courses-hero-metrics span {
+    max-width: none;
+    font-size: 12px;
+  }
+  .catalog-section {
+    padding-inline: 10px;
+  }
+  .catalog-toolbar {
+    margin-top: -64px;
+    padding: 16px;
+  }
+  .catalog-card-body {
+    padding: 14px;
+  }
+  .catalog-pagination button {
+    min-width: 32px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .courses-hero-enter {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .courses-lower-enter {
+    opacity: 1;
+    transform: none;
+    animation: none;
   }
 }
