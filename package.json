@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "export:original-courses": "node scripts/export-original-course-content.mjs",
+    "import:course-content": "node scripts/import-course-content-to-supabase.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.0",

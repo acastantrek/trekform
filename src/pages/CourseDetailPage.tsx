@@ -1,19 +1,18 @@
-import { useEffect, useState } from 'react'
-import {
+﻿import {
   ArrowLeft,
   ArrowRight,
   Award,
   BookOpen,
   CalendarDays,
-  Check,
   ChevronRight,
   Clock3,
-  GraduationCap,
+  FileText,
   MapPin,
   Monitor,
   ShieldCheck,
   UsersRound,
 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { getCourseDetail, type CourseDetail } from '../services/courses'
 
@@ -28,31 +27,6 @@ const timeFormatter = new Intl.DateTimeFormat('es-ES', {
 })
 const moneyFormatter = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' })
 
-const fallbackModules = [
-  {
-    id: 'fundamentos',
-    title: 'Fundamentos y normativa aplicable',
-    content: 'Conceptos esenciales, responsabilidades y normativa relacionada con la actividad.',
-    durationMinutes: null,
-    position: 1,
-  },
-  {
-    id: 'prevencion',
-    title: 'Prevención y trabajo seguro',
-    content: 'Identificación de riesgos, medidas preventivas y procedimientos de trabajo seguro.',
-    durationMinutes: null,
-    position: 2,
-  },
-  {
-    id: 'evaluacion',
-    title: 'Aplicación práctica y evaluación',
-    content:
-      'Ejercicios aplicados, resolución de situaciones reales y evaluación de conocimientos.',
-    durationMinutes: null,
-    position: 3,
-  },
-]
-
 function accentedTitle(text: string) {
   const words = text.split(' ')
   const splitAt = Math.max(1, Math.ceil(words.length / 2))
@@ -61,6 +35,36 @@ function accentedTitle(text: string) {
       {words.slice(0, splitAt).join(' ')} <span>{words.slice(splitAt).join(' ')}</span>
     </>
   )
+}
+
+function splitParagraphs(text: string) {
+  return text
+    .split(/\n\s*\n|\r\n\s*\r\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+}
+
+function formatDuration(minutes: number | null) {
+  if (!minutes) return 'Consultar'
+  if (minutes % 60 === 0) return `${minutes / 60} horas`
+
+  const hours = Math.floor(minutes / 60)
+  const remainder = minutes % 60
+  if (!hours) return `${remainder} min`
+
+  return `${hours} h ${remainder} min`
+}
+
+function getModalityLabel(modality: string) {
+  if (modality === 'online') return 'Online'
+  if (modality === 'hybrid') return 'Híbrida'
+  return 'Presencial'
+}
+
+function getAudienceLabel(audience: CourseDetail['audience']) {
+  if (audience === 'companies') return 'Empresas'
+  if (audience === 'individuals') return 'Particulares'
+  return 'Particulares y empresas'
 }
 
 export function CourseDetailPage() {
@@ -110,13 +114,28 @@ export function CourseDetailPage() {
     )
   }
 
-  const modules = course.modules.length ? course.modules : fallbackModules
-  const modality =
-    course.modality === 'online'
-      ? 'Online'
-      : course.modality === 'hybrid'
-        ? 'Híbrida'
-        : 'Presencial'
+  const descriptionParagraphs = splitParagraphs(course.description)
+  const objectiveParagraphs = splitParagraphs(course.objectives)
+  const audienceParagraphs = splitParagraphs(course.audienceDescription)
+  const methodologyParagraphs = splitParagraphs(course.methodology)
+  const modality = getModalityLabel(course.modality)
+  const durationLabel = formatDuration(course.durationMinutes)
+  const methodologyLabel = course.methodology || 'Teórico-práctica'
+  const certificationLabel = course.certificationName || 'Diploma acreditativo Trekform'
+  const sidebarCards = [
+    {
+      title: course.sidebarCertificationTitle,
+      text: course.sidebarCertificationText,
+    },
+    {
+      title: course.sidebarQualityTitle,
+      text: course.sidebarQualityText,
+    },
+    {
+      title: course.sidebarFundaeTitle,
+      text: course.sidebarFundaeText,
+    },
+  ].filter((item) => item.text)
 
   return (
     <div className="course-detail-page">
@@ -150,7 +169,10 @@ export function CourseDetailPage() {
           <div>
             <ShieldCheck size={25} />
             <span>
-              <strong>Formación acreditativa</strong> orientada al trabajo seguro
+              <strong>{course.isOfficialCertification ? 'Certificación oficial' : 'Formación acreditativa'}</strong>
+              {course.isFundaeEligible
+                ? ' Bonificable para empresas a través de FUNDAE.'
+                : ' Orientada al trabajo seguro y la mejora profesional.'}
             </span>
           </div>
         </div>
@@ -161,7 +183,7 @@ export function CourseDetailPage() {
           <Clock3 />
           <span>
             Duración
-            <strong>{course.durationHours ? `${course.durationHours} horas` : 'Consultar'}</strong>
+            <strong>{durationLabel}</strong>
           </span>
         </div>
         <div>
@@ -173,13 +195,13 @@ export function CourseDetailPage() {
         <div>
           <BookOpen />
           <span>
-            Metodología<strong>Teórico-práctica</strong>
+            Metodología<strong>{methodologyLabel}</strong>
           </span>
         </div>
         <div>
           <Award />
           <span>
-            Acreditación<strong>Diploma incluido</strong>
+            Certificación<strong>{certificationLabel}</strong>
           </span>
         </div>
       </section>
@@ -188,77 +210,89 @@ export function CourseDetailPage() {
         <div className="course-detail-content">
           <span className="course-detail-kicker">SOBRE EL CURSO</span>
           <h2>
-            Formación útil <span>para el trabajo real.</span>
+            Información útil <span>y aplicada.</span>
           </h2>
-          <p className="course-detail-lead">{course.description}</p>
-          <p>
-            El programa está pensado para particulares que quieren mejorar su empleabilidad y para
-            empresas que necesitan formar a sus equipos. Los contenidos se trabajan con un enfoque
-            claro, aplicado y centrado en la seguridad.
-          </p>
+          <p className="course-detail-lead">{course.heroText || course.excerpt}</p>
+          {descriptionParagraphs.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
 
-          <div className="course-detail-benefits">
-            <article>
-              <ShieldCheck />
-              <h3>Seguridad</h3>
-              <p>Identifica riesgos y aplica medidas preventivas adecuadas.</p>
-            </article>
-            <article>
-              <GraduationCap />
-              <h3>Capacitación</h3>
-              <p>Adquiere conocimientos transferibles a situaciones reales.</p>
-            </article>
-            <article>
-              <Award />
-              <h3>Acreditación</h3>
-              <p>Recibe un diploma acreditativo al completar la formación.</p>
-            </article>
-          </div>
+          {!!objectiveParagraphs.length && (
+            <div className="course-detail-audience">
+              <span className="course-detail-kicker">OBJETIVOS</span>
+              <h2>
+                Qué vas <span>a conseguir.</span>
+              </h2>
+              {objectiveParagraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          )}
 
-          <div className="course-detail-audience">
-            <span className="course-detail-kicker">A QUIÉN VA DIRIGIDO</span>
-            <h2>
-              Particulares, profesionales <span>y empresas.</span>
-            </h2>
-            <ul>
-              <li>
-                <Check size={17} /> Personas que quieren mejorar sus competencias profesionales.
-              </li>
-              <li>
-                <Check size={17} /> Trabajadores que necesitan formación para su puesto.
-              </li>
-              <li>
-                <Check size={17} /> Empresas que buscan formar equipos o cumplir requisitos
-                preventivos.
-              </li>
-            </ul>
-          </div>
+          {!!audienceParagraphs.length && (
+            <div className="course-detail-audience">
+              <span className="course-detail-kicker">A QUIÉN VA DIRIGIDO</span>
+              <h2>
+                Pensado para <span>{getAudienceLabel(course.audience).toLowerCase()}.</span>
+              </h2>
+              {audienceParagraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          )}
+
+          {!!methodologyParagraphs.length && (
+            <div className="course-detail-audience">
+              <span className="course-detail-kicker">METODOLOGÍA</span>
+              <h2>
+                Cómo se desarrolla <span>la formación.</span>
+              </h2>
+              {methodologyParagraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          )}
         </div>
 
         <aside className="course-detail-sidebar">
           <span>INFORMACIÓN DEL CURSO</span>
-          <h2>{accentedTitle(course.title)}</h2>
+          <h2>{accentedTitle(course.shortTitle)}</h2>
           <dl>
             <div>
               <dt>Duración</dt>
-              <dd>{course.durationHours ? `${course.durationHours} horas` : 'Consultar'}</dd>
+              <dd>{durationLabel}</dd>
             </div>
             <div>
               <dt>Modalidad</dt>
               <dd>{modality}</dd>
             </div>
             <div>
-              <dt>Metodología</dt>
-              <dd>Teórico-práctica</dd>
+              <dt>Dirigido a</dt>
+              <dd>{getAudienceLabel(course.audience)}</dd>
             </div>
             <div>
               <dt>Certificación</dt>
-              <dd>Diploma acreditativo</dd>
+              <dd>{certificationLabel}</dd>
             </div>
           </dl>
+          {sidebarCards.length ? (
+            <div className="course-detail-editorial-list">
+              {sidebarCards.map((card) => (
+                <article key={card.title}>
+                  <h3>{card.title}</h3>
+                  <p>{card.text}</p>
+                </article>
+              ))}
+            </div>
+          ) : null}
           <Link to="/inscripciones">
             Inscríbete ahora <ArrowRight size={18} />
           </Link>
+          {course.brochureUrl ? (
+            <a href={course.brochureUrl} className="course-detail-text-link" target="_blank" rel="noreferrer">
+              <FileText size={14} /> Descargar ficha
+            </a>
+          ) : null}
           <small>¿Necesitas una formación a medida?</small>
           <Link to="/contacto" className="course-detail-contact">
             Habla con nuestro equipo
@@ -266,30 +300,32 @@ export function CourseDetailPage() {
         </aside>
       </section>
 
-      <section className="course-detail-program">
-        <div className="course-detail-section-heading">
-          <div>
-            <span className="course-detail-kicker">PROGRAMA FORMATIVO</span>
-            <h2>
-              Qué <span>aprenderás.</span>
-            </h2>
+      {course.modules.length ? (
+        <section className="course-detail-program">
+          <div className="course-detail-section-heading">
+            <div>
+              <span className="course-detail-kicker">PROGRAMA FORMATIVO</span>
+              <h2>
+                Qué <span>aprenderás.</span>
+              </h2>
+            </div>
+            <p>Contenido estructurado para que puedas aplicar la formación en situaciones reales.</p>
           </div>
-          <p>Un recorrido estructurado desde los fundamentos hasta la aplicación práctica.</p>
-        </div>
-        <div className="course-detail-modules">
-          {modules.map((module, index) => (
-            <details key={module.id} open={index === 0}>
-              <summary>
-                <span>{String(index + 1).padStart(2, '0')}</span>
-                <strong>{module.title}</strong>
-                {module.durationMinutes && <small>{module.durationMinutes} min</small>}
-                <i>+</i>
-              </summary>
-              <p>{module.content}</p>
-            </details>
-          ))}
-        </div>
-      </section>
+          <div className="course-detail-modules">
+            {course.modules.map((module, index) => (
+              <details key={module.id} open={index === 0}>
+                <summary>
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                  <strong>{module.title}</strong>
+                  {module.durationMinutes ? <small>{formatDuration(module.durationMinutes)}</small> : null}
+                  <i>+</i>
+                </summary>
+                <p>{module.description}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="course-detail-sessions">
         <div className="course-detail-section-heading">

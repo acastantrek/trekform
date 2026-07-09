@@ -51,16 +51,33 @@ export function BlogPage() {
   return (
     <div className="blog-page">
       <section className="blog-hero">
-        <div className="blog-hero-copy">
-          <h1>
-            El Blog <span>de trekform</span>
-          </h1>
-          <p>
-            Inicio <i /> <span>Blog</span>
-          </p>
-        </div>
-        <div className="blog-hero-media" aria-hidden="true">
-          <img src="/brand/blog-hero-blogging.svg" alt="" />
+        <div
+          className="blog-hero-bg"
+          aria-hidden="true"
+          style={{
+            backgroundImage:
+              "url('https://trekform.com/trekform/uploads/assets/images/backgrounds/headerblog2.jpg')",
+          }}
+        />
+        <div className="blog-hero-inner">
+          <a href="/blog" className="blog-hero-title-link">
+            <h1>
+              El Blog de <span>trekform</span>
+            </h1>
+          </a>
+          <div className="blog-breadcrumb-box">
+            <ul className="blog-breadcrumb" aria-label="Breadcrumb">
+              <li>
+                <Link to="/">Inicio</Link>
+              </li>
+              <li>
+                <span>/</span>
+              </li>
+              <li>
+                <Link to="/blog">Blog</Link>
+              </li>
+            </ul>
+          </div>
         </div>
       </section>
 
