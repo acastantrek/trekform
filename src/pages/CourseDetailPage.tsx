@@ -4,12 +4,15 @@
   Award,
   BookOpen,
   CalendarDays,
+  Check,
   ChevronRight,
   Clock3,
   FileText,
   MapPin,
   Monitor,
+  Percent,
   ShieldCheck,
+  Star,
   UsersRound,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -121,18 +124,21 @@ export function CourseDetailPage() {
   const durationLabel = formatDuration(course.durationMinutes)
   const methodologyLabel = course.methodology || 'Teórico-práctica'
   const certificationLabel = course.certificationName || 'Diploma acreditativo Trekform'
-  const sidebarCards = [
+  const trustCards = [
     {
       title: course.sidebarCertificationTitle,
       text: course.sidebarCertificationText,
+      icon: <ShieldCheck size={22} />,
     },
     {
       title: course.sidebarQualityTitle,
       text: course.sidebarQualityText,
+      icon: <Star size={22} />,
     },
     {
       title: course.sidebarFundaeTitle,
       text: course.sidebarFundaeText,
+      icon: <Percent size={22} />,
     },
   ].filter((item) => item.text)
   const factCards = [
@@ -150,16 +156,19 @@ export function CourseDetailPage() {
       kicker: 'OBJETIVOS',
       title: 'Qué vas a conseguir',
       paragraphs: objectiveParagraphs,
+      variant: 'list' as const,
     },
     {
       kicker: 'A QUIÉN VA DIRIGIDO',
       title: `Pensado para ${getAudienceLabel(course.audience).toLowerCase()}`,
       paragraphs: audienceParagraphs,
+      variant: 'list' as const,
     },
     {
       kicker: 'METODOLOGÍA',
       title: 'Cómo se desarrolla la formación',
       paragraphs: methodologyParagraphs,
+      variant: 'text' as const,
     },
   ].filter((section) => section.paragraphs.length)
 
@@ -266,9 +275,32 @@ export function CourseDetailPage() {
                 <article className="course-detail-story-card" key={section.kicker}>
                   <span className="course-detail-kicker">{section.kicker}</span>
                   <h3>{section.title}</h3>
-                  {section.paragraphs.map((paragraph, index) => (
-                    <p key={`${section.kicker}-${index}`}>{paragraph}</p>
-                  ))}
+                  {section.variant === 'list' ? (
+                    <ul>
+                      {section.paragraphs.map((paragraph, index) => (
+                        <li key={`${section.kicker}-${index}`}>
+                          <Check size={15} />
+                          <span>{paragraph}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    section.paragraphs.map((paragraph, index) => (
+                      <p key={`${section.kicker}-${index}`}>{paragraph}</p>
+                    ))
+                  )}
+                </article>
+              ))}
+            </div>
+          ) : null}
+
+          {trustCards.length ? (
+            <div className="course-detail-trust-row">
+              {trustCards.map((card) => (
+                <article key={card.title}>
+                  {card.icon}
+                  <h3>{card.title}</h3>
+                  <p>{card.text}</p>
                 </article>
               ))}
             </div>
@@ -296,19 +328,12 @@ export function CourseDetailPage() {
               <dd>{certificationLabel}</dd>
             </div>
           </dl>
-          {sidebarCards.length ? (
-            <div className="course-detail-editorial-list">
-              {sidebarCards.map((card) => (
-                <article key={card.title}>
-                  <h3>{card.title}</h3>
-                  <p>{card.text}</p>
-                </article>
-              ))}
-            </div>
-          ) : null}
           <Link to="/inscripciones">
             Inscríbete ahora <ArrowRight size={18} />
           </Link>
+          <p className="course-detail-sidebar-note">
+            <ShieldCheck size={14} /> Sin compromiso · Respuesta en menos de 24h
+          </p>
           <div className="course-detail-sidebar-links">
             {course.brochureUrl ? (
               <a href={course.brochureUrl} className="course-detail-text-link" target="_blank" rel="noreferrer">
@@ -348,6 +373,23 @@ export function CourseDetailPage() {
           </div>
         </section>
       ) : null}
+
+      <section className="course-detail-social-proof">
+        <div className="course-detail-social-rating">
+          <div className="course-detail-stars">
+            {Array.from({ length: 5 }, (_, index) => (
+              <Star key={index} fill="currentColor" />
+            ))}
+            <strong>4,8/5</strong>
+          </div>
+          <p>Basado en +2.300 valoraciones de alumnos</p>
+        </div>
+        <blockquote>
+          “Formación muy práctica y profesores excelentes. Las instalaciones y la maquinaria en
+          perfecto estado.”
+          <cite>— Marta C.</cite>
+        </blockquote>
+      </section>
 
       <section className="course-detail-sessions">
         <div className="course-detail-section-heading">
