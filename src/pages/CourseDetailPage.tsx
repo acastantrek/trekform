@@ -25,7 +25,6 @@ const timeFormatter = new Intl.DateTimeFormat('es-ES', {
   hour: '2-digit',
   minute: '2-digit',
 })
-const moneyFormatter = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' })
 
 function accentedTitle(text: string) {
   const words = text.split(' ')
@@ -136,122 +135,144 @@ export function CourseDetailPage() {
       text: course.sidebarFundaeText,
     },
   ].filter((item) => item.text)
+  const factCards = [
+    { label: 'Duración', value: durationLabel, icon: <Clock3 size={20} /> },
+    {
+      label: 'Modalidad',
+      value: modality,
+      icon: course.modality === 'online' ? <Monitor size={20} /> : <UsersRound size={20} />,
+    },
+    { label: 'Metodología', value: methodologyLabel, icon: <BookOpen size={20} /> },
+    { label: 'Certificación', value: certificationLabel, icon: <Award size={20} /> },
+  ]
+  const contentSections = [
+    {
+      kicker: 'OBJETIVOS',
+      title: 'Qué vas a conseguir',
+      paragraphs: objectiveParagraphs,
+    },
+    {
+      kicker: 'A QUIÉN VA DIRIGIDO',
+      title: `Pensado para ${getAudienceLabel(course.audience).toLowerCase()}`,
+      paragraphs: audienceParagraphs,
+    },
+    {
+      kicker: 'METODOLOGÍA',
+      title: 'Cómo se desarrolla la formación',
+      paragraphs: methodologyParagraphs,
+    },
+  ].filter((section) => section.paragraphs.length)
 
   return (
     <div className="course-detail-page">
       <section className="course-detail-hero">
-        <div className="course-detail-copy">
-          <nav aria-label="Migas de pan">
-            <Link to="/">Inicio</Link>
-            <ChevronRight size={13} />
-            <Link to="/cursos-trekform">Cursos</Link>
-            <ChevronRight size={13} />
-            <span>{course.categories[0]}</span>
-          </nav>
-          <div className="course-detail-categories">
-            {course.categories.map((category) => (
-              <span key={category}>{category}</span>
-            ))}
+        <div
+          className="course-detail-hero-bg"
+          aria-hidden="true"
+          style={{ backgroundImage: `url('${course.image}')` }}
+        />
+        <div className="course-detail-hero-grid">
+          <div className="course-detail-copy">
+            <div className="course-detail-categories">
+              {course.categories.map((category) => (
+                <span key={category}>{category}</span>
+              ))}
+              <span>{modality}</span>
+            </div>
+            <h1>{accentedTitle(course.title)}</h1>
+            <p className="course-detail-excerpt">{course.heroText || course.excerpt}</p>
+            <div className="course-detail-hero-actions">
+              <Link to="/inscripciones" className="course-detail-primary">
+                Ver convocatorias <ArrowRight size={18} />
+              </Link>
+              <Link to="/contacto" className="course-detail-secondary">
+                Solicitar información
+              </Link>
+            </div>
           </div>
-          <h1>{accentedTitle(course.title)}</h1>
-          <p>{course.excerpt}</p>
-          <div className="course-detail-hero-actions">
-            <Link to="/inscripciones" className="course-detail-primary">
-              Ver convocatorias <ArrowRight size={18} />
-            </Link>
-            <Link to="/contacto" className="course-detail-secondary">
-              Solicitar información
-            </Link>
-          </div>
-        </div>
-        <div className="course-detail-visual">
-          <img src={course.image} alt={course.title} />
-          <div>
-            <ShieldCheck size={25} />
-            <span>
-              <strong>{course.isOfficialCertification ? 'Certificación oficial' : 'Formación acreditativa'}</strong>
+
+          <aside className="course-detail-hero-card">
+            <span>{course.isOfficialCertification ? 'Certificación oficial' : 'Formación acreditativa'}</span>
+            <strong>
               {course.isFundaeEligible
-                ? ' Bonificable para empresas a través de FUNDAE.'
-                : ' Orientada al trabajo seguro y la mejora profesional.'}
-            </span>
-          </div>
+                ? 'Bonificable por FUNDAE para empresas'
+                : 'Formación práctica adaptada a necesidades reales'}
+            </strong>
+            <p>
+              {course.isFundaeEligible
+                ? 'Gestionamos formación abierta o in-company con enfoque práctico, seguro y orientado al puesto de trabajo.'
+                : 'Curso pensado para mejorar la seguridad, la cualificación y la empleabilidad del alumno.'}
+            </p>
+            <div className="course-detail-hero-card-meta">
+              <article>
+                <ShieldCheck size={16} />
+                <span>{certificationLabel}</span>
+              </article>
+              <article>
+                <Clock3 size={16} />
+                <span>{durationLabel}</span>
+              </article>
+            </div>
+          </aside>
         </div>
+
+        <div className="course-detail-breadcrumb-box">
+          <ul className="course-detail-breadcrumb" aria-label="Breadcrumb">
+            <li>
+              <Link to="/">Inicio</Link>
+            </li>
+            <li>
+              <ChevronRight size={12} />
+            </li>
+            <li>
+              <Link to="/cursos-trekform">Cursos</Link>
+            </li>
+            <li>
+              <ChevronRight size={12} />
+            </li>
+            <li>
+              <span>{course.categories[0]}</span>
+            </li>
+          </ul>
+        </div>
+
       </section>
 
-      <section className="course-detail-overview">
-        <div>
-          <Clock3 />
-          <span>
-            Duración
-            <strong>{durationLabel}</strong>
-          </span>
-        </div>
-        <div>
-          {course.modality === 'online' ? <Monitor /> : <UsersRound />}
-          <span>
-            Modalidad<strong>{modality}</strong>
-          </span>
-        </div>
-        <div>
-          <BookOpen />
-          <span>
-            Metodología<strong>{methodologyLabel}</strong>
-          </span>
-        </div>
-        <div>
-          <Award />
-          <span>
-            Certificación<strong>{certificationLabel}</strong>
-          </span>
-        </div>
-      </section>
+      <div className="course-detail-overview">
+        {factCards.map((item) => (
+          <article key={item.label}>
+            {item.icon}
+            <span>{item.label}</span>
+            <strong>{item.value}</strong>
+          </article>
+        ))}
+      </div>
 
       <section className="course-detail-main">
-        <div className="course-detail-content">
-          <span className="course-detail-kicker">SOBRE EL CURSO</span>
-          <h2>
-            Información útil <span>y aplicada.</span>
-          </h2>
-          <p className="course-detail-lead">{course.heroText || course.excerpt}</p>
-          {descriptionParagraphs.map((paragraph) => (
-            <p key={paragraph}>{paragraph}</p>
-          ))}
+        <div className="course-detail-content-column">
+          <div className="course-detail-intro-card">
+            <span className="course-detail-kicker">SOBRE EL CURSO</span>
+            <h2>
+              Formación diseñada para <span>aplicarse de verdad.</span>
+            </h2>
+            {descriptionParagraphs.map((paragraph, index) => (
+              <p key={`${paragraph}-${index}`}>{paragraph}</p>
+            ))}
+          </div>
 
-          {!!objectiveParagraphs.length && (
-            <div className="course-detail-audience">
-              <span className="course-detail-kicker">OBJETIVOS</span>
-              <h2>
-                Qué vas <span>a conseguir.</span>
-              </h2>
-              {objectiveParagraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
+          {contentSections.length ? (
+            <div className="course-detail-story-grid">
+              {contentSections.map((section) => (
+                <article className="course-detail-story-card" key={section.kicker}>
+                  <span className="course-detail-kicker">{section.kicker}</span>
+                  <h3>{section.title}</h3>
+                  {section.paragraphs.map((paragraph, index) => (
+                    <p key={`${section.kicker}-${index}`}>{paragraph}</p>
+                  ))}
+                </article>
               ))}
             </div>
-          )}
-
-          {!!audienceParagraphs.length && (
-            <div className="course-detail-audience">
-              <span className="course-detail-kicker">A QUIÉN VA DIRIGIDO</span>
-              <h2>
-                Pensado para <span>{getAudienceLabel(course.audience).toLowerCase()}.</span>
-              </h2>
-              {audienceParagraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </div>
-          )}
-
-          {!!methodologyParagraphs.length && (
-            <div className="course-detail-audience">
-              <span className="course-detail-kicker">METODOLOGÍA</span>
-              <h2>
-                Cómo se desarrolla <span>la formación.</span>
-              </h2>
-              {methodologyParagraphs.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
-            </div>
-          )}
+          ) : null}
         </div>
 
         <aside className="course-detail-sidebar">
@@ -288,29 +309,30 @@ export function CourseDetailPage() {
           <Link to="/inscripciones">
             Inscríbete ahora <ArrowRight size={18} />
           </Link>
-          {course.brochureUrl ? (
-            <a href={course.brochureUrl} className="course-detail-text-link" target="_blank" rel="noreferrer">
-              <FileText size={14} /> Descargar ficha
-            </a>
-          ) : null}
-          <small>¿Necesitas una formación a medida?</small>
-          <Link to="/contacto" className="course-detail-contact">
-            Habla con nuestro equipo
-          </Link>
+          <div className="course-detail-sidebar-links">
+            {course.brochureUrl ? (
+              <a href={course.brochureUrl} className="course-detail-text-link" target="_blank" rel="noreferrer">
+                <FileText size={14} /> Descargar ficha
+              </a>
+            ) : null}
+            <Link to="/contacto" className="course-detail-contact">
+              Habla con nuestro equipo
+            </Link>
+          </div>
         </aside>
       </section>
 
       {course.modules.length ? (
         <section className="course-detail-program">
-          <div className="course-detail-section-heading">
-            <div>
-              <span className="course-detail-kicker">PROGRAMA FORMATIVO</span>
-              <h2>
-                Qué <span>aprenderás.</span>
-              </h2>
-            </div>
-            <p>Contenido estructurado para que puedas aplicar la formación en situaciones reales.</p>
+        <div className="course-detail-section-heading">
+          <div>
+            <span className="course-detail-kicker">PROGRAMA FORMATIVO</span>
+            <h2>
+              Qué <span>aprenderás.</span>
+            </h2>
           </div>
+          <p>Un recorrido claro, progresivo y orientado a situaciones reales de trabajo.</p>
+        </div>
           <div className="course-detail-modules">
             {course.modules.map((module, index) => (
               <details key={module.id} open={index === 0}>
@@ -332,10 +354,10 @@ export function CourseDetailPage() {
           <div>
             <span className="course-detail-kicker">PRÓXIMAS CONVOCATORIAS</span>
             <h2>
-              Elige fecha <span>y lugar.</span>
+              Elige tu fecha <span>y avanza.</span>
             </h2>
           </div>
-          <p>Las plazas se actualizan regularmente. Selecciona una convocatoria para continuar.</p>
+          <p>Consulta la disponibilidad actual o pídenos una convocatoria adaptada a tu empresa.</p>
         </div>
         {course.sessions.length ? (
           <div className="course-detail-session-grid">
@@ -349,7 +371,7 @@ export function CourseDetailPage() {
                     {timeFormatter.format(new Date(session.endsAt))}
                   </span>
                 </div>
-                <div>
+                <div className="course-detail-session-body">
                   <span className={`course-detail-status ${session.status}`}>
                     {session.status === 'full' ? 'Completo' : 'Plazas disponibles'}
                   </span>
@@ -362,7 +384,6 @@ export function CourseDetailPage() {
                   </p>
                 </div>
                 <div className="course-detail-session-price">
-                  <strong>{moneyFormatter.format(session.priceCents / 100)}</strong>
                   {session.status === 'open' ? (
                     <Link to="/inscripciones">
                       Inscríbete <ArrowRight size={16} />
@@ -381,7 +402,7 @@ export function CourseDetailPage() {
               <h3>
                 Consulta las <span>próximas fechas.</span>
               </h3>
-              <p>Podemos organizar esta formación en convocatoria abierta o para tu empresa.</p>
+              <p>Podemos organizar esta formación en convocatoria abierta o in-company.</p>
             </div>
             <Link to="/contacto">
               Solicitar información <ArrowRight size={17} />
@@ -394,11 +415,11 @@ export function CourseDetailPage() {
         <div>
           <span>¿TIENES DUDAS?</span>
           <h2>
-            Te ayudamos <span>a elegir.</span>
+            Te ayudamos <span>a elegir la formación adecuada.</span>
           </h2>
         </div>
         <p>
-          Cuéntanos qué formación buscas y encontraremos la opción adecuada para ti o tu empresa.
+          Cuéntanos el perfil del alumno o las necesidades de tu empresa y te proponemos la mejor opción.
         </p>
         <Link to="/contacto">
           Contactar <ArrowRight size={18} />
