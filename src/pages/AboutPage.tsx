@@ -259,7 +259,6 @@ export function AboutPage() {
           {faqs.map((faq, index) => (
             <details
               key={faq.question}
-              open={index === 0}
               data-reveal
               style={{ '--reveal-delay': `${0.06 + index * 0.04}s` } as CSSProperties}
             >

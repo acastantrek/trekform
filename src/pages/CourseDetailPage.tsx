@@ -335,7 +335,7 @@ export function CourseDetailPage() {
         </div>
           <div className="course-detail-modules">
             {course.modules.map((module, index) => (
-              <details key={module.id} open={index === 0}>
+              <details key={module.id}>
                 <summary>
                   <span>{String(index + 1).padStart(2, '0')}</span>
                   <strong>{module.title}</strong>
