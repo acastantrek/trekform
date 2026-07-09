@@ -788,11 +788,9 @@ footer > p {
 }
 @media (max-width: 900px) {
   .cityline {
-    justify-content: flex-start;
-    overflow: auto;
-    flex-wrap: nowrap;
+    display: none;
   }
-  .topline > div {
+  .topline {
     display: none;
   }
   .nav {
