@@ -184,6 +184,13 @@ export async function updateCourse(id: string, input: CourseInput): Promise<void
 
 export async function deleteCourse(id: string): Promise<void> {
   const client = requireClient()
+
+  // course_sessions.course_id is ON DELETE RESTRICT (to protect sessions that have real
+  // enrollments), so a course's sessions must be removed first. This delete itself fails
+  // with a clear FK error if any of those sessions still has enrollments.
+  const { error: sessionsError } = await client.from('course_sessions').delete().eq('course_id', id)
+  if (sessionsError) throw new Error(`No se pudo eliminar el curso: ${sessionsError.message}`)
+
   const { error } = await client.from('courses').delete().eq('id', id)
   if (error) throw new Error(`No se pudo eliminar el curso: ${error.message}`)
 }

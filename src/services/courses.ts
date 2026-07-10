@@ -1,19 +1,7 @@
-﻿import { supabase } from '../lib/supabase'
+import { supabase } from '../lib/supabase'
 import type { Course } from '../types/course'
 
-interface LegacyCourseRow {
-  id: string
-  slug: string
-  title: string
-  image_url: string | null
-  duration_hours: number | null
-  excerpt: string | null
-  is_featured: boolean
-  course_categories: { name: string } | null
-  course_category_assignments: Array<{ course_categories: { name: string } | null }>
-}
-
-interface ModernCourseRow {
+interface CourseRow {
   id: string
   slug: string
   title: string
@@ -25,11 +13,8 @@ interface ModernCourseRow {
   course_category_assignments: Array<{ course_categories: { name: string } | null }>
 }
 
-const modernCourseColumns =
+const courseColumns =
   'id, slug, title, featured_image_url, duration_minutes, excerpt, is_featured, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name))'
-
-const legacyCourseColumns =
-  'id, slug, title, image_url, duration_hours, excerpt, is_featured, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name))'
 
 const fallbackImage =
   'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=85'
@@ -43,11 +28,6 @@ function formatDuration(minutes: number | null) {
   if (!hours) return `${remainder} min`
 
   return `${hours} h ${remainder} min`
-}
-
-function formatHours(hours: number | null) {
-  if (!hours) return 'Consultar'
-  return `${hours} horas`
 }
 
 function collectCategories(row: {
@@ -67,7 +47,7 @@ function collectCategories(row: {
   return { primaryCategory, categories }
 }
 
-function mapModernCourse(row: ModernCourseRow): Course {
+function mapCourse(row: CourseRow): Course {
   const { primaryCategory, categories } = collectCategories(row)
 
   return {
@@ -86,59 +66,27 @@ function mapModernCourse(row: ModernCourseRow): Course {
   }
 }
 
-function mapLegacyCourse(row: LegacyCourseRow): Course {
-  const { primaryCategory, categories } = collectCategories(row)
-
-  return {
-    id: row.id,
-    slug: row.slug,
-    title: row.title,
-    category: primaryCategory,
-    categories,
-    image: row.image_url ?? fallbackImage,
-    place: 'Toda España',
-    duration: formatHours(row.duration_hours),
-    color: '#d9ff43',
-    description: row.excerpt ?? '',
-    featured: row.is_featured,
-    order: 0,
-  }
-}
-
 export async function getCourses(options: { featured?: boolean } = {}): Promise<Course[]> {
   if (!supabase) {
     throw new Error('Falta configurar la conexión con Supabase.')
   }
 
   const client = supabase as any
-  let modernQuery = client
+  let query = client
     .from('courses')
-    .select(modernCourseColumns)
+    .select(courseColumns)
     .order('is_featured', { ascending: false })
     .order('sort_order', { ascending: true })
     .order('title', { ascending: true })
 
-  if (options.featured) modernQuery = modernQuery.eq('is_featured', true)
+  if (options.featured) query = query.eq('is_featured', true)
 
-  const modernResult = await modernQuery
-  if (!modernResult.error) {
-    return (modernResult.data as ModernCourseRow[]).map(mapModernCourse)
+  const result = await query
+  if (result.error) {
+    throw new Error(`No se pudieron cargar los cursos: ${result.error.message}`)
   }
 
-  let legacyQuery = client
-    .from('courses')
-    .select(legacyCourseColumns)
-    .order('is_featured', { ascending: false })
-    .order('title', { ascending: true })
-
-  if (options.featured) legacyQuery = legacyQuery.eq('is_featured', true)
-
-  const legacyResult = await legacyQuery
-  if (legacyResult.error) {
-    throw new Error(`No se pudieron cargar los cursos: ${legacyResult.error.message}`)
-  }
-
-  return (legacyResult.data as LegacyCourseRow[]).map(mapLegacyCourse)
+  return (result.data as CourseRow[]).map(mapCourse)
 }
 
 export interface CourseModule {
@@ -192,7 +140,7 @@ export interface CourseDetail {
   sessions: CourseSession[]
 }
 
-interface ModernCourseDetailRow {
+interface CourseDetailRow {
   id: string
   slug: string
   title: string
@@ -200,7 +148,6 @@ interface ModernCourseDetailRow {
   excerpt: string | null
   hero_text: string | null
   description: string | null
-  seo_description: string | null
   objectives: string | null
   audience_description: string | null
   audience: 'individuals' | 'companies' | 'both'
@@ -243,56 +190,7 @@ interface ModernCourseDetailRow {
   }>
 }
 
-interface LegacyCourseDetailRow {
-  id: string
-  slug: string
-  title: string
-  excerpt: string | null
-  description: string | null
-  image_url: string | null
-  modality: string
-  duration_hours: number | null
-  course_categories: { name: string } | null
-  course_category_assignments: Array<{ course_categories: { name: string } | null }>
-  course_modules: Array<{
-    id: string
-    title: string
-    content: string | null
-    duration_minutes: number | null
-    position: number
-  }>
-  course_sessions: Array<{
-    id: string
-    slug: string
-    starts_at: string
-    ends_at: string
-    capacity: number
-    price_cents: number
-    status: 'open' | 'full' | 'completed'
-    venues: {
-      name: string
-      address: string
-      locations: { city: string; province: string } | null
-    } | null
-  }>
-}
-
-function mapSessions(
-  sessions: Array<{
-    id: string
-    slug: string
-    starts_at: string
-    ends_at: string
-    capacity: number
-    price_cents: number
-    status: 'open' | 'full' | 'completed'
-    venues: {
-      name: string
-      address: string
-      locations: { city: string; province: string } | null
-    } | null
-  }>,
-) {
+function mapSessions(sessions: CourseDetailRow['course_sessions']) {
   return sessions
     .filter((session) => session.status !== 'completed' && new Date(session.ends_at) >= new Date())
     .map((session) => ({
@@ -310,7 +208,7 @@ function mapSessions(
     .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
 }
 
-function mapModernCourseDetail(row: ModernCourseDetailRow): CourseDetail {
+function mapCourseDetail(row: CourseDetailRow): CourseDetail {
   const { categories } = collectCategories(row)
 
   return {
@@ -353,80 +251,23 @@ function mapModernCourseDetail(row: ModernCourseDetailRow): CourseDetail {
   }
 }
 
-function mapLegacyCourseDetail(row: LegacyCourseDetailRow): CourseDetail {
-  const { categories } = collectCategories(row)
-  const durationMinutes = row.duration_hours ? row.duration_hours * 60 : null
-
-  return {
-    id: row.id,
-    slug: row.slug,
-    title: row.title,
-    shortTitle: row.title,
-    excerpt: row.excerpt ?? 'Formación profesional para particulares y empresas.',
-    heroText: row.excerpt ?? '',
-    description:
-      row.description ?? 'Curso orientado a adquirir conocimientos prácticos y trabajar con seguridad.',
-    objectives: '',
-    audienceDescription: '',
-    audience: 'both',
-    image: row.image_url ?? fallbackImage,
-    modality: row.modality,
-    methodology: '',
-    durationMinutes,
-    brochureUrl: '',
-    certificationName: 'Diploma acreditativo Trekform',
-    isOfficialCertification: false,
-    isFundaeEligible: false,
-    sidebarCertificationTitle: 'Certificación oficial',
-    sidebarCertificationText: '',
-    sidebarQualityTitle: 'Calidad garantizada',
-    sidebarQualityText: '',
-    sidebarFundaeTitle: 'Bonificaciones',
-    sidebarFundaeText: '',
-    categories,
-    modules: row.course_modules
-      .map((module) => ({
-        id: module.id,
-        title: module.title,
-        description: module.content ?? '',
-        durationMinutes: module.duration_minutes,
-        position: module.position,
-      }))
-      .sort((a, b) => a.position - b.position),
-    sessions: mapSessions(row.course_sessions),
-  }
-}
-
 export async function getCourseDetail(slug: string): Promise<CourseDetail | null> {
   if (!supabase) throw new Error('Falta configurar la conexión con Supabase.')
 
   const client = supabase as any
-  const modernResult = await client
+  const result = await client
     .from('courses')
     .select(
-      'id, slug, title, short_title, excerpt, hero_text, description, seo_description, objectives, audience_description, audience, featured_image_url, modality, methodology, duration_minutes, brochure_url, certification_name, is_official_certification, is_fundae_eligible, sidebar_certification_title, sidebar_certification_text, sidebar_quality_title, sidebar_quality_text, sidebar_fundae_title, sidebar_fundae_text, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_modules(id, title, description, duration_minutes, sort_order), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
+      'id, slug, title, short_title, excerpt, hero_text, description, objectives, audience_description, audience, featured_image_url, modality, methodology, duration_minutes, brochure_url, certification_name, is_official_certification, is_fundae_eligible, sidebar_certification_title, sidebar_certification_text, sidebar_quality_title, sidebar_quality_text, sidebar_fundae_title, sidebar_fundae_text, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_modules(id, title, description, duration_minutes, sort_order), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
     )
     .eq('slug', slug)
     .eq('status', 'published')
     .maybeSingle()
 
-  if (!modernResult.error && modernResult.data) {
-    return mapModernCourseDetail(modernResult.data as ModernCourseDetailRow)
+  if (result.error) {
+    throw new Error(`No se pudo cargar el curso: ${result.error.message}`)
   }
+  if (!result.data) return null
 
-  const legacyResult = await client
-    .from('courses')
-    .select(
-      'id, slug, title, excerpt, description, image_url, modality, duration_hours, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_modules(id, title, content, duration_minutes, position), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
-    )
-    .eq('slug', slug)
-    .eq('status', 'published')
-    .maybeSingle()
-
-  if (legacyResult.error) {
-    throw new Error(`No se pudo cargar el curso: ${legacyResult.error.message}`)
-  }
-  if (!legacyResult.data) return null
-
-  return mapLegacyCourseDetail(legacyResult.data as LegacyCourseDetailRow)
+  return mapCourseDetail(result.data as CourseDetailRow)
 }
