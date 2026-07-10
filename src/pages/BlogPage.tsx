@@ -1,6 +1,7 @@
 ﻿import { useEffect, useMemo, useState } from 'react'
 import { ArrowLeft, ArrowRight, CalendarDays, Search } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
+import { Markdown } from '../components/common/Markdown'
 import { getBlogPost, getBlogPosts, type BlogPost } from '../services/blog'
 
 const pageSize = 12
@@ -221,9 +222,7 @@ export function BlogPostPage() {
       </header>
       <img className="blog-article-cover" src={post.image} alt="" />
       <div className="blog-article-body">
-        {post.content.split(/\n\s*\n/).map((paragraph) => (
-          <p key={paragraph}>{paragraph}</p>
-        ))}
+        <Markdown content={post.content} className="blog-article-content" />
         <aside>
           <span>¿QUIERES FORMARTE?</span>
           <h2>

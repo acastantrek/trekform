@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
+import { Markdown } from '../../../components/common/Markdown'
 import { FormField } from '../../components/FormField'
 import { useAuth } from '../../contexts/useAuth'
 import { slugify } from '../../lib/slugify'
@@ -102,7 +103,7 @@ export function BlogPostFormPage() {
         </div>
       </div>
 
-      <form className="form" onSubmit={handleSubmit}>
+      <form className="form form-wide" onSubmit={handleSubmit}>
         {error && <div className="alert alert-error">{error}</div>}
 
         <div className="form-grid">
@@ -168,13 +169,19 @@ export function BlogPostFormPage() {
           />
         </FormField>
 
-        <FormField label="Contenido" htmlFor="post-content">
-          <textarea
-            id="post-content"
-            style={{ minHeight: 260 }}
-            value={form.content ?? ''}
-            onChange={(event) => setForm((prev) => ({ ...prev, content: event.target.value }))}
-          />
+        <FormField
+          label="Contenido"
+          htmlFor="post-content"
+          hint="Admite Markdown: **negrita**, # títulos, listas, enlaces… se pega tal cual y se renderiza en el blog."
+        >
+          <div className="markdown-field">
+            <textarea
+              id="post-content"
+              value={form.content ?? ''}
+              onChange={(event) => setForm((prev) => ({ ...prev, content: event.target.value }))}
+            />
+            <Markdown content={form.content || '*Nada que mostrar todavía.*'} className="markdown-preview" />
+          </div>
         </FormField>
 
         <div className="form-grid">

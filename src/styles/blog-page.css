@@ -360,11 +360,73 @@
   margin: 0 auto;
   padding: 68px 24px 100px;
 }
-.blog-article-body > p {
+.blog-article-content > p,
+.blog-article-content > ul,
+.blog-article-content > ol,
+.blog-article-content > blockquote {
   margin: 0 0 24px;
   color: #444;
   font-size: 18px;
   line-height: 1.9;
+}
+.blog-article-content > h1,
+.blog-article-content > h2,
+.blog-article-content > h3,
+.blog-article-content > h4 {
+  margin: 40px 0 16px;
+  font-family: 'Inter Tight', sans-serif;
+  letter-spacing: -0.03em;
+  color: #111;
+}
+.blog-article-content > h1 {
+  font-size: 34px;
+}
+.blog-article-content > h2 {
+  font-size: 28px;
+}
+.blog-article-content > h3 {
+  font-size: 22px;
+}
+.blog-article-content > h4 {
+  font-size: 19px;
+}
+.blog-article-content strong {
+  font-weight: 700;
+  color: #111;
+}
+.blog-article-content a {
+  color: var(--orange);
+  text-decoration: underline;
+}
+.blog-article-content ul,
+.blog-article-content ol {
+  padding-left: 24px;
+}
+.blog-article-content li {
+  margin-bottom: 8px;
+}
+.blog-article-content > blockquote {
+  padding-left: 20px;
+  border-left: 3px solid var(--orange);
+  font-style: italic;
+  color: #555;
+}
+.blog-article-content code {
+  background: #f1eee7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+.blog-article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 24px;
+}
+.blog-article-content th,
+.blog-article-content td {
+  border: 1px solid #e2e0da;
+  padding: 8px 12px;
+  text-align: left;
 }
 .blog-article-body aside {
   margin-top: 58px;
