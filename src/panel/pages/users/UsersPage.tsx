@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { DataTable } from '../../components/DataTable'
+import { FormField } from '../../components/FormField'
 import { useAuth } from '../../contexts/useAuth'
-import { listUsers, updateUserActive, updateUserRole } from '../../services/users'
+import { inviteAdminUser, listUsers, updateUserActive, updateUserRole } from '../../services/users'
 import type { AdminUser, AppRole } from '../../types'
 
 const roleOptions: AppRole[] = ['admin', 'student', 'company']
@@ -11,6 +12,8 @@ const roleLabel: Record<AppRole, string> = {
   student: 'Alumno',
   company: 'Empresa',
 }
+
+const emptyInviteForm = { email: '', firstName: '', lastName: '' }
 
 function formatDate(value: string) {
   return value ? new Date(value).toLocaleDateString('es-ES') : '—'
@@ -23,6 +26,21 @@ export function UsersPage() {
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [updatingId, setUpdatingId] = useState<string | null>(null)
+  const [inviteForm, setInviteForm] = useState(emptyInviteForm)
+  const [inviting, setInviting] = useState(false)
+  const [inviteError, setInviteError] = useState<string | null>(null)
+  const [inviteSuccess, setInviteSuccess] = useState<string | null>(null)
+
+  async function reload() {
+    try {
+      setUsers(await listUsers())
+      setError(null)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : 'Error al cargar los usuarios.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   useEffect(() => {
     listUsers()
@@ -33,6 +51,23 @@ export function UsersPage() {
       .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar los usuarios.'))
       .finally(() => setLoading(false))
   }, [])
+
+  async function handleInvite(event: FormEvent) {
+    event.preventDefault()
+    setInviting(true)
+    setInviteError(null)
+    setInviteSuccess(null)
+    try {
+      await inviteAdminUser(inviteForm)
+      setInviteSuccess(`Invitación enviada a ${inviteForm.email}.`)
+      setInviteForm(emptyInviteForm)
+      await reload()
+    } catch (cause) {
+      setInviteError(cause instanceof Error ? cause.message : 'No se pudo enviar la invitación.')
+    } finally {
+      setInviting(false)
+    }
+  }
 
   const filteredUsers = useMemo(() => {
     const term = search.trim().toLowerCase()
@@ -75,6 +110,47 @@ export function UsersPage() {
           <p>Gestiona quién tiene acceso de administrador al panel.</p>
         </div>
       </div>
+
+      <form className="form" onSubmit={handleInvite} style={{ marginBottom: 24 }}>
+        <h2>Invitar administrador</h2>
+        <p className="form-field-hint" style={{ marginTop: -4, marginBottom: 12 }}>
+          Se enviará un email de invitación para que la persona establezca su propia contraseña.
+        </p>
+        {inviteError && <div className="alert alert-error">{inviteError}</div>}
+        {inviteSuccess && <div className="alert alert-success">{inviteSuccess}</div>}
+
+        <div className="form-grid">
+          <FormField label="Nombre" htmlFor="invite-first-name">
+            <input
+              id="invite-first-name"
+              value={inviteForm.firstName}
+              onChange={(event) => setInviteForm((prev) => ({ ...prev, firstName: event.target.value }))}
+            />
+          </FormField>
+          <FormField label="Apellidos" htmlFor="invite-last-name">
+            <input
+              id="invite-last-name"
+              value={inviteForm.lastName}
+              onChange={(event) => setInviteForm((prev) => ({ ...prev, lastName: event.target.value }))}
+            />
+          </FormField>
+          <FormField label="Email" htmlFor="invite-email">
+            <input
+              id="invite-email"
+              type="email"
+              required
+              value={inviteForm.email}
+              onChange={(event) => setInviteForm((prev) => ({ ...prev, email: event.target.value }))}
+            />
+          </FormField>
+        </div>
+
+        <div className="form-actions">
+          <button type="submit" className="btn btn-primary" disabled={inviting}>
+            {inviting ? 'Enviando…' : 'Enviar invitación'}
+          </button>
+        </div>
+      </form>
 
       <div className="filters-bar">
         <input

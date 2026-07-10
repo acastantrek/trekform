@@ -53,3 +53,23 @@ export async function updateUserActive(id: string, isActive: boolean): Promise<v
   const { error } = await client.from('profiles').update({ is_active: isActive }).eq('id', id)
   if (error) throw new Error(`No se pudo actualizar el estado: ${error.message}`)
 }
+
+export interface InviteAdminInput {
+  email: string
+  firstName: string
+  lastName: string
+}
+
+export async function inviteAdminUser(input: InviteAdminInput): Promise<void> {
+  const client = requireClient()
+  const { data, error } = await client.functions.invoke('invite-admin', {
+    body: { email: input.email, firstName: input.firstName, lastName: input.lastName },
+  })
+
+  if (error) {
+    const context = (error as { context?: Response }).context
+    const body = await context?.json().catch(() => null)
+    throw new Error(body?.error ?? `No se pudo enviar la invitación: ${error.message}`)
+  }
+  if (data?.error) throw new Error(data.error)
+}

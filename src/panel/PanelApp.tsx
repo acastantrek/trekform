@@ -3,6 +3,7 @@ import { AuthProvider } from './contexts/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { AppLayout } from './layouts/AppLayout'
 import { LoginPage } from './pages/LoginPage'
+import { SetPasswordPage } from './pages/SetPasswordPage'
 import { CoursesPage } from './pages/courses/CoursesPage'
 import { CourseFormPage } from './pages/courses/CourseFormPage'
 import { CategoriesPage } from './pages/courses/CategoriesPage'
@@ -20,6 +21,7 @@ export function PanelApp() {
       <AuthProvider>
         <Routes>
           <Route path="login" element={<LoginPage />} />
+          <Route path="set-password" element={<SetPasswordPage />} />
 
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
