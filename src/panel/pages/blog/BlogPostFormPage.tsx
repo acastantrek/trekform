@@ -48,7 +48,6 @@ export function BlogPostFormPage() {
 
   const [categories, setCategories] = useState<BlogCategory[]>([])
   const [form, setForm] = useState<BlogPostInput>(emptyForm)
-  const [slugTouched, setSlugTouched] = useState(false)
   const [loading, setLoading] = useState(isEditing)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -67,7 +66,6 @@ export function BlogPostFormPage() {
           setError('No se ha encontrado el artículo.')
           return
         }
-        setSlugTouched(true)
         setForm(toInput(data))
       })
       .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar el artículo.'))
@@ -106,34 +104,17 @@ export function BlogPostFormPage() {
       <form className="form form-wide" onSubmit={handleSubmit}>
         {error && <div className="alert alert-error">{error}</div>}
 
-        <div className="form-grid">
-          <FormField label="Título" htmlFor="post-title">
-            <input
-              id="post-title"
-              required
-              value={form.title}
-              onChange={(event) => {
-                const title = event.target.value
-                setForm((prev) => ({
-                  ...prev,
-                  title,
-                  slug: slugTouched ? prev.slug : slugify(title),
-                }))
-              }}
-            />
-          </FormField>
-          <FormField label="Slug" htmlFor="post-slug">
-            <input
-              id="post-slug"
-              required
-              value={form.slug}
-              onChange={(event) => {
-                setSlugTouched(true)
-                setForm((prev) => ({ ...prev, slug: event.target.value }))
-              }}
-            />
-          </FormField>
-        </div>
+        <FormField label="Título" htmlFor="post-title">
+          <input
+            id="post-title"
+            required
+            value={form.title}
+            onChange={(event) => {
+              const title = event.target.value
+              setForm((prev) => ({ ...prev, title, slug: slugify(title) }))
+            }}
+          />
+        </FormField>
 
         <div className="form-grid">
           <FormField label="Categoría" htmlFor="post-category">
