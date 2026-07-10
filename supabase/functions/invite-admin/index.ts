@@ -7,7 +7,7 @@ const PANEL_APP_URL = Deno.env.get('PANEL_APP_URL') ?? 'https://trekform.vercel.
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, apikey, content-type',
+  'Access-Control-Allow-Headers': 'authorization, apikey, content-type, x-client-info',
 }
 
 function json(body: unknown, status = 200) {

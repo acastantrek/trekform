@@ -67,8 +67,9 @@ export async function inviteAdminUser(input: InviteAdminInput): Promise<void> {
   })
 
   if (error) {
-    const context = (error as { context?: Response }).context
-    const body = await context?.json().catch(() => null)
+    const context = (error as { context?: unknown }).context
+    const body =
+      context instanceof Response ? await context.json().catch(() => null) : null
     throw new Error(body?.error ?? `No se pudo enviar la invitación: ${error.message}`)
   }
   if (data?.error) throw new Error(data.error)
