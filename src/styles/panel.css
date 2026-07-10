@@ -1,0 +1,570 @@
+/*
+  Estilos del panel de administración (`/panel`), aislados del resto del
+  sitio mediante el selector envolvente `.panel-app`. No se reutilizan
+  nombres de variable ni selectores de elemento sin ámbito para no chocar
+  con `brand.css` / `styles.css` del sitio público.
+*/
+
+.panel-app {
+  --panel-navy-light: #16233d;
+  --panel-orange-light: #ffaa17;
+  --panel-border: #e2e0da;
+  --panel-text: #1c2230;
+  --panel-text-muted: #6b7280;
+  --panel-danger: #c0392b;
+  --panel-positive: #1b8a5a;
+  --panel-warning: #b8790b;
+  --panel-radius: 8px;
+
+  min-height: 100vh;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter Tight', sans-serif;
+  background: var(--cream);
+  color: var(--panel-text);
+}
+
+.panel-app,
+.panel-app * {
+  box-sizing: border-box;
+}
+
+.panel-app button,
+.panel-app input,
+.panel-app select,
+.panel-app textarea {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.panel-app a {
+  color: var(--orange);
+}
+
+.panel-app h1,
+.panel-app h2,
+.panel-app h3 {
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+
+.panel-app :where(h1, h2, h3, h4, h5, h6) {
+  text-transform: none !important;
+}
+
+/* App shell */
+
+.panel-app .app-shell {
+  display: flex;
+  min-height: 100vh;
+}
+
+.panel-app .sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--navy);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 14px;
+}
+
+.panel-app .sidebar-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  padding: 0 10px 20px;
+  letter-spacing: 0.02em;
+}
+
+.panel-app .sidebar-title span {
+  color: var(--panel-orange-light);
+}
+
+.panel-app .sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.panel-app .sidebar-nav a {
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: var(--panel-radius);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.panel-app .sidebar-nav a:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.panel-app .sidebar-nav a.active {
+  background: var(--orange);
+  color: #fff;
+}
+
+.panel-app .sidebar-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 14px;
+  margin-top: 14px;
+}
+
+.panel-app .sidebar-user {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0 10px 10px;
+}
+
+.panel-app .sidebar-footer button {
+  width: 100%;
+}
+
+.panel-app .main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 32px 40px;
+}
+
+.panel-app .page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.panel-app .page-header p {
+  color: var(--panel-text-muted);
+  margin: 4px 0 0;
+}
+
+/* Buttons */
+
+.panel-app .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 9px 18px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.panel-app .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.panel-app .btn-primary {
+  background: linear-gradient(135deg, var(--orange), var(--panel-orange-light));
+  color: #fff;
+}
+
+.panel-app .btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.panel-app .btn-secondary {
+  background: #fff;
+  border-color: var(--panel-border);
+  color: var(--panel-text);
+}
+
+.panel-app .btn-secondary:hover:not(:disabled) {
+  border-color: var(--orange);
+}
+
+.panel-app .btn-danger {
+  background: #fff;
+  border-color: var(--panel-danger);
+  color: var(--panel-danger);
+}
+
+.panel-app .btn-danger:hover:not(:disabled) {
+  background: var(--panel-danger);
+  color: #fff;
+}
+
+.panel-app .btn-ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.panel-app .btn-ghost:hover:not(:disabled) {
+  border-color: #fff;
+  color: #fff;
+}
+
+.panel-app .btn-sm {
+  padding: 5px 12px;
+  font-size: 13px;
+}
+
+/* Table */
+
+.panel-app .table-wrap {
+  background: #fff;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--panel-radius);
+  overflow-x: auto;
+}
+
+.panel-app .data-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 14px;
+}
+
+.panel-app .data-table th,
+.panel-app .data-table td {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--panel-border);
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+.panel-app .data-table .col-wide {
+  width: 28%;
+}
+
+.panel-app .data-table .col-medium {
+  width: 18%;
+}
+
+.panel-app .data-table .col-narrow {
+  width: 12%;
+}
+
+.panel-app .data-table .col-actions {
+  width: 18%;
+  white-space: nowrap;
+}
+
+.panel-app .data-table .row-actions .btn-sm {
+  padding: 5px 8px;
+}
+
+.panel-app .data-table th {
+  color: var(--panel-text-muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.panel-app .data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.panel-app .data-table tbody tr:hover {
+  background: rgba(235, 118, 21, 0.04);
+}
+
+.panel-app .row-actions {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+  flex-wrap: wrap;
+}
+
+.panel-app .pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.panel-app .pagination-status {
+  font-size: 13px;
+  color: var(--panel-text-muted);
+}
+
+.panel-app .empty-state {
+  color: var(--panel-text-muted);
+  background: #fff;
+  border: 1px dashed var(--panel-border);
+  border-radius: var(--panel-radius);
+  padding: 32px;
+  text-align: center;
+}
+
+/* Badges */
+
+.panel-app .badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.panel-app .badge--neutral {
+  background: #eef0f3;
+  color: #4b5563;
+}
+
+.panel-app .badge--positive {
+  background: rgba(27, 138, 90, 0.12);
+  color: var(--panel-positive);
+}
+
+.panel-app .badge--warning {
+  background: rgba(184, 121, 11, 0.14);
+  color: var(--panel-warning);
+}
+
+.panel-app .badge--negative {
+  background: rgba(192, 57, 43, 0.12);
+  color: var(--panel-danger);
+}
+
+/* Forms */
+
+.panel-app .form {
+  background: #fff;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--panel-radius);
+  padding: 24px;
+  max-width: 720px;
+}
+
+.panel-app .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.panel-app .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.panel-app .form-field label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--panel-text);
+}
+
+.panel-app .form-field input,
+.panel-app .form-field select,
+.panel-app .form-field textarea {
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 9px 12px;
+  color: var(--panel-text);
+  background: #fff;
+}
+
+.panel-app .form-field input:focus,
+.panel-app .form-field select:focus,
+.panel-app .form-field textarea:focus {
+  outline: 2px solid var(--orange);
+  outline-offset: 1px;
+}
+
+.panel-app .form-field textarea {
+  resize: vertical;
+  min-height: 90px;
+  font-family: inherit;
+}
+
+.panel-app .form-field-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--panel-text-muted);
+}
+
+.panel-app .form-field-error {
+  margin: 0;
+  font-size: 12px;
+  color: var(--panel-danger);
+}
+
+.panel-app .checkbox-field {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel-app .checkbox-field input {
+  width: auto;
+}
+
+.panel-app .form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+/* Modal */
+
+.panel-app .modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 18, 32, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+}
+
+.panel-app .modal-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+}
+
+.panel-app .modal-card h2 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.panel-app .modal-card p {
+  color: var(--panel-text-muted);
+  margin: 0 0 20px;
+}
+
+.panel-app .modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Filters */
+
+.panel-app .filters-bar {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.panel-app .filters-bar select,
+.panel-app .filters-bar input {
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  background: #fff;
+}
+
+.panel-app .filters-bar .search-input {
+  flex: 1;
+  min-width: 240px;
+  max-width: 480px;
+}
+
+/* Alerts */
+
+.panel-app .alert {
+  border-radius: var(--panel-radius);
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  font-size: 14px;
+}
+
+.panel-app .alert-error {
+  background: rgba(192, 57, 43, 0.08);
+  color: var(--panel-danger);
+  border: 1px solid rgba(192, 57, 43, 0.25);
+}
+
+.panel-app .alert-success {
+  background: rgba(27, 138, 90, 0.08);
+  color: var(--panel-positive);
+  border: 1px solid rgba(27, 138, 90, 0.25);
+}
+
+/* Misc states */
+
+.panel-app .page-loading,
+.panel-app .unauthorized {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 12px;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Login */
+
+.panel-app .login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--navy);
+}
+
+.panel-app .login-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 36px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.panel-app .login-card h1 {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.panel-app .login-card p {
+  color: var(--panel-text-muted);
+  margin: 0 0 24px;
+  font-size: 14px;
+}
+
+.panel-app .login-card .btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+@media (max-width: 720px) {
+  .panel-app .app-shell {
+    flex-direction: column;
+  }
+
+  .panel-app .sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+  }
+
+  .panel-app .sidebar-nav {
+    flex-direction: row;
+  }
+
+  .panel-app .sidebar-footer {
+    display: none;
+  }
+
+  .panel-app .main-content {
+    padding: 20px;
+  }
+
+  .panel-app .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

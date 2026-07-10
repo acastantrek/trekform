@@ -11,6 +11,7 @@
 @import './blog-page.css';
 @import './contact-page-v2.css';
 @import './course-detail-page.css';
+@import './panel.css';
 
 :where(body, button, input, select, textarea) {
   font-family: 'Inter Tight', sans-serif;

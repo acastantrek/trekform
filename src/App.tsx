@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Outlet, Route, Routes } from 'react-router-dom'
 import { RouteScrollToTop } from './components/common/RouteScrollToTop'
 import { StaticFooter } from './components/layout/StaticFooter'
 import { StaticHeader } from './components/layout/StaticHeader'
@@ -9,14 +9,26 @@ import { ContactPage } from './pages/ContactPage'
 import { CourseDetailPage } from './pages/CourseDetailPage'
 import { HomePage } from './pages/HomePage'
 import { RegistrationPage } from './pages/RegistrationPage'
+import { PanelApp } from './panel/PanelApp'
+
+function PublicLayout() {
+  return (
+    <>
+      <StaticHeader />
+      <main>
+        <Outlet />
+      </main>
+      <StaticFooter />
+    </>
+  )
+}
 
 export default function App() {
   return (
     <>
       <RouteScrollToTop />
-      <StaticHeader />
-      <main>
-        <Routes>
+      <Routes>
+        <Route element={<PublicLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/quienes-somos" element={<AboutPage />} />
           <Route path="/cursos-trekform" element={<CoursesPage />} />
@@ -26,9 +38,10 @@ export default function App() {
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/contacto" element={<ContactPage />} />
           <Route path="*" element={<HomePage />} />
-        </Routes>
-      </main>
-      <StaticFooter />
+        </Route>
+
+        <Route path="/panel/*" element={<PanelApp />} />
+      </Routes>
     </>
   )
 }
