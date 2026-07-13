@@ -1,4 +1,4 @@
-﻿import { useState, type FormEvent } from 'react'
+﻿import { useState, type CSSProperties, type FormEvent } from 'react'
 import {
   ArrowRight,
   Building2,
@@ -10,6 +10,7 @@ import {
   Phone,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 import { submitContactRequest } from '../services/contact'
 
 const offices = [
@@ -26,6 +27,8 @@ const offices = [
 type SubmitState = 'idle' | 'sending' | 'success' | 'error'
 
 export function ContactPage() {
+  useScrollReveal()
+
   const [submitState, setSubmitState] = useState<SubmitState>('idle')
   const [error, setError] = useState('')
 
@@ -63,23 +66,23 @@ export function ContactPage() {
   return (
     <div className="contact-v2">
       <section className="contact-v2-hero">
-        <div className="contact-v2-hero-copy">
-          <span>HABLEMOS</span>
-          <h1>
+        <div className="contact-v2-hero-copy" data-reveal>
+          <span data-reveal data-reveal-delay="0.04">HABLEMOS</span>
+          <h1 data-reveal data-reveal-delay="0.08">
             Contacta con el equipo <span>Trekform</span>
           </h1>
-          <p>
+          <p data-reveal data-reveal-delay="0.12">
             Cuéntanos qué formación necesitas y te ayudaremos a encontrar el curso, la fecha y la
             modalidad adecuada para ti o para tu empresa.
           </p>
-          <div className="contact-v2-hero-actions">
+          <div className="contact-v2-hero-actions" data-reveal data-reveal-delay="0.16">
             <a href="tel:+34932640532">
               Llamar ahora <Phone size={18} />
             </a>
             <a href="mailto:comercial@trekform.com">Enviar email</a>
           </div>
         </div>
-        <div className="contact-v2-hero-image" aria-hidden="true">
+        <div className="contact-v2-hero-image" aria-hidden="true" data-reveal data-reveal-delay="0.1">
           <img
             src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1300&q=88"
             alt=""
@@ -88,7 +91,7 @@ export function ContactPage() {
       </section>
 
       <section className="contact-v2-main" aria-labelledby="contact-form-title">
-        <div className="contact-v2-info">
+        <div className="contact-v2-info" data-reveal>
           <span className="contact-v2-kicker">CONTACTO DIRECTO</span>
           <h2>
             Estamos <span>para ayudarte.</span>
@@ -131,7 +134,7 @@ export function ContactPage() {
           </div>
         </div>
 
-        <div className="contact-v2-form-wrap">
+        <div className="contact-v2-form-wrap" data-reveal data-reveal-delay="0.08">
           {submitState === 'success' ? (
             <div className="contact-v2-success" role="status">
               <CheckCircle2 size={48} />
@@ -239,7 +242,7 @@ export function ContactPage() {
         </div>
       </section>
 
-      <section className="contact-v2-offices" aria-labelledby="offices-title">
+      <section className="contact-v2-offices" aria-labelledby="offices-title" data-reveal>
         <div>
           <span className="contact-v2-kicker">COBERTURA NACIONAL</span>
           <h2 id="offices-title">
@@ -249,7 +252,12 @@ export function ContactPage() {
         <p>Contacta con el equipo de tu zona o consulta otras poblaciones disponibles.</p>
         <div className="contact-v2-office-grid">
           {offices.map((office, index) => (
-            <a href={office.href} key={office.city}>
+            <a
+              href={office.href}
+              key={office.city}
+              data-reveal
+              style={{ '--reveal-delay': `${0.04 + index * 0.03}s` } as CSSProperties}
+            >
               <span>{String(index + 1).padStart(2, '0')}</span>
               <MapPin size={17} />
               <strong>{office.city}</strong>
@@ -259,7 +267,7 @@ export function ContactPage() {
         </div>
       </section>
 
-      <section className="contact-v2-company">
+      <section className="contact-v2-company" data-reveal>
         <Building2 size={35} />
         <div>
           <span>FORMACIÓN PARA EMPRESAS</span>

@@ -1,66 +1,14 @@
 ﻿import { ArrowRight, CheckCircle2 } from 'lucide-react'
-import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { CourseCatalog } from '../components/courses/CourseCatalog'
 import { LatestNews } from '../components/home/LatestNews'
 import { TestimonialsCarousel } from '../components/home/TestimonialsCarousel'
 import { TrekformHeroSection } from '../components/home/TrekformHeroSection'
 import { TrekformStatsSection } from '../components/home/TrekformStatsSection'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export function HomePage() {
-  useEffect(() => {
-    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
-
-    if (media.matches) {
-      const revealAll = () =>
-        document.querySelectorAll('[data-reveal]').forEach((element) => {
-          element.classList.add('is-visible')
-        })
-      revealAll()
-      // Content that loads asynchronously (e.g. courses fetched from Supabase)
-      // renders after this effect runs, so keep marking new elements as visible.
-      const mutationObserver = new MutationObserver(revealAll)
-      mutationObserver.observe(document.body, { childList: true, subtree: true })
-      return () => mutationObserver.disconnect()
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return
-          entry.target.classList.add('is-visible')
-          observer.unobserve(entry.target)
-        })
-      },
-      { threshold: 0.18, rootMargin: '0px 0px -8% 0px' },
-    )
-
-    const observeNew = (root: ParentNode) => {
-      root.querySelectorAll('[data-reveal]:not(.is-visible)').forEach((element) => {
-        observer.observe(element)
-      })
-    }
-
-    observeNew(document)
-
-    // Elements added after mount (e.g. course cards loaded from Supabase) would
-    // otherwise never be picked up by the observer above and stay invisible.
-    const mutationObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (!(node instanceof Element)) return
-          if (node.matches('[data-reveal]')) observer.observe(node)
-          observeNew(node)
-        })
-      })
-    })
-    mutationObserver.observe(document.body, { childList: true, subtree: true })
-
-    return () => {
-      observer.disconnect()
-      mutationObserver.disconnect()
-    }
-  }, [])
+  useScrollReveal()
 
   return (
     <>

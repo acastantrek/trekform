@@ -1,10 +1,11 @@
-﻿import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { ArrowLeft, ArrowRight, CalendarDays, Search } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { Markdown } from '../components/common/Markdown'
+import { useScrollReveal } from '../hooks/useScrollReveal'
 import { getBlogPost, getBlogPosts, type BlogPost } from '../services/blog'
 
-const pageSize = 12
+const pageSize = 8
 const dateFormatter = new Intl.DateTimeFormat('es-ES', {
   day: '2-digit',
   month: 'short',
@@ -26,6 +27,8 @@ function accentedTitle(text: string) {
 }
 
 export function BlogPage() {
+  useScrollReveal()
+
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
@@ -49,6 +52,13 @@ export function BlogPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
   const visiblePosts = filtered.slice((page - 1) * pageSize, page * pageSize)
 
+  const pageWindowSize = Math.min(5, totalPages)
+  const pageWindowStart = Math.min(
+    Math.max(1, page - Math.floor(pageWindowSize / 2)),
+    totalPages - pageWindowSize + 1,
+  )
+  const pageWindow = Array.from({ length: pageWindowSize }, (_, index) => pageWindowStart + index)
+
   return (
     <div className="blog-page">
       <section className="blog-hero">
@@ -60,30 +70,21 @@ export function BlogPage() {
               "url('https://trekform.com/trekform/uploads/assets/images/backgrounds/headerblog2.jpg')",
           }}
         />
-        <div className="blog-hero-inner">
+        <div className="blog-hero-inner" data-reveal>
           <a href="/blog" className="blog-hero-title-link">
-            <h1>
+            <h1 data-reveal data-reveal-delay="0.06">
               El Blog de <span>trekform</span>
             </h1>
           </a>
-          <div className="blog-breadcrumb-box">
-            <ul className="blog-breadcrumb" aria-label="Breadcrumb">
-              <li>
-                <Link to="/">Inicio</Link>
-              </li>
-              <li>
-                <span>/</span>
-              </li>
-              <li>
-                <Link to="/blog">Blog</Link>
-              </li>
-            </ul>
-          </div>
+          <p data-reveal data-reveal-delay="0.1">
+            Consejos prácticos, actualidad del sector y buenas prácticas de prevención y
+            maquinaria industrial.
+          </p>
         </div>
       </section>
 
       <section className="blog-content" aria-labelledby="blog-title">
-        <label className="blog-search">
+        <label className="blog-search" data-reveal>
           <span className="sr-only">Buscar artículos</span>
           <input
             type="search"
@@ -126,8 +127,8 @@ export function BlogPage() {
         ) : (
           <>
             <div className="blog-grid">
-              {visiblePosts.map((post) => (
-                <BlogCard post={post} key={post.id} />
+              {visiblePosts.map((post, index) => (
+                <BlogCard post={post} index={index} key={post.id} />
               ))}
             </div>
             <div className="blog-pagination">
@@ -136,18 +137,16 @@ export function BlogPage() {
                 {filtered.length}
               </span>
               <div>
-                {Array.from({ length: Math.min(5, totalPages) }, (_, index) => index + 1).map(
-                  (item) => (
-                    <button
-                      type="button"
-                      className={page === item ? 'active' : ''}
-                      onClick={() => setPage(item)}
-                      key={item}
-                    >
-                      {item}
-                    </button>
-                  ),
-                )}
+                {pageWindow.map((item) => (
+                  <button
+                    type="button"
+                    className={page === item ? 'active' : ''}
+                    onClick={() => setPage(item)}
+                    key={item}
+                  >
+                    {item}
+                  </button>
+                ))}
                 <button
                   type="button"
                   disabled={page >= totalPages}
@@ -164,9 +163,13 @@ export function BlogPage() {
   )
 }
 
-function BlogCard({ post }: { post: BlogPost }) {
+function BlogCard({ post, index }: { post: BlogPost; index: number }) {
   return (
-    <article className="blog-card">
+    <article
+      className="blog-card"
+      data-reveal
+      style={{ '--reveal-delay': `${0.04 + index * 0.04}s` } as CSSProperties}
+    >
       <Link className="blog-card-image" to={`/blog/${post.slug}`}>
         <img src={post.image} alt="" />
       </Link>
