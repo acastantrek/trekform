@@ -11,6 +11,8 @@ export interface BlogPost {
   publishedAt: string
 }
 
+const defaultBlogImage = '/brand/courses-hero-original.jpg'
+
 const defaultContent =
   'La formación técnica y preventiva ayuda a trabajar con mayor seguridad, reducir riesgos y mejorar la preparación profesional. En Trekform combinamos teoría clara, práctica real y criterios aplicables al puesto de trabajo.\n\nCada convocatoria está pensada para que el alumno entienda los riesgos, use correctamente los equipos y pueda aplicar lo aprendido desde el primer día.'
 
@@ -166,7 +168,7 @@ function mapPost(row: BlogPostRow): BlogPost {
     title: row.title,
     excerpt: row.excerpt ?? '',
     content: row.content ?? row.excerpt ?? '',
-    image: row.image_url ?? fallbackBlogPosts[0].image,
+    image: row.image_url || defaultBlogImage,
     category: row.blog_categories?.name ?? 'Actualidad',
     publishedAt: row.published_at ?? new Date().toISOString(),
   }
