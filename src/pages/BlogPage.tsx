@@ -195,7 +195,14 @@ export function BlogPostPage() {
       .finally(() => setLoading(false))
   }, [slug])
 
-  if (loading) return <div className="blog-article-loading">Cargando artículo...</div>
+  if (loading) {
+    return (
+      <div className="blog-article-loading" role="status">
+        <span />
+        <p>Cargando artículo…</p>
+      </div>
+    )
+  }
   if (!post) {
     return (
       <section className="blog-article-missing">
