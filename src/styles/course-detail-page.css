@@ -191,11 +191,13 @@
   font-weight: 800;
   text-align: right;
 }
-.course-detail-sidebar > a {
+.course-detail-sidebar > a,
+  .course-detail-sidebar > .course-detail-enroll-button {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 15px;
+  border: 0;
   background: #eb7615;
   color: #0b1220;
   font-size: 10px;
@@ -364,10 +366,13 @@
 .course-detail-session-price strong {
   font-size: 20px;
 }
-.course-detail-session-price a {
+.course-detail-session-price a,
+.course-detail-session-price button {
   display: flex;
   align-items: center;
   gap: 12px;
+  border: 0;
+  background: none;
   color: #eb7615;
   font-size: 10px;
   font-weight: 900;
@@ -771,10 +776,12 @@
   font-size: 12px;
   line-height: 1.45;
 }
-.course-detail-sidebar > a {
+.course-detail-sidebar > a,
+  .course-detail-sidebar > .course-detail-enroll-button {
   min-height: 54px;
   justify-content: space-between;
   padding: 0 18px;
+  border: 0;
   border-radius: 999px;
 }
 .course-detail-sidebar-links {
@@ -869,9 +876,11 @@
   font-size: 28px;
   letter-spacing: -0.03em;
 }
-.course-detail-session-price a {
+.course-detail-session-price a,
+.course-detail-session-price button {
   min-height: 46px;
   padding: 0 16px;
+  border: 0;
   border-radius: 999px;
   background: #0f1825;
   color: #fff;
@@ -958,7 +967,9 @@
   }
   .course-detail-hero-actions a,
   .course-detail-sidebar > a,
+  .course-detail-sidebar > .course-detail-enroll-button,
   .course-detail-session-price a,
+.course-detail-session-price button,
   .course-detail-no-sessions a,
   .course-detail-final-cta a {
     width: 100%;
@@ -1340,7 +1351,9 @@
 .course-detail-sidebar dd {
   color: #1d1d1b;
 }
-.course-detail-sidebar > a {
+.course-detail-sidebar > a,
+  .course-detail-sidebar > .course-detail-enroll-button {
+  border: 0;
   border-radius: 5px;
   background: linear-gradient(135deg, #ffaa17, #eb7615);
   color: #111;
@@ -1403,9 +1416,11 @@
   grid-template-columns: 1fr;
   justify-items: end;
 }
-.course-detail-session-price a {
+.course-detail-session-price a,
+.course-detail-session-price button {
   min-height: 42px;
   padding: 0 16px;
+  border: 0;
   border-radius: 5px;
   background: linear-gradient(135deg, #ffaa17, #eb7615);
   color: #111;

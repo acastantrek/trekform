@@ -15,9 +15,11 @@
   Users,
 } from 'lucide-react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
 import { useCourses } from '../hooks/useCourses'
+import { getRegistrationSessions, type RegistrationSession } from '../services/registrations'
 import type { Course } from '../types/course'
 
 const pageSize = 8
@@ -123,6 +125,24 @@ export function CoursesPage() {
   const [durationFilters, setDurationFilters] = useState<string[]>([])
   const [certificationFilters, setCertificationFilters] = useState<string[]>([])
   const [page, setPage] = useState(1)
+  const [nextSessionByCourseSlug, setNextSessionByCourseSlug] = useState<
+    Map<string, RegistrationSession>
+  >(new Map())
+  const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
+
+  useEffect(() => {
+    getRegistrationSessions()
+      .then((sessions) => {
+        const map = new Map<string, RegistrationSession>()
+        sessions.forEach((session) => {
+          if (session.status === 'open' && !map.has(session.courseSlug)) {
+            map.set(session.courseSlug, session)
+          }
+        })
+        setNextSessionByCourseSlug(map)
+      })
+      .catch(() => setNextSessionByCourseSlug(new Map()))
+  }, [])
 
   const catalogCategories = useMemo(() => {
     const available = new Set(allCourses.flatMap((course) => course.categories))
@@ -459,7 +479,18 @@ export function CoursesPage() {
                         </div>
                         <div className="catalog-card-actions">
                           <Link to={`/cursos-trekform/${course.slug}`}>Ver detalles</Link>
-                          <Link to="/inscripciones">Inscribirme</Link>
+                          {nextSessionByCourseSlug.has(course.slug) ? (
+                            <button
+                              type="button"
+                              onClick={() => setActiveSession(nextSessionByCourseSlug.get(course.slug)!)}
+                            >
+                              Inscribirme
+                            </button>
+                          ) : (
+                            <Link to={`/cursos-trekform/${course.slug}#convocatorias`}>
+                              Inscribirme
+                            </Link>
+                          )}
                         </div>
                       </div>
                     </article>
@@ -564,6 +595,10 @@ export function CoursesPage() {
           </div>
         </div>
       </section>
+
+      {activeSession && (
+        <EnrollmentModal session={activeSession} onClose={() => setActiveSession(null)} />
+      )}
     </>
   )
 }

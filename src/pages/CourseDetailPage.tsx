@@ -17,7 +17,9 @@
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import { getCourseDetail, type CourseDetail } from '../services/courses'
+import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
+import { getCourseDetail, type CourseDetail, type CourseSession } from '../services/courses'
+import type { RegistrationSession } from '../services/registrations'
 
 const dateFormatter = new Intl.DateTimeFormat('es-ES', {
   day: '2-digit',
@@ -69,10 +71,37 @@ function getAudienceLabel(audience: CourseDetail['audience']) {
   return 'Particulares y empresas'
 }
 
+function toRegistrationSession(course: CourseDetail, session: CourseSession): RegistrationSession {
+  return {
+    id: session.id,
+    slug: session.slug,
+    courseSlug: course.slug,
+    courseTitle: course.title,
+    category: course.categories[0] ?? 'Formación',
+    excerpt: course.excerpt,
+    objectives: course.objectives,
+    certificationName: course.certificationName,
+    isOfficialCertification: course.isOfficialCertification,
+    image: course.image,
+    city: session.city,
+    province: session.province,
+    venue: session.venue,
+    address: session.address,
+    startsAt: session.startsAt,
+    endsAt: session.endsAt,
+    modality: getModalityLabel(course.modality),
+    durationHours: course.durationMinutes ? course.durationMinutes / 60 : null,
+    capacity: session.capacity,
+    priceCents: session.priceCents,
+    status: session.status,
+  }
+}
+
 export function CourseDetailPage() {
   const { slug = '' } = useParams()
   const [course, setCourse] = useState<CourseDetail | null>(null)
   const [loading, setLoading] = useState(true)
+  const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -124,6 +153,7 @@ export function CourseDetailPage() {
   const durationLabel = formatDuration(course.durationMinutes)
   const methodologyLabel = course.methodology || 'Teórico-práctica'
   const certificationLabel = course.certificationName || 'Diploma acreditativo Trekform'
+  const nextOpenSession = course.sessions.find((session) => session.status === 'open')
   const trustCards = [
     {
       title: course.sidebarCertificationTitle,
@@ -328,9 +358,19 @@ export function CourseDetailPage() {
               <dd>{certificationLabel}</dd>
             </div>
           </dl>
-          <Link to="/inscripciones">
-            Inscríbete ahora <ArrowRight size={18} />
-          </Link>
+          {nextOpenSession ? (
+            <button
+              type="button"
+              className="course-detail-enroll-button"
+              onClick={() => setActiveSession(toRegistrationSession(course, nextOpenSession))}
+            >
+              Inscríbete ahora <ArrowRight size={18} />
+            </button>
+          ) : (
+            <Link to="/inscripciones">
+              Inscríbete ahora <ArrowRight size={18} />
+            </Link>
+          )}
           <p className="course-detail-sidebar-note">
             <ShieldCheck size={14} /> Sin compromiso · Respuesta en menos de 24h
           </p>
@@ -391,7 +431,7 @@ export function CourseDetailPage() {
         </blockquote>
       </section>
 
-      <section className="course-detail-sessions">
+      <section className="course-detail-sessions" id="convocatorias">
         <div className="course-detail-section-heading">
           <div>
             <span className="course-detail-kicker">PRÓXIMAS CONVOCATORIAS</span>
@@ -427,9 +467,12 @@ export function CourseDetailPage() {
                 </div>
                 <div className="course-detail-session-price">
                   {session.status === 'open' ? (
-                    <Link to="/inscripciones">
+                    <button
+                      type="button"
+                      onClick={() => setActiveSession(toRegistrationSession(course, session))}
+                    >
                       Inscríbete <ArrowRight size={16} />
-                    </Link>
+                    </button>
                   ) : (
                     <span>Sin plazas</span>
                   )}
@@ -467,6 +510,10 @@ export function CourseDetailPage() {
           Contactar <ArrowRight size={18} />
         </Link>
       </section>
+
+      {activeSession && (
+        <EnrollmentModal session={activeSession} onClose={() => setActiveSession(null)} />
+      )}
     </div>
   )
 }

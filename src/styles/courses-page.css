@@ -434,6 +434,8 @@
 .catalog-card {
   overflow: hidden;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 .catalog-image {
   position: relative;
@@ -487,6 +489,9 @@
 .catalog-card-body {
   padding: 14px 15px 15px;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 .catalog-card-body h2 {
   min-height: 52px;
@@ -526,7 +531,9 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  margin: 10px 0 12px;
+  margin-top: auto;
+  padding: 10px 0 0;
+  margin-bottom: 12px;
 }
 .course-dates small {
   width: 100%;
@@ -546,7 +553,8 @@
   grid-template-columns: 1fr 1fr;
   gap: 10px;
 }
-.catalog-card-actions a {
+.catalog-card-actions a,
+.catalog-card-actions button {
   height: 36px;
   border-radius: 4px;
   display: inline-flex;
@@ -560,7 +568,9 @@
   background: #fff;
   color: #202020;
 }
-.catalog-card-actions a:last-child {
+.catalog-card-actions a:last-child,
+.catalog-card-actions button {
+  border: 0;
   background: linear-gradient(135deg, #ffaa17, #eb7615);
   color: #fff;
 }
@@ -841,7 +851,8 @@
     margin-left: 0;
   }
   .catalog-company-cta a,
-  .catalog-card-actions a {
+  .catalog-card-actions a,
+  .catalog-card-actions button {
     width: 100%;
   }
   .catalog-card-actions {

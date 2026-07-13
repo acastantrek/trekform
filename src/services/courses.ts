@@ -106,6 +106,7 @@ export interface CourseSession {
   priceCents: number
   status: 'open' | 'full' | 'completed'
   venue: string
+  address: string
   city: string
   province: string
 }
@@ -202,6 +203,7 @@ function mapSessions(sessions: CourseDetailRow['course_sessions']) {
       priceCents: session.price_cents,
       status: session.status,
       venue: session.venues?.name ?? 'Formación online',
+      address: session.venues?.address ?? '',
       city: session.venues?.locations?.city ?? 'Online',
       province: session.venues?.locations?.province ?? '',
     }))
