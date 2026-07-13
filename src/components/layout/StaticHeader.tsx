@@ -1,5 +1,5 @@
 ﻿import { useState } from 'react'
-import { ArrowRight, Mail, Menu, Phone, ShieldCheck, X } from 'lucide-react'
+import { ArrowRight, Mail, Menu, ShieldCheck, X } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { TrekformLogo } from '../common/TrekformLogo'
 
@@ -12,28 +12,11 @@ const links = [
   { label: 'Contacto', to: '/contacto' },
 ] as const
 
-const cityPhones = [
-  'BARCELONA 932640532',
-  'MADRID 917376166',
-  'SEVILLA 955441523',
-  'VALENCIA 960661525',
-  'ZARAGOZA 876660075',
-  'BILBAO 944770615',
-  'VIGO 886060078',
-  'G.CANARIA 828150008',
-  'RESTO POBLACIONES 932640532',
-]
-
 export function StaticHeader() {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
     <>
-      <div className="cityline">
-        {cityPhones.map((item) => (
-          <span key={item}>{item}</span>
-        ))}
-      </div>
       <div className="topline">
         <span>
           <ShieldCheck size={16} /> ¡Por tu seguridad, escoge Trekform!
@@ -41,9 +24,6 @@ export function StaticHeader() {
         <div>
           <span>
             <Mail size={15} /> comercial@trekform.com
-          </span>
-          <span>
-            <Phone size={15} /> 93 264 05 32
           </span>
           <span className="top-sep">
             Lunes a Jueves de 9:00h - 18:00h | Viernes de 9:00h - 15:00h

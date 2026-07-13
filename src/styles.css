@@ -61,20 +61,6 @@ a {
     background-color 0.22s ease,
     border-color 0.22s ease;
 }
-.cityline {
-  min-height: 34px;
-  padding: 8px 5vw;
-  background: #0b1220;
-  color: rgba(255, 255, 255, 0.78);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 18px;
-  flex-wrap: wrap;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-}
 .topline {
   height: 38px;
   padding: 0 5vw;
@@ -787,9 +773,6 @@ footer > p {
   font-size: 11px;
 }
 @media (max-width: 900px) {
-  .cityline {
-    display: none;
-  }
   .topline {
     display: none;
   }
