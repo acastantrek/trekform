@@ -9,6 +9,9 @@ export interface RegistrationSession {
   courseTitle: string
   category: string
   excerpt: string
+  objectives: string
+  certificationName: string
+  isOfficialCertification: boolean
   image: string
   city: string
   province: string
@@ -19,6 +22,7 @@ export interface RegistrationSession {
   modality: string
   durationHours: number | null
   capacity: number | null
+  priceCents: number | null
   status: RegistrationSessionStatus
 }
 
@@ -29,6 +33,7 @@ interface SessionRow {
   ends_at: string
   status: RegistrationSessionStatus
   capacity: number | null
+  price_cents: number | null
   course_id: string
   venue_id: string | null
 }
@@ -38,6 +43,9 @@ interface CourseRow {
   slug: string
   title: string
   excerpt: string | null
+  objectives: string | null
+  certification_name: string | null
+  is_official_certification: boolean | null
   modality: string | null
   duration_hours: number | null
   image_url: string | null
@@ -87,13 +95,15 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
   const [sessionsResult, coursesResult, categoriesResult, venuesResult] = await Promise.all([
     supabase
       .from('course_sessions')
-      .select('id, slug, starts_at, ends_at, status, capacity, course_id, venue_id')
+      .select('id, slug, starts_at, ends_at, status, capacity, price_cents, course_id, venue_id')
       .neq('status', 'completed')
       .gte('ends_at', nowIso)
       .order('starts_at', { ascending: true }),
     supabase
       .from('courses')
-      .select('id, slug, title, excerpt, modality, duration_hours, image_url, category_id')
+      .select(
+        'id, slug, title, excerpt, objectives, certification_name, is_official_certification, modality, duration_hours, image_url, category_id',
+      )
       .eq('status', 'published')
       .order('title', { ascending: true }),
     supabase.from('course_categories').select('id, name').order('name', { ascending: true }),
@@ -139,6 +149,9 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
         courseTitle: course.title,
         category: (course.category_id && categoryById.get(course.category_id)) || 'Formación',
         excerpt: course.excerpt ?? 'Formación práctica y orientada a la seguridad laboral.',
+        objectives: course.objectives ?? '',
+        certificationName: course.certification_name ?? 'Diploma acreditativo Trekform',
+        isOfficialCertification: course.is_official_certification ?? false,
         image: course.image_url ?? fallbackImage,
         city,
         province,
@@ -149,6 +162,7 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
         modality: formatModality(course.modality),
         durationHours: course.duration_hours,
         capacity: session.capacity,
+        priceCents: session.price_cents,
         status: session.status,
       } satisfies RegistrationSession
     })

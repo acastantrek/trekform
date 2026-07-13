@@ -537,6 +537,12 @@
   color: #181818;
 }
 
+.registration-session-actions button:not(:disabled) {
+  border: 0;
+  background: #f5ae1b;
+  color: #181818;
+}
+
 .registration-session-actions button:disabled {
   border: 0;
   background: #e5e1d8;

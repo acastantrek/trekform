@@ -18,6 +18,7 @@
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
 import { useRegistrationSessions } from '../hooks/useRegistrationSessions'
 import type { RegistrationSession } from '../services/registrations'
 
@@ -162,6 +163,7 @@ export function RegistrationPage() {
   const [onlyAvailable, setOnlyAvailable] = useState(false)
   const [sortBy, setSortBy] = useState('Más próximas')
   const [page, setPage] = useState(1)
+  const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
 
   const cityOptions = useMemo(
     () => ['Todas las ciudades', ...new Set(sessions.map((session) => session.city))],
@@ -643,13 +645,9 @@ export function RegistrationPage() {
                               Completo
                             </button>
                           ) : (
-                            <a
-                              href="https://inscripciones.trekcom.online/"
-                              target="_blank"
-                              rel="noreferrer"
-                            >
+                            <button type="button" onClick={() => setActiveSession(session)}>
                               Inscribirme
-                            </a>
+                            </button>
                           )}
                         </div>
                       </article>
@@ -754,6 +752,10 @@ export function RegistrationPage() {
           </div>
         </div>
       </section>
+
+      {activeSession && (
+        <EnrollmentModal session={activeSession} onClose={() => setActiveSession(null)} />
+      )}
     </div>
   )
 }
