@@ -92,22 +92,24 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
 
   const nowIso = new Date().toISOString()
 
+  const client = supabase as any
+
   const [sessionsResult, coursesResult, categoriesResult, venuesResult] = await Promise.all([
-    supabase
+    client
       .from('course_sessions')
       .select('id, slug, starts_at, ends_at, status, capacity, price_cents, course_id, venue_id')
       .neq('status', 'completed')
       .gte('ends_at', nowIso)
       .order('starts_at', { ascending: true }),
-    supabase
+    client
       .from('courses')
       .select(
         'id, slug, title, excerpt, objectives, certification_name, is_official_certification, modality, duration_hours, image_url, category_id',
       )
       .eq('status', 'published')
       .order('title', { ascending: true }),
-    supabase.from('course_categories').select('id, name').order('name', { ascending: true }),
-    supabase.from('venues').select('id, name, address, locations(city, province)'),
+    client.from('course_categories').select('id, name').order('name', { ascending: true }),
+    client.from('venues').select('id, name, address, locations(city, province)'),
   ])
 
   if (sessionsResult.error) {
