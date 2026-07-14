@@ -630,12 +630,6 @@ export function RegistrationPage() {
                                 ? 'Últimas plazas'
                                 : 'Inscripción abierta'}
                           </span>
-                          <span className={`badge badge-${meta.secondaryBadge.tone}`}>
-                            {meta.secondaryBadge.tone === 'featured' ? (
-                              <Star size={11} fill="currentColor" />
-                            ) : null}{' '}
-                            {meta.secondaryBadge.label}
-                          </span>
                         </div>
 
                         <div className="registration-session-actions">
