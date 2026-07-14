@@ -11,6 +11,7 @@
   MapPin,
   RotateCcw,
   Search,
+  SlidersHorizontal,
   Star,
   UserRound,
   Users,
@@ -19,6 +20,7 @@ import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useRegistrationSessions } from '../hooks/useRegistrationSessions'
 import type { RegistrationSession } from '../services/registrations'
 
@@ -152,18 +154,45 @@ function matchesCertificationFilter(
 
 export function RegistrationPage() {
   const { sessions, loading, error } = useRegistrationSessions()
+  const isMobileFilters = useMediaQuery('(max-width: 680px)')
   const [search, setSearch] = useState('')
   const [selectedCity, setSelectedCity] = useState('Todas las ciudades')
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías')
   const [selectedModality, setSelectedModality] = useState('Todas las modalidades')
   const [selectedMonth, setSelectedMonth] = useState('Cualquier fecha')
   const [selectedClientType, setSelectedClientType] = useState(clientTypeOptions[0])
+  const [appliedCity, setAppliedCity] = useState('Todas las ciudades')
+  const [appliedCategory, setAppliedCategory] = useState('Todas las categorías')
+  const [appliedModality, setAppliedModality] = useState('Todas las modalidades')
+  const [appliedMonth, setAppliedMonth] = useState('Cualquier fecha')
   const [durationFilters, setDurationFilters] = useState<string[]>([])
   const [certificationFilters, setCertificationFilters] = useState<string[]>([])
   const [onlyAvailable, setOnlyAvailable] = useState(false)
   const [sortBy, setSortBy] = useState('Más próximas')
   const [page, setPage] = useState(1)
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
+  const [filtersOpen, setFiltersOpen] = useState(false)
+
+  const updateCity = (value: string) => {
+    setSelectedCity(value)
+    if (!isMobileFilters) setAppliedCity(value)
+    setPage(1)
+  }
+  const updateCategory = (value: string) => {
+    setSelectedCategory(value)
+    if (!isMobileFilters) setAppliedCategory(value)
+    setPage(1)
+  }
+  const updateModality = (value: string) => {
+    setSelectedModality(value)
+    if (!isMobileFilters) setAppliedModality(value)
+    setPage(1)
+  }
+  const updateMonth = (value: string) => {
+    setSelectedMonth(value)
+    if (!isMobileFilters) setAppliedMonth(value)
+    setPage(1)
+  }
 
   const cityOptions = useMemo(
     () => ['Todas las ciudades', ...new Set(sessions.map((session) => session.city))],
@@ -209,13 +238,13 @@ export function RegistrationPage() {
           ].join(' '),
         ).includes(query)
 
-      const matchesCity = selectedCity === cityOptions[0] || session.city === selectedCity
+      const matchesCity = appliedCity === cityOptions[0] || session.city === appliedCity
       const matchesCategory =
-        selectedCategory === categoryOptions[0] || session.category === selectedCategory
+        appliedCategory === categoryOptions[0] || session.category === appliedCategory
       const matchesModality =
-        selectedModality === modalityOptions[0] || session.modality === selectedModality
+        appliedModality === modalityOptions[0] || session.modality === appliedModality
       const matchesMonth =
-        selectedMonth === monthOptions[0] || getMonthLabel(session.startsAt) === selectedMonth
+        appliedMonth === monthOptions[0] || getMonthLabel(session.startsAt) === appliedMonth
       const matchesAvailability = !onlyAvailable || session.status !== 'full'
       const matchesDuration =
         durationFilters.length === 0 ||
@@ -244,6 +273,10 @@ export function RegistrationPage() {
       return new Date(left.startsAt).getTime() - new Date(right.startsAt).getTime()
     })
   }, [
+    appliedCategory,
+    appliedCity,
+    appliedModality,
+    appliedMonth,
     categoryOptions,
     certificationFilters,
     cityOptions,
@@ -252,10 +285,6 @@ export function RegistrationPage() {
     monthOptions,
     onlyAvailable,
     search,
-    selectedCategory,
-    selectedCity,
-    selectedModality,
-    selectedMonth,
     sessionMetaById,
     sessions,
     sortBy,
@@ -264,18 +293,32 @@ export function RegistrationPage() {
   const totalPages = Math.max(1, Math.ceil(filteredSessions.length / pageSize))
   const visibleSessions = filteredSessions.slice((page - 1) * pageSize, page * pageSize)
 
+  const applyFilters = () => {
+    setAppliedCity(selectedCity)
+    setAppliedCategory(selectedCategory)
+    setAppliedModality(selectedModality)
+    setAppliedMonth(selectedMonth)
+    setPage(1)
+    setFiltersOpen(false)
+  }
+
   const resetFilters = () => {
     setSearch('')
     setSelectedCity(cityOptions[0] ?? 'Todas las ciudades')
+    setAppliedCity(cityOptions[0] ?? 'Todas las ciudades')
     setSelectedCategory(categoryOptions[0] ?? 'Todas las categorías')
+    setAppliedCategory(categoryOptions[0] ?? 'Todas las categorías')
     setSelectedModality(modalityOptions[0] ?? 'Todas las modalidades')
+    setAppliedModality(modalityOptions[0] ?? 'Todas las modalidades')
     setSelectedMonth(monthOptions[0] ?? 'Cualquier fecha')
+    setAppliedMonth(monthOptions[0] ?? 'Cualquier fecha')
     setSelectedClientType(clientTypeOptions[0])
     setDurationFilters([])
     setCertificationFilters([])
     setOnlyAvailable(false)
     setSortBy('Más próximas')
     setPage(1)
+    setFiltersOpen(false)
   }
 
   const toggleCheckboxFilter = (
@@ -292,7 +335,7 @@ export function RegistrationPage() {
       <section className="courses-page-hero registration-page-hero">
         <div className="courses-hero-content courses-hero-animate">
           <h1 className="courses-hero-enter courses-hero-enter--1">
-            Cursos abiertos <span>Trekform</span>
+            Inscripciones <span>abiertas</span>
           </h1>
           <p className="courses-hero-enter courses-hero-enter--2">
             Formación práctica, certificada y enfocada a tu seguridad y a tu futuro profesional.
@@ -334,108 +377,112 @@ export function RegistrationPage() {
 
       <section className="registration-toolbar-wrap" id="registration-catalog">
         <div className="registration-toolbar">
-          <label className="registration-search-field" htmlFor="registration-search">
-            <span>¿Qué curso buscas?</span>
-            <div>
-              <input
-                id="registration-search"
-                type="search"
-                value={search}
-                onChange={(event) => {
-                  setSearch(event.target.value)
-                  setPage(1)
-                }}
-                placeholder="Ej: Carretillas, Altura, PRL, PEMP..."
-                aria-label="Buscar convocatorias"
-              />
-              <Search size={18} />
-            </div>
-          </label>
-          <ToolbarSelect
-            label="Ciudad"
-            value={selectedCity}
-            options={cityOptions}
-            onChange={(value) => {
-              setSelectedCity(value)
-              setPage(1)
-            }}
-          />
-          <ToolbarSelect
-            label="Categoría"
-            value={selectedCategory}
-            options={categoryOptions}
-            onChange={(value) => {
-              setSelectedCategory(value)
-              setPage(1)
-            }}
-          />
-          <ToolbarSelect
-            label="Modalidad"
-            value={selectedModality}
-            options={modalityOptions}
-            onChange={(value) => {
-              setSelectedModality(value)
-              setPage(1)
-            }}
-          />
-          <ToolbarSelect
-            label="Fecha / Mes"
-            value={selectedMonth}
-            options={monthOptions}
-            onChange={(value) => {
-              setSelectedMonth(value)
-              setPage(1)
-            }}
-          />
-          <ToolbarSelect
-            label="Tipo de cliente"
-            value={selectedClientType}
-            options={clientTypeOptions}
-            onChange={setSelectedClientType}
-          />
-          <div className="registration-toolbar-actions registration-toolbar-actions-wide">
-            <button type="button" className="registration-toolbar-reset" onClick={resetFilters}>
-              <RotateCcw size={15} /> Limpiar filtros
+          <div className="registration-toolbar-primary">
+            <label className="registration-search-field" htmlFor="registration-search">
+              <span>¿Qué curso buscas?</span>
+              <div>
+                <input
+                  id="registration-search"
+                  type="search"
+                  value={search}
+                  onChange={(event) => {
+                    setSearch(event.target.value)
+                    setPage(1)
+                  }}
+                  placeholder="Ej: Carretillas, Altura, PRL, PEMP..."
+                  aria-label="Buscar convocatorias"
+                />
+                <Search size={18} />
+              </div>
+            </label>
+            <button
+              type="button"
+              className="registration-filters-toggle"
+              aria-expanded={filtersOpen}
+              onClick={() => setFiltersOpen((open) => !open)}
+            >
+              <SlidersHorizontal size={16} /> Filtros
+              <ChevronDown size={16} className={filtersOpen ? 'is-rotated' : ''} />
             </button>
-            <a href="#registration-results" className="registration-toolbar-submit">
-              Buscar cursos
-            </a>
           </div>
 
-          <div className="registration-active-chips">
-            {selectedCity !== cityOptions[0] ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedCity(cityOptions[0])
-                  setPage(1)
-                }}
-              >
-                {selectedCity} ×
+          <div className={`registration-toolbar-fields${filtersOpen ? ' is-open' : ''}`}>
+            <ToolbarSelect label="Ciudad" value={selectedCity} options={cityOptions} onChange={updateCity} />
+            <ToolbarSelect
+              label="Categoría"
+              value={selectedCategory}
+              options={categoryOptions}
+              onChange={updateCategory}
+            />
+            <ToolbarSelect
+              label="Modalidad"
+              value={selectedModality}
+              options={modalityOptions}
+              onChange={updateModality}
+            />
+            <ToolbarSelect
+              label="Fecha / Mes"
+              value={selectedMonth}
+              options={monthOptions}
+              onChange={updateMonth}
+            />
+            <ToolbarSelect
+              label="Tipo de cliente"
+              value={selectedClientType}
+              options={clientTypeOptions}
+              onChange={setSelectedClientType}
+            />
+            <div className="registration-toolbar-actions registration-toolbar-actions-wide">
+              <button type="button" className="registration-toolbar-reset" onClick={resetFilters}>
+                <RotateCcw size={15} /> Limpiar filtros
               </button>
-            ) : null}
-            {selectedMonth !== monthOptions[0] ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedMonth(monthOptions[0])
-                  setPage(1)
-                }}
+              <a
+                href="#registration-results"
+                className="registration-toolbar-submit"
+                onClick={applyFilters}
               >
-                {selectedMonth} ×
-              </button>
-            ) : null}
-            {selectedCategory !== categoryOptions[0] ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setSelectedCategory(categoryOptions[0])
-                  setPage(1)
-                }}
-              >
-                {selectedCategory} ×
-              </button>
-            ) : null}
+                Buscar cursos
+              </a>
+            </div>
+
+            <div className="registration-active-chips">
+              {appliedCity !== cityOptions[0] ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCity(cityOptions[0])
+                    setAppliedCity(cityOptions[0])
+                    setPage(1)
+                  }}
+                >
+                  {appliedCity} ×
+                </button>
+              ) : null}
+              {appliedMonth !== monthOptions[0] ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedMonth(monthOptions[0])
+                    setAppliedMonth(monthOptions[0])
+                    setPage(1)
+                  }}
+                >
+                  {appliedMonth} ×
+                </button>
+              ) : null}
+              {appliedCategory !== categoryOptions[0] ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedCategory(categoryOptions[0])
+                    setAppliedCategory(categoryOptions[0])
+                    setPage(1)
+                  }}
+                >
+                  {appliedCategory} ×
+                </button>
+              ) : null}
+            </div>
           </div>
         </div>
       </section>
@@ -451,19 +498,13 @@ export function RegistrationPage() {
                   key={item}
                   label={item}
                   checked={selectedCategory === item}
-                  onChange={() => {
-                    setSelectedCategory(selectedCategory === item ? categoryOptions[0] : item)
-                    setPage(1)
-                  }}
+                  onChange={() => updateCategory(selectedCategory === item ? categoryOptions[0] : item)}
                 />
               ))}
               <button
                 type="button"
                 className="sidebar-link-button"
-                onClick={() => {
-                  setSelectedCategory(categoryOptions[0])
-                  setPage(1)
-                }}
+                onClick={() => updateCategory(categoryOptions[0])}
               >
                 Ver todas las categorías
               </button>
@@ -475,10 +516,7 @@ export function RegistrationPage() {
                   key={item}
                   label={item}
                   checked={selectedModality === item}
-                  onChange={() => {
-                    setSelectedModality(selectedModality === item ? modalityOptions[0] : item)
-                    setPage(1)
-                  }}
+                  onChange={() => updateModality(selectedModality === item ? modalityOptions[0] : item)}
                 />
               ))}
             </SidebarGroup>

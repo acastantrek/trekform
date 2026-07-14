@@ -295,6 +295,13 @@
   font-size: 12px;
   font-weight: 800;
 }
+.catalog-toolbar-primary,
+.catalog-toolbar-fields {
+  display: contents;
+}
+.catalog-filters-toggle {
+  display: none;
+}
 .catalog-layout {
   max-width: 1500px;
   margin: 0 auto;
@@ -786,58 +793,97 @@
 }
 @media (max-width: 680px) {
   .courses-page-hero {
-    min-height: 590px;
-    padding: 55px 22px 115px;
+    min-height: 0;
+    padding: 40px 20px 64px;
     align-items: flex-start;
   }
   .courses-hero-content h1 {
-    font-size: 46px;
+    font-size: 40px;
   }
   .courses-hero-content > p {
     max-width: 100%;
-    font-size: 16px;
+    font-size: 15px;
   }
-  .courses-hero-actions a {
-    width: 100%;
-    min-width: 0;
-  }
+  .courses-hero-actions,
   .courses-hero-metrics,
+  .courses-hero-claim {
+    display: none;
+  }
   .catalog-toolbar,
   .catalog-grid,
   .catalog-trust-row,
   .catalog-company-cta {
     grid-template-columns: 1fr;
   }
-  .courses-hero-claim {
-    width: 100%;
-    margin-top: 18px;
-    clip-path: none;
-  }
   .catalog-section {
     padding-inline: 14px;
   }
   .catalog-toolbar {
-    margin-top: -70px;
-    padding: 18px;
+    margin-top: -30px;
+    padding: 14px;
   }
   .catalog-search-field {
     grid-column: auto;
   }
-  .catalog-summary,
-  .catalog-summary > div,
+  .catalog-toolbar-primary {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .catalog-toolbar-primary .catalog-search-field {
+    flex: 1;
+    min-width: 0;
+  }
+  .catalog-filters-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+  .catalog-filters-toggle svg:last-child {
+    transition: transform 0.2s ease;
+  }
+  .catalog-filters-toggle svg.is-rotated {
+    transform: rotate(180deg);
+  }
+  .catalog-toolbar-fields {
+    display: none;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 14px;
+  }
+  .catalog-toolbar-fields.is-open {
+    display: grid;
+  }
+  .catalog-summary {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .catalog-summary > div {
+    display: block;
+  }
+  .catalog-summary label {
+    flex-direction: row;
+    align-items: center;
+  }
+  .catalog-summary select {
+    width: auto;
+  }
+  .catalog-summary .view-toggle {
+    display: none;
+  }
   .catalog-pagination {
     align-items: stretch;
     flex-direction: column;
-  }
-  .catalog-summary > div {
-    display: grid;
-  }
-  .catalog-summary label {
-    align-items: stretch;
-    flex-direction: column;
-  }
-  .catalog-summary select {
-    width: 100%;
   }
   .catalog-company-cta {
     padding: 0 18px 18px;
@@ -864,21 +910,17 @@
 }
 @media (max-width: 420px) {
   .courses-page-hero {
-    padding: 48px 16px 104px;
+    padding: 34px 16px 56px;
   }
   .courses-hero-content h1 {
-    font-size: 38px;
-  }
-  .courses-hero-metrics span {
-    max-width: none;
-    font-size: 12px;
+    font-size: 34px;
   }
   .catalog-section {
     padding-inline: 10px;
   }
   .catalog-toolbar {
-    margin-top: -64px;
-    padding: 16px;
+    margin-top: -26px;
+    padding: 14px;
   }
   .catalog-card-body {
     padding: 14px;

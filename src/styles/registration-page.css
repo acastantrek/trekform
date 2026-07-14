@@ -55,6 +55,7 @@
 .registration-toolbar-select {
   display: grid;
   gap: 8px;
+  min-width: 0;
 }
 
 .registration-search-field > span,
@@ -150,6 +151,15 @@
   color: #fff;
   font-size: 13px;
   font-weight: 700;
+}
+
+.registration-toolbar-primary,
+.registration-toolbar-fields {
+  display: contents;
+}
+
+.registration-filters-toggle {
+  display: none;
 }
 
 .registration-results-area {
@@ -756,6 +766,12 @@
   }
 }
 
+@media (max-width: 1020px) {
+  .registration-sidebar {
+    display: none;
+  }
+}
+
 @media (max-width: 1120px) {
   .registration-results-headers {
     display: none;
@@ -811,23 +827,157 @@
   }
 }
 
-@media (max-width: 640px) {
-  .registration-toolbar-submit {
-    width: 100%;
+@media (max-width: 680px) {
+  .registration-toolbar-wrap {
+    margin-top: -30px;
   }
 
   .registration-toolbar {
     grid-template-columns: 1fr;
-    padding: 16px;
+    padding: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(18, 18, 18, 0.97), rgba(35, 35, 34, 0.96));
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26);
   }
 
-  .registration-search-field {
+  .registration-toolbar-primary {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .registration-toolbar-primary .registration-search-field {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .registration-search-field > span,
+  .registration-toolbar-select > span {
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: none;
+    letter-spacing: normal;
+    color: rgba(255, 255, 255, 0.86);
+  }
+
+  .registration-search-field input,
+  .registration-toolbar-select select {
+    height: 42px;
+    border-color: #d7d7d4;
+    border-radius: 4px;
+    color: #343434;
+    padding: 0 42px 0 13px;
+    font: 400 13px 'Inter', sans-serif;
+  }
+
+  .registration-search-field svg,
+  .registration-toolbar-select svg {
+    width: 18px;
+    height: 18px;
+    right: 12px;
+    color: #6c6c68;
+  }
+
+  .registration-filters-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .registration-filters-toggle svg:last-child {
+    transition: transform 0.2s ease;
+  }
+
+  .registration-filters-toggle svg.is-rotated {
+    transform: rotate(180deg);
+  }
+
+  .registration-toolbar-fields {
+    display: none;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .registration-toolbar-fields.is-open {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .registration-toolbar-actions-wide {
     grid-column: auto;
   }
 
   .registration-toolbar-actions {
     flex-direction: column;
     align-items: stretch;
+    gap: 12px;
+  }
+
+  .registration-toolbar-reset,
+  .registration-toolbar-submit {
+    height: 42px;
+    min-height: 0;
+    padding: 0;
+    border-radius: 5px;
+    gap: 9px;
+    font-size: 13px;
+    font-weight: 900;
+    width: 100%;
+  }
+
+  .registration-toolbar-submit {
+    background: linear-gradient(135deg, #ffaa17, #eb7615);
+    color: #111;
+  }
+
+  .registration-active-chips button {
+    min-height: 0;
+    padding: 7px 11px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .registration-search-field {
+    grid-column: auto;
+  }
+
+  .registration-session-card,
+  .registration-empty {
+    border-radius: 8px;
+    border-color: #dededb;
+    box-shadow: 0 2px 8px rgba(20, 20, 20, 0.05);
+  }
+
+  .registration-summary {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .registration-summary strong {
+    font-size: 18px;
+  }
+
+  .registration-summary p {
+    color: #242424;
+  }
+
+  .registration-summary-controls {
+    display: none;
   }
 
   .registration-session-card {
@@ -850,9 +1000,20 @@
     grid-template-columns: 1fr;
   }
 
+  .registration-session-actions button:not(:disabled) {
+    background: linear-gradient(135deg, #ffaa17, #eb7615);
+    color: #111;
+  }
+
   .registration-pagination {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .registration-pagination button.active {
+    background: #ffaa17;
+    border-color: #ffaa17;
+    color: #111;
   }
 
   .registration-view-switch {

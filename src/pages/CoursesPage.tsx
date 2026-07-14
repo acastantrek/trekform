@@ -10,6 +10,7 @@
   MapPin,
   RotateCcw,
   Search,
+  SlidersHorizontal,
   Star,
   User,
   Users,
@@ -19,6 +20,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
 import { useCourses } from '../hooks/useCourses'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 import { getRegistrationSessions, type RegistrationSession } from '../services/registrations'
 import type { Course } from '../types/course'
 
@@ -116,19 +118,34 @@ function matchesCertificationFilter(filter: string, meta: ReturnType<typeof getC
 
 export function CoursesPage() {
   const { courses: allCourses, loading, error } = useCourses()
-  const [category, setCategory] = useState('Todos')
+  const isMobileFilters = useMediaQuery('(max-width: 680px)')
+  const [category, setCategoryDraft] = useState('Todos')
   const [search, setSearch] = useState('')
-  const [city, setCity] = useState(cities[0])
-  const [modality, setModality] = useState(modalities[0])
+  const [city, setCityDraft] = useState(cities[0])
+  const [modality, setModalityDraft] = useState(modalities[0])
   const [date, setDate] = useState(dates[0])
   const [clientType, setClientType] = useState(clientTypes[0])
   const [durationFilters, setDurationFilters] = useState<string[]>([])
   const [certificationFilters, setCertificationFilters] = useState<string[]>([])
+  const [appliedCategory, setAppliedCategory] = useState('Todos')
+  const [appliedCity, setAppliedCity] = useState(cities[0])
+  const [appliedModality, setAppliedModality] = useState(modalities[0])
   const [page, setPage] = useState(1)
   const [nextSessionByCourseSlug, setNextSessionByCourseSlug] = useState<
     Map<string, RegistrationSession>
   >(new Map())
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
+  const [filtersOpen, setFiltersOpen] = useState(false)
+
+  const setCity = (value: string) => {
+    setCityDraft(value)
+    if (!isMobileFilters) setAppliedCity(value)
+  }
+
+  const setModality = (value: string) => {
+    setModalityDraft(value)
+    if (!isMobileFilters) setAppliedModality(value)
+  }
 
   useEffect(() => {
     getRegistrationSessions()
@@ -169,9 +186,10 @@ export function CoursesPage() {
 
     return allCourses.filter((course) => {
       const meta = courseMetaById.get(course.id)!
-      const matchesCategory = category === 'Todos' || course.categories.includes(category)
-      const matchesCity = city === cities[0] || meta.city === city
-      const matchesModality = modality === modalities[0] || meta.modality === modality
+      const matchesCategory =
+        appliedCategory === 'Todos' || course.categories.includes(appliedCategory)
+      const matchesCity = appliedCity === cities[0] || meta.city === appliedCity
+      const matchesModality = appliedModality === modalities[0] || meta.modality === appliedModality
       const matchesDuration =
         durationFilters.length === 0 ||
         durationFilters.some((filter) => matchesDurationFilter(filter, meta.durationHours))
@@ -208,9 +226,9 @@ export function CoursesPage() {
   }, [
     allCourses,
     courseMetaById,
-    category,
-    city,
-    modality,
+    appliedCategory,
+    appliedCity,
+    appliedModality,
     durationFilters,
     certificationFilters,
     search,
@@ -220,20 +238,33 @@ export function CoursesPage() {
   const visibleCourses = filteredCourses.slice((page - 1) * pageSize, page * pageSize)
 
   const selectCategory = (value: string) => {
-    setCategory(value)
+    setCategoryDraft(value)
+    if (!isMobileFilters) setAppliedCategory(value)
     setPage(1)
   }
 
+  const applyFilters = () => {
+    setAppliedCity(city)
+    setAppliedCategory(category)
+    setAppliedModality(modality)
+    setPage(1)
+    setFiltersOpen(false)
+  }
+
   const clearFilters = () => {
-    setCategory('Todos')
+    setCategoryDraft('Todos')
+    setAppliedCategory('Todos')
     setSearch('')
-    setCity(cities[0])
-    setModality(modalities[0])
+    setCityDraft(cities[0])
+    setAppliedCity(cities[0])
+    setModalityDraft(modalities[0])
+    setAppliedModality(modalities[0])
     setDate(dates[0])
     setClientType(clientTypes[0])
     setDurationFilters([])
     setCertificationFilters([])
     setPage(1)
+    setFiltersOpen(false)
   }
 
   return (
@@ -283,57 +314,87 @@ export function CoursesPage() {
 
       <section className="catalog-section">
         <div className="catalog-toolbar">
-          <label className="catalog-search-field" htmlFor="course-search">
-            <span>¿Qué curso buscas?</span>
-            <div>
-              <input
-                id="course-search"
-                type="search"
-                value={search}
-                onChange={(event) => {
-                  setSearch(event.target.value)
-                  setPage(1)
-                }}
-                placeholder="Ej: Carretillas, Altura, PRL, PEMP..."
-                aria-label="Buscar cursos"
-              />
-              <Search />
+          <div className="catalog-toolbar-primary">
+            <label className="catalog-search-field" htmlFor="course-search">
+              <span>¿Qué curso buscas?</span>
+              <div>
+                <input
+                  id="course-search"
+                  type="search"
+                  value={search}
+                  onChange={(event) => {
+                    setSearch(event.target.value)
+                    setPage(1)
+                  }}
+                  placeholder="Ej: Carretillas, Altura, PRL, PEMP..."
+                  aria-label="Buscar cursos"
+                />
+                <Search />
+              </div>
+            </label>
+            <button
+              type="button"
+              className="catalog-filters-toggle"
+              aria-expanded={filtersOpen}
+              onClick={() => setFiltersOpen((open) => !open)}
+            >
+              <SlidersHorizontal size={16} /> Filtros
+              <ChevronDown size={16} className={filtersOpen ? 'is-rotated' : ''} />
+            </button>
+          </div>
+
+          <div className={`catalog-toolbar-fields${filtersOpen ? ' is-open' : ''}`}>
+            <CatalogSelect label="Ciudad" value={city} options={cities} onChange={setCity} />
+            <CatalogSelect
+              label="Categoría"
+              value={category}
+              options={catalogCategories}
+              onChange={selectCategory}
+            />
+            <CatalogSelect
+              label="Modalidad"
+              value={modality}
+              options={modalities}
+              onChange={setModality}
+            />
+            <CatalogSelect label="Fecha / Mes" value={date} options={dates} onChange={setDate} />
+            <CatalogSelect
+              label="Tipo de cliente"
+              value={clientType}
+              options={clientTypes}
+              onChange={setClientType}
+            />
+            <button type="button" className="catalog-reset" onClick={clearFilters}>
+              <RotateCcw size={15} /> Limpiar filtros
+            </button>
+            <button type="button" className="catalog-submit" onClick={applyFilters}>
+              Buscar cursos
+            </button>
+            <div className="active-filter-chips">
+              {appliedCity !== cities[0] ? (
+                <button
+                  onClick={() => {
+                    setCity(cities[0])
+                    setAppliedCity(cities[0])
+                  }}
+                >
+                  {appliedCity} ×
+                </button>
+              ) : null}
+              {date !== dates[0] ? (
+                <button onClick={() => setDate(dates[0])}>{date} ×</button>
+              ) : null}
+              {appliedCategory !== 'Todos' ? (
+                <button
+                  onClick={() => {
+                    setCategoryDraft('Todos')
+                    setAppliedCategory('Todos')
+                  }}
+                >
+                  {appliedCategory} ×
+                </button>
+              ) : null}
             </div>
-          </label>
-          <CatalogSelect label="Ciudad" value={city} options={cities} onChange={setCity} />
-          <CatalogSelect
-            label="Categoría"
-            value={category}
-            options={catalogCategories}
-            onChange={selectCategory}
-          />
-          <CatalogSelect
-            label="Modalidad"
-            value={modality}
-            options={modalities}
-            onChange={setModality}
-          />
-          <CatalogSelect label="Fecha / Mes" value={date} options={dates} onChange={setDate} />
-          <CatalogSelect
-            label="Tipo de cliente"
-            value={clientType}
-            options={clientTypes}
-            onChange={setClientType}
-          />
-          <button type="button" className="catalog-reset" onClick={clearFilters}>
-            <RotateCcw size={15} /> Limpiar filtros
-          </button>
-          <button type="button" className="catalog-submit">
-            Buscar cursos
-          </button>
-          <div className="active-filter-chips">
-            {city !== cities[0] ? (
-              <button onClick={() => setCity(cities[0])}>{city} ×</button>
-            ) : null}
-            {date !== dates[0] ? <button onClick={() => setDate(dates[0])}>{date} ×</button> : null}
-            {category !== 'Todos' ? (
-              <button onClick={() => selectCategory('Todos')}>{category} ×</button>
-            ) : null}
           </div>
         </div>
 
