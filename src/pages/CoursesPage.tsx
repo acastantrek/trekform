@@ -237,6 +237,11 @@ export function CoursesPage() {
   const totalPages = Math.max(1, Math.ceil(filteredCourses.length / pageSize))
   const visibleCourses = filteredCourses.slice((page - 1) * pageSize, page * pageSize)
 
+  const goToPage = (value: number) => {
+    setPage(value)
+    document.getElementById('catalog-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   const selectCategory = (value: string) => {
     setCategoryDraft(value)
     if (!isMobileFilters) setAppliedCategory(value)
@@ -312,10 +317,10 @@ export function CoursesPage() {
         </div>
       </section>
 
-      <section className="catalog-section">
-        <div className="catalog-toolbar">
-          <div className="catalog-toolbar-primary">
-            <label className="catalog-search-field" htmlFor="course-search">
+      <section className="registration-toolbar-wrap">
+        <div className="registration-toolbar">
+          <div className="registration-toolbar-primary">
+            <label className="registration-search-field" htmlFor="course-search">
               <span>¿Qué curso buscas?</span>
               <div>
                 <input
@@ -334,7 +339,7 @@ export function CoursesPage() {
             </label>
             <button
               type="button"
-              className="catalog-filters-toggle"
+              className="registration-filters-toggle"
               aria-expanded={filtersOpen}
               onClick={() => setFiltersOpen((open) => !open)}
             >
@@ -343,7 +348,7 @@ export function CoursesPage() {
             </button>
           </div>
 
-          <div className={`catalog-toolbar-fields${filtersOpen ? ' is-open' : ''}`}>
+          <div className={`registration-toolbar-fields${filtersOpen ? ' is-open' : ''}`}>
             <CatalogSelect label="Ciudad" value={city} options={cities} onChange={setCity} />
             <CatalogSelect
               label="Categoría"
@@ -364,13 +369,15 @@ export function CoursesPage() {
               options={clientTypes}
               onChange={setClientType}
             />
-            <button type="button" className="catalog-reset" onClick={clearFilters}>
-              <RotateCcw size={15} /> Limpiar filtros
-            </button>
-            <button type="button" className="catalog-submit" onClick={applyFilters}>
-              Buscar cursos
-            </button>
-            <div className="active-filter-chips">
+            <div className="registration-toolbar-actions registration-toolbar-actions-wide">
+              <button type="button" className="registration-toolbar-reset" onClick={clearFilters}>
+                <RotateCcw size={15} /> Limpiar filtros
+              </button>
+              <a href="#catalog-results" className="registration-toolbar-submit" onClick={applyFilters}>
+                Buscar cursos
+              </a>
+            </div>
+            <div className="registration-active-chips">
               {appliedCity !== cities[0] ? (
                 <button
                   onClick={() => {
@@ -397,7 +404,9 @@ export function CoursesPage() {
             </div>
           </div>
         </div>
+      </section>
 
+      <section className="catalog-section">
         <div className="catalog-layout" id="catalog-results">
           <aside className="catalog-sidebar">
             <h2>Filtrar resultados</h2>
@@ -576,17 +585,13 @@ export function CoursesPage() {
                   <button
                     type="button"
                     className={page === item ? 'active' : ''}
-                    onClick={() => setPage(item)}
+                    onClick={() => goToPage(item)}
                     key={item}
                   >
                     {item}
                   </button>
                 ))}
-                <button
-                  type="button"
-                  disabled={page >= totalPages}
-                  onClick={() => setPage(page + 1)}
-                >
+                <button type="button" disabled={page >= totalPages} onClick={() => goToPage(page + 1)}>
                   Siguiente
                 </button>
               </div>
@@ -676,7 +681,7 @@ function CatalogSelect({
   onChange: (value: string) => void
 }) {
   return (
-    <label className="catalog-select">
+    <label className="registration-toolbar-select">
       <span>{label}</span>
       <div>
         <select value={value} onChange={(event) => onChange(event.target.value)}>

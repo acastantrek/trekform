@@ -1,0 +1,129 @@
+.legal-page-hero {
+  padding: 90px 8vw 50px;
+  background: radial-gradient(circle at top right, rgba(235, 118, 21, 0.08), transparent 24%), #f6f1e8;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.legal-page-hero > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.legal-page-hero > span svg {
+  color: var(--accent);
+}
+
+.legal-page-hero h1 {
+  margin: 14px 0 0;
+  font-size: clamp(36px, 5vw, 56px);
+  max-width: 900px;
+}
+
+.legal-page-content {
+  padding: 60px 8vw 110px;
+}
+
+.legal-page-content article {
+  max-width: 880px;
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+}
+
+.legal-page-content p {
+  color: #45525c;
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.legal-page-content section {
+  display: grid;
+  gap: 14px;
+}
+
+.legal-page-content h2 {
+  font-size: 20px;
+  color: var(--navy);
+}
+
+.legal-page-content a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.legal-page-content dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 22px 24px;
+  background: #f6f1e8;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+}
+
+.legal-page-content dl > div {
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) 1fr;
+  gap: 10px;
+}
+
+.legal-page-content dt {
+  color: var(--navy);
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.legal-page-content dd {
+  margin: 0;
+  color: #45525c;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+@media (max-width: 680px) {
+  .legal-page-content dl > div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+.legal-page-content ul {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.legal-page-content ul.legal-link-list {
+  padding: 18px 22px;
+  background: #f6f1e8;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+}
+
+.legal-page-content ul li {
+  color: #45525c;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.legal-page-content ul li strong {
+  color: var(--navy);
+}
+
+@media (max-width: 680px) {
+  .legal-page-hero {
+    padding: 60px 6vw 40px;
+  }
+
+  .legal-page-content {
+    padding: 40px 6vw 70px;
+  }
+}

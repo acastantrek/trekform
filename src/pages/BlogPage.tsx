@@ -59,6 +59,11 @@ export function BlogPage() {
   )
   const pageWindow = Array.from({ length: pageWindowSize }, (_, index) => pageWindowStart + index)
 
+  const goToPage = (value: number) => {
+    setPage(value)
+    document.getElementById('blog-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <div className="blog-page">
       <section className="blog-hero">
@@ -83,7 +88,7 @@ export function BlogPage() {
         </div>
       </section>
 
-      <section className="blog-content" aria-labelledby="blog-title">
+      <section className="blog-content" id="blog-results" aria-labelledby="blog-title">
         <label className="blog-search" data-reveal>
           <span className="sr-only">Buscar artículos</span>
           <input
@@ -141,17 +146,13 @@ export function BlogPage() {
                   <button
                     type="button"
                     className={page === item ? 'active' : ''}
-                    onClick={() => setPage(item)}
+                    onClick={() => goToPage(item)}
                     key={item}
                   >
                     {item}
                   </button>
                 ))}
-                <button
-                  type="button"
-                  disabled={page >= totalPages}
-                  onClick={() => setPage(page + 1)}
-                >
+                <button type="button" disabled={page >= totalPages} onClick={() => goToPage(page + 1)}>
                   Siguiente <ArrowRight size={14} />
                 </button>
               </div>

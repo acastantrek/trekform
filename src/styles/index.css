@@ -12,6 +12,7 @@
 @import './contact-page-v2.css';
 @import './course-detail-page.css';
 @import './enrollment-modal.css';
+@import './legal-page.css';
 @import './panel.css';
 
 :where(body, button, input, select, textarea) {

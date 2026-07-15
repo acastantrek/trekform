@@ -7,7 +7,10 @@ import { BlogPage, BlogPostPage } from './pages/BlogPage'
 import { CoursesPage } from './pages/CoursesPage'
 import { ContactPage } from './pages/ContactPage'
 import { CourseDetailPage } from './pages/CourseDetailPage'
+import { CookiesPolicyPage } from './pages/CookiesPolicyPage'
 import { HomePage } from './pages/HomePage'
+import { LegalNoticePage } from './pages/LegalNoticePage'
+import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage'
 import { RegistrationPage } from './pages/RegistrationPage'
 import { PanelApp } from './panel/PanelApp'
 
@@ -37,6 +40,9 @@ export default function App() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/contacto" element={<ContactPage />} />
+          <Route path="/politica-de-privacidad" element={<PrivacyPolicyPage />} />
+          <Route path="/aviso-legal" element={<LegalNoticePage />} />
+          <Route path="/politica-de-cookies" element={<CookiesPolicyPage />} />
           <Route path="*" element={<HomePage />} />
         </Route>
 

@@ -833,6 +833,7 @@
   }
 
   .registration-toolbar {
+    position: relative;
     grid-template-columns: 1fr;
     padding: 14px;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -906,12 +907,23 @@
     display: none;
     grid-template-columns: 1fr;
     gap: 12px;
-    margin-top: 14px;
   }
 
   .registration-toolbar-fields.is-open {
     display: grid;
     grid-template-columns: 1fr;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: -10px;
+    right: -10px;
+    z-index: 40;
+    padding: 14px;
+    background: linear-gradient(135deg, rgba(18, 18, 18, 0.98), rgba(35, 35, 34, 0.98));
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.35);
+    max-height: calc(100vh - 160px);
+    overflow-y: auto;
   }
 
   .registration-toolbar-actions-wide {
@@ -937,6 +949,7 @@
   }
 
   .registration-toolbar-submit {
+    flex: none;
     background: linear-gradient(135deg, #ffaa17, #eb7615);
     color: #111;
   }

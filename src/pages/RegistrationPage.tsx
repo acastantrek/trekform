@@ -17,8 +17,8 @@
   Users,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useRegistrationSessions } from '../hooks/useRegistrationSessions'
@@ -155,7 +155,10 @@ function matchesCertificationFilter(
 export function RegistrationPage() {
   const { sessions, loading, error } = useRegistrationSessions()
   const isMobileFilters = useMediaQuery('(max-width: 680px)')
-  const [search, setSearch] = useState('')
+  const [searchParams] = useSearchParams()
+  const courseQuery = searchParams.get('curso')
+  const [search, setSearch] = useState(courseQuery ?? '')
+  const [syncedCourseQuery, setSyncedCourseQuery] = useState(courseQuery)
   const [selectedCity, setSelectedCity] = useState('Todas las ciudades')
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías')
   const [selectedModality, setSelectedModality] = useState('Todas las modalidades')
@@ -172,6 +175,20 @@ export function RegistrationPage() {
   const [page, setPage] = useState(1)
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
+
+  if (courseQuery && courseQuery !== syncedCourseQuery) {
+    setSyncedCourseQuery(courseQuery)
+    setSearch(courseQuery)
+    setPage(1)
+  }
+
+  useEffect(() => {
+    if (searchParams.get('curso')) {
+      document
+        .getElementById('registration-results')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [searchParams])
 
   const updateCity = (value: string) => {
     setSelectedCity(value)
@@ -292,6 +309,11 @@ export function RegistrationPage() {
 
   const totalPages = Math.max(1, Math.ceil(filteredSessions.length / pageSize))
   const visibleSessions = filteredSessions.slice((page - 1) * pageSize, page * pageSize)
+
+  const goToPage = (value: number) => {
+    setPage(value)
+    document.getElementById('registration-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   const applyFilters = () => {
     setAppliedCity(selectedCity)
@@ -698,7 +720,7 @@ export function RegistrationPage() {
                         type="button"
                         key={item}
                         className={item === page ? 'active' : ''}
-                        onClick={() => setPage(item)}
+                        onClick={() => goToPage(item)}
                       >
                         {item}
                       </button>
@@ -706,7 +728,7 @@ export function RegistrationPage() {
                     <button
                       type="button"
                       disabled={page >= totalPages}
-                      onClick={() => setPage((value) => Math.min(value + 1, totalPages))}
+                      onClick={() => goToPage(Math.min(page + 1, totalPages))}
                     >
                       Siguiente
                     </button>

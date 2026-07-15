@@ -1,4 +1,4 @@
-﻿import { useState } from 'react'
+﻿import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, Mail, Menu, ShieldCheck, X } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { TrekformLogo } from '../common/TrekformLogo'
@@ -14,6 +14,20 @@ const links = [
 
 export function StaticHeader() {
   const [isOpen, setIsOpen] = useState(false)
+  const headerRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [isOpen])
 
   return (
     <>
@@ -30,7 +44,7 @@ export function StaticHeader() {
           </span>
         </div>
       </div>
-      <header className="nav-wrap">
+      <header className="nav-wrap" ref={headerRef}>
         <TrekformLogo />
         <nav className={`nav${isOpen ? ' open' : ''}`} aria-label="Navegación principal">
           {links.map(({ label, to }) => (

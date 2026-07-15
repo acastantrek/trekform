@@ -221,7 +221,10 @@ export function CourseDetailPage() {
             <h1>{accentedTitle(course.title)}</h1>
             <p className="course-detail-excerpt">{course.heroText || course.excerpt}</p>
             <div className="course-detail-hero-actions">
-              <Link to="/inscripciones" className="course-detail-primary">
+              <Link
+                to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}
+                className="course-detail-primary"
+              >
                 Ver convocatorias <ArrowRight size={18} />
               </Link>
               <Link to="/contacto" className="course-detail-secondary">

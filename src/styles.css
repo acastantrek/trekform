@@ -770,7 +770,13 @@ footer > p {
   justify-content: space-between;
   gap: 20px;
   color: #748593;
-  font-size: 11px;
+  font-size: 14px;
+}
+.footer-bottom a {
+  color: inherit;
+}
+.footer-bottom a:hover {
+  color: #ffaa17;
 }
 @media (max-width: 900px) {
   .topline {

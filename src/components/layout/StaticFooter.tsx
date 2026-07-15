@@ -57,8 +57,14 @@ export function StaticFooter() {
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© Copyright 2025 by Trekform.com</span>
-        <span>Aviso legal · Política de privacidad · Política de cookies</span>
+        <span>
+          © Copyright 2025 by <Link to="/">Trekform.com</Link>
+        </span>
+        <span>
+          <Link to="/aviso-legal">Aviso legal</Link> ·{' '}
+          <Link to="/politica-de-privacidad">Política de privacidad</Link> ·{' '}
+          <Link to="/politica-de-cookies">Política de cookies</Link>
+        </span>
       </div>
     </footer>
   )

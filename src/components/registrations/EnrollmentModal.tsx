@@ -1,6 +1,18 @@
-import { CheckCircle2, MapPin, Phone, ShieldCheck, X } from 'lucide-react'
+import {
+  ArrowRight,
+  Building2,
+  CalendarDays,
+  CheckCircle2,
+  MapPin,
+  Phone,
+  ShieldCheck,
+  User,
+  X,
+} from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { submitContactRequest } from '../../services/contact'
+import { submitSimulatedPayment } from '../../services/enrollments'
 import type { RegistrationSession } from '../../services/registrations'
 
 type Step = 'choose' | 'individual' | 'individual-success' | 'company' | 'company-success'
@@ -83,18 +95,13 @@ export function EnrollmentModal({
     setSending(true)
     setError('')
     try {
-      await submitContactRequest({
-        name: `${data.get('name')} ${data.get('lastName')}`.trim(),
+      await submitSimulatedPayment({
+        courseSessionId: session.id,
+        firstName: String(data.get('name') ?? ''),
+        lastName: String(data.get('lastName') ?? ''),
         email: String(data.get('email') ?? ''),
-        subject: `Inscripción particular: ${session.courseTitle}`,
-        message: [
-          `Solicitud de inscripción como particular a "${session.courseTitle}".`,
-          `Convocatoria: ${sessionDate}, ${sessionSchedule} · ${session.venue}, ${session.city}.`,
-          `DNI/NIE/Pasaporte: ${data.get('docId')}`,
-          price ? `Precio de la convocatoria: ${price}` : null,
-        ]
-          .filter(Boolean)
-          .join('\n'),
+        identityDocument: String(data.get('docId') ?? ''),
+        amountPaidCents: session.priceCents,
       })
       setStep('individual-success')
     } catch (cause) {
@@ -268,13 +275,41 @@ export function EnrollmentModal({
                 <section>
                   <h3>Selecciona el tipo de inscripción</h3>
                   <div className="enrollment-modal-type-cards">
-                    <button type="button" onClick={() => setStep('company')}>
-                      <strong>Soy empresa</strong>
-                      <span>Solicita información para inscribir trabajadores.</span>
+                    <button
+                      type="button"
+                      className="enrollment-modal-type-card"
+                      onClick={() => setStep('company')}
+                    >
+                      <span className="enrollment-modal-type-icon" aria-hidden="true">
+                        <Building2 size={22} />
+                      </span>
+                      <span className="enrollment-modal-type-text">
+                        <strong>Soy empresa</strong>
+                        <span>Solicita información para inscribir trabajadores.</span>
+                      </span>
+                      <ArrowRight
+                        size={18}
+                        className="enrollment-modal-type-arrow"
+                        aria-hidden="true"
+                      />
                     </button>
-                    <button type="button" onClick={() => setStep('individual')}>
-                      <strong>Soy particular</strong>
-                      <span>Inscríbete a título personal en esta convocatoria.</span>
+                    <button
+                      type="button"
+                      className="enrollment-modal-type-card"
+                      onClick={() => setStep('individual')}
+                    >
+                      <span className="enrollment-modal-type-icon" aria-hidden="true">
+                        <User size={22} />
+                      </span>
+                      <span className="enrollment-modal-type-text">
+                        <strong>Soy particular</strong>
+                        <span>Inscríbete a título personal en esta convocatoria.</span>
+                      </span>
+                      <ArrowRight
+                        size={18}
+                        className="enrollment-modal-type-arrow"
+                        aria-hidden="true"
+                      />
                     </button>
                   </div>
                 </section>
@@ -319,7 +354,13 @@ export function EnrollmentModal({
                     </div>
                     <label className="enrollment-modal-consent">
                       <input type="checkbox" required />
-                      <span>He leído y acepto la política de privacidad.</span>
+                      <span>
+                        He leído y acepto la{' '}
+                        <Link to="/politica-de-privacidad" target="_blank" rel="noopener noreferrer">
+                          política de privacidad
+                        </Link>
+                        .
+                      </span>
                     </label>
                   </form>
                 </section>
@@ -328,10 +369,10 @@ export function EnrollmentModal({
               {step === 'individual-success' && (
                 <section className="enrollment-modal-success">
                   <CheckCircle2 size={34} />
-                  <h3>¡Solicitud enviada!</h3>
+                  <h3>¡Pago realizado!</h3>
                   <p>
-                    Hemos recibido tu solicitud para "{session.courseTitle}". Nuestro equipo se
-                    pondrá en contacto contigo en breve para confirmar la plaza y el pago.
+                    Hemos registrado tu inscripción y el pago para "{session.courseTitle}". Nuestro
+                    equipo se pondrá en contacto contigo en breve para confirmar la plaza.
                   </p>
                 </section>
               )}
@@ -353,6 +394,13 @@ export function EnrollmentModal({
                     {sessionDate} · {sessionSchedule}
                   </p>
                 </div>
+                <Link
+                  to={`/inscripciones?curso=${encodeURIComponent(session.courseTitle)}#registration-results`}
+                  className="enrollment-modal-other-dates"
+                  onClick={onClose}
+                >
+                  <CalendarDays size={14} /> Buscar otras fechas de este curso
+                </Link>
                 {price && <div className="enrollment-modal-price">{price}</div>}
 
                 {step === 'individual' && (
@@ -362,7 +410,7 @@ export function EnrollmentModal({
                     className="enrollment-modal-cta"
                     disabled={sending}
                   >
-                    {sending ? 'Enviando...' : 'Enviar solicitud de inscripción'}
+                    {sending ? 'Enviando...' : 'Realizar pago'}
                   </button>
                 )}
                 {error && <p className="enrollment-modal-error">{error}</p>}
