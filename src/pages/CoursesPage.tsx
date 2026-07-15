@@ -239,7 +239,9 @@ export function CoursesPage() {
 
   const goToPage = (value: number) => {
     setPage(value)
-    document.getElementById('catalog-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    requestAnimationFrame(() => {
+      document.getElementById('catalog-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }
 
   const selectCategory = (value: string) => {

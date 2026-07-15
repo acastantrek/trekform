@@ -312,7 +312,11 @@ export function RegistrationPage() {
 
   const goToPage = (value: number) => {
     setPage(value)
-    document.getElementById('registration-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    requestAnimationFrame(() => {
+      document
+        .getElementById('registration-results')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }
 
   const applyFilters = () => {

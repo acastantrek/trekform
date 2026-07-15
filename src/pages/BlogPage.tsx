@@ -61,7 +61,9 @@ export function BlogPage() {
 
   const goToPage = (value: number) => {
     setPage(value)
-    document.getElementById('blog-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    requestAnimationFrame(() => {
+      document.getElementById('blog-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }
 
   return (

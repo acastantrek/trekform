@@ -208,7 +208,9 @@ export function CourseDetailPage() {
         <div
           className="course-detail-hero-bg"
           aria-hidden="true"
-          style={{ backgroundImage: `url('${course.image}')` }}
+          style={{
+            backgroundImage: `linear-gradient(90deg, rgba(16, 28, 48, 0.92) 0%, rgba(16, 28, 48, 0.55) 45%, rgba(16, 28, 48, 0.22) 100%), url('${course.image}')`,
+          }}
         />
         <div className="course-detail-hero-grid">
           <div className="course-detail-copy">
