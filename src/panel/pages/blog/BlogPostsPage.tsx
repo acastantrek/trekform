@@ -2,16 +2,29 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { DataTable } from '../../components/DataTable'
+import { Pagination } from '../../components/Pagination'
 import { StatusBadge } from '../../components/StatusBadge'
 import { deletePost, listPosts } from '../../services/blog'
 import { useConfirm } from '../../hooks/useConfirm'
-import type { BlogPost } from '../../types'
+import type { BlogPost, RecordStatus } from '../../types'
+
+const statusOptions: RecordStatus[] = ['published', 'draft', 'archived']
+
+const statusLabel: Record<RecordStatus, string> = {
+  published: 'Publicado',
+  draft: 'Borrador',
+  archived: 'Archivado',
+}
+
+const PAGE_SIZE = 20
 
 export function BlogPostsPage() {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [search, setSearch] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
+  const [page, setPage] = useState(1)
   const { confirm, dialog } = useConfirm()
 
   async function reload() {
@@ -47,12 +60,22 @@ export function BlogPostsPage() {
 
   const filteredPosts = useMemo(() => {
     const term = search.trim().toLowerCase()
-    if (!term) return posts
-    return posts.filter(
-      (post) =>
-        post.title.toLowerCase().includes(term) || (post.categoryName ?? '').toLowerCase().includes(term),
-    )
-  }, [posts, search])
+    return posts.filter((post) => {
+      if (statusFilter && post.status !== statusFilter) return false
+      if (
+        term &&
+        !post.title.toLowerCase().includes(term) &&
+        !(post.categoryName ?? '').toLowerCase().includes(term)
+      ) {
+        return false
+      }
+      return true
+    })
+  }, [posts, search, statusFilter])
+
+  const totalPages = Math.max(1, Math.ceil(filteredPosts.length / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
+  const paginatedPosts = filteredPosts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   return (
     <div>
@@ -69,12 +92,29 @@ export function BlogPostsPage() {
       </div>
 
       <div className="filters-bar">
+        <select
+          value={statusFilter}
+          onChange={(event) => {
+            setStatusFilter(event.target.value)
+            setPage(1)
+          }}
+        >
+          <option value="">Todos los estados</option>
+          {statusOptions.map((status) => (
+            <option key={status} value={status}>
+              {statusLabel[status]}
+            </option>
+          ))}
+        </select>
         <input
           type="search"
           className="search-input"
           placeholder="Buscar por título o categoría…"
           value={search}
-          onChange={(event) => setSearch(event.target.value)}
+          onChange={(event) => {
+            setSearch(event.target.value)
+            setPage(1)
+          }}
         />
       </div>
 
@@ -83,9 +123,13 @@ export function BlogPostsPage() {
         <p>Cargando…</p>
       ) : (
         <DataTable
-          rows={filteredPosts}
+          rows={paginatedPosts}
           rowKey={(row) => row.id}
-          emptyMessage={search ? 'Ningún artículo coincide con la búsqueda.' : 'Todavía no hay artículos. Crea el primero.'}
+          emptyMessage={
+            search || statusFilter
+              ? 'Ningún artículo coincide con los filtros.'
+              : 'Todavía no hay artículos. Crea el primero.'
+          }
           columns={[
             { header: 'Título', render: (row) => row.title },
             { header: 'Categoría', render: (row) => row.categoryName ?? 'Sin categoría' },
@@ -111,6 +155,7 @@ export function BlogPostsPage() {
           ]}
         />
       )}
+      <Pagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />
       {dialog}
     </div>
   )

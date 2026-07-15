@@ -2,10 +2,23 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
 import { DataTable } from '../../components/DataTable'
+import { Pagination } from '../../components/Pagination'
 import { StatusBadge } from '../../components/StatusBadge'
 import { deleteSession, listCourseOptions, listSessions, type CourseOption } from '../../services/sessions'
 import { useConfirm } from '../../hooks/useConfirm'
-import type { CourseSession } from '../../types'
+import type { CourseSession, SessionStatus } from '../../types'
+
+const statusOptions: SessionStatus[] = ['draft', 'open', 'full', 'completed', 'cancelled']
+
+const statusLabel: Record<SessionStatus, string> = {
+  draft: 'Borrador',
+  open: 'Abierta',
+  full: 'Completa',
+  completed: 'Finalizada',
+  cancelled: 'Cancelada',
+}
+
+const PAGE_SIZE = 20
 
 function formatDateTime(value: string) {
   return new Date(value).toLocaleString('es-ES', {
@@ -25,6 +38,9 @@ export function SessionsPage() {
   const [sessions, setSessions] = useState<CourseSession[]>([])
   const [courses, setCourses] = useState<CourseOption[]>([])
   const [courseFilter, setCourseFilter] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
+  const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const { confirm, dialog } = useConfirm()
@@ -53,9 +69,28 @@ export function SessionsPage() {
       .finally(() => setLoading(false))
   }, [])
 
-  const filteredSessions = useMemo(
-    () => (courseFilter ? sessions.filter((session) => session.courseId === courseFilter) : sessions),
-    [sessions, courseFilter],
+  const filteredSessions = useMemo(() => {
+    const term = search.trim().toLowerCase()
+    return sessions.filter((session) => {
+      if (courseFilter && session.courseId !== courseFilter) return false
+      if (statusFilter && session.status !== statusFilter) return false
+      if (
+        term &&
+        !session.code.toLowerCase().includes(term) &&
+        !session.courseTitle.toLowerCase().includes(term) &&
+        !(session.venueName ?? '').toLowerCase().includes(term)
+      ) {
+        return false
+      }
+      return true
+    })
+  }, [sessions, courseFilter, statusFilter, search])
+
+  const totalPages = Math.max(1, Math.ceil(filteredSessions.length / PAGE_SIZE))
+  const currentPage = Math.min(page, totalPages)
+  const paginatedSessions = filteredSessions.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
   )
 
   async function handleDelete(session: CourseSession) {
@@ -73,7 +108,9 @@ export function SessionsPage() {
       <div className="page-header">
         <div>
           <h1>Convocatorias</h1>
-          <p>Fechas concretas de cada curso a las que se pueden inscribir alumnos.</p>
+          <p>
+            {filteredSessions.length} de {sessions.length} convocatorias.
+          </p>
         </div>
         <Link to="/panel/convocatorias/nueva" className="btn btn-primary">
           <Plus size={16} /> Nueva convocatoria
@@ -81,7 +118,27 @@ export function SessionsPage() {
       </div>
 
       <div className="filters-bar">
-        <select value={courseFilter} onChange={(event) => setCourseFilter(event.target.value)}>
+        <select
+          value={statusFilter}
+          onChange={(event) => {
+            setStatusFilter(event.target.value)
+            setPage(1)
+          }}
+        >
+          <option value="">Todos los estados</option>
+          {statusOptions.map((status) => (
+            <option key={status} value={status}>
+              {statusLabel[status]}
+            </option>
+          ))}
+        </select>
+        <select
+          value={courseFilter}
+          onChange={(event) => {
+            setCourseFilter(event.target.value)
+            setPage(1)
+          }}
+        >
           <option value="">Todos los cursos</option>
           {courses.map((course) => (
             <option key={course.id} value={course.id}>
@@ -89,6 +146,16 @@ export function SessionsPage() {
             </option>
           ))}
         </select>
+        <input
+          type="search"
+          className="search-input"
+          placeholder="Buscar por código, curso o sede…"
+          value={search}
+          onChange={(event) => {
+            setSearch(event.target.value)
+            setPage(1)
+          }}
+        />
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
@@ -96,9 +163,9 @@ export function SessionsPage() {
         <p>Cargando…</p>
       ) : (
         <DataTable
-          rows={filteredSessions}
+          rows={paginatedSessions}
           rowKey={(row) => row.id}
-          emptyMessage="No hay convocatorias para este filtro."
+          emptyMessage="No hay convocatorias para estos filtros."
           columns={[
             { header: 'Código', render: (row) => row.code },
             { header: 'Curso', render: (row) => row.courseTitle },
@@ -125,6 +192,7 @@ export function SessionsPage() {
           ]}
         />
       )}
+      <Pagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />
       {dialog}
     </div>
   )

@@ -97,6 +97,7 @@ export function EnrollmentsPage() {
         </select>
         <input
           type="search"
+          className="search-input"
           placeholder="Buscar por alumno o email…"
           value={search}
           onChange={(event) => setSearch(event.target.value)}

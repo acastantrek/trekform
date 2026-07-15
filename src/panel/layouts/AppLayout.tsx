@@ -1,4 +1,6 @@
-import { NavLink, Outlet } from 'react-router-dom'
+import { Menu, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/useAuth'
 
 const links = [
@@ -13,11 +15,43 @@ const links = [
 
 export function AppLayout() {
   const { profile, signOut } = useAuth()
+  const [isOpen, setIsOpen] = useState(false)
+  const sidebarRef = useRef<HTMLElement>(null)
+  const location = useLocation()
+
+  useEffect(() => {
+    setIsOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!sidebarRef.current?.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [isOpen])
 
   return (
     <div className="app-shell">
-      <aside className="sidebar">
-        <div className="sidebar-title">
+      <button
+        type="button"
+        className="sidebar-toggle"
+        onClick={() => setIsOpen((value) => !value)}
+        aria-expanded={isOpen}
+        aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+      >
+        <span className="sidebar-title">
+          Trekform <span>Admin</span>
+        </span>
+        {isOpen ? <X size={22} /> : <Menu size={22} />}
+      </button>
+      <aside className={`sidebar${isOpen ? ' is-open' : ''}`} ref={sidebarRef}>
+        <div className="sidebar-title sidebar-title--desktop">
           Trekform <span>Admin</span>
         </div>
         <nav className="sidebar-nav">
