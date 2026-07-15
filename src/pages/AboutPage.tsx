@@ -13,6 +13,7 @@
 } from 'lucide-react'
 import { type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 const strengths = [
@@ -88,6 +89,7 @@ const faqs = [
 
 export function AboutPage() {
   useScrollReveal()
+  const isMobile = useMediaQuery('(max-width: 640px)')
 
   return (
     <>
@@ -98,9 +100,15 @@ export function AboutPage() {
             Tu partner en formación <span>y seguridad laboral</span>
           </h1>
           <p data-reveal data-reveal-delay="0.14">
-            Somos especialistas en prevención de riesgos laborales y manejo de maquinaria
-            industrial. Formamos a particulares y empresas con una metodología práctica, certificada
-            y orientada al trabajo real.
+            {isMobile ? (
+              'Somos especialistas en prevención de riesgos laborales y manejo de maquinaria industrial.'
+            ) : (
+              <>
+                Somos especialistas en prevención de riesgos laborales y manejo de maquinaria
+                industrial. Formamos a particulares y empresas con una metodología práctica,
+                certificada y orientada al trabajo real.
+              </>
+            )}
           </p>
           <div className="about-hero-actions" data-reveal data-reveal-delay="0.18">
             <Link to="/cursos-trekform">

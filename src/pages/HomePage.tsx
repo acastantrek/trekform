@@ -5,15 +5,17 @@ import { LatestNews } from '../components/home/LatestNews'
 import { TestimonialsCarousel } from '../components/home/TestimonialsCarousel'
 import { TrekformHeroSection } from '../components/home/TrekformHeroSection'
 import { TrekformStatsSection } from '../components/home/TrekformStatsSection'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export function HomePage() {
   useScrollReveal()
+  const isMobile = useMediaQuery('(max-width: 680px)')
 
   return (
     <>
       <TrekformHeroSection />
-      <section className="course-section" data-reveal>
+      <section className="course-section" data-reveal={isMobile ? undefined : true}>
         <div className="section-heading" data-reveal data-reveal-delay="0.05">
           <div>
             <span className="kicker">NUESTROS CURSOS DESTACADOS</span>

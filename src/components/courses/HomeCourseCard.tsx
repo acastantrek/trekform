@@ -1,18 +1,24 @@
 import { ArrowRight, Clock3, MapPin } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import type { Course } from '../../types/course'
 
 export function HomeCourseCard({ course, index }: { course: Course; index: number }) {
+  const isMobile = useMediaQuery('(max-width: 680px)')
+  const skipReveal = isMobile && index === 0
+
   return (
     <article
       className="course-card"
-      data-reveal
+      data-reveal={skipReveal ? undefined : true}
       style={
-        {
-          '--accent': course.color,
-          '--reveal-delay': `${0.05 + index * 0.04}s`,
-        } as CSSProperties
+        skipReveal
+          ? ({ '--accent': course.color } as CSSProperties)
+          : ({
+              '--accent': course.color,
+              '--reveal-delay': `${0.05 + index * 0.04}s`,
+            } as CSSProperties)
       }
     >
       <div className="course-image" style={{ backgroundImage: `url(${course.image})` }}>

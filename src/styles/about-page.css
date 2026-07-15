@@ -476,11 +476,27 @@
   }
 }
 @media (max-width: 640px) {
+  .about-page-hero {
+    min-height: 0;
+  }
+  .about-hero-media {
+    min-height: 0;
+    padding-top: 12px;
+  }
   .about-hero-copy {
+    padding-top: 20px;
     padding-bottom: 24px;
   }
+  .about-hero-copy > span {
+    font-size: 11px;
+  }
   .about-hero-copy h1 {
-    font-size: 40px;
+    margin: 10px 0 12px;
+    font-size: 32px;
+  }
+  .about-hero-copy p {
+    font-size: 15px;
+    line-height: 1.45;
   }
   .about-proof-strip,
   .strength-grid {
