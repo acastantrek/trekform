@@ -212,12 +212,6 @@ export function EnrollmentModal({
               </>
             )}
           </div>
-
-          <div className="enrollment-modal-footer">
-            <button type="button" onClick={onClose}>
-              Cerrar
-            </button>
-          </div>
         </div>
       </div>
     )
@@ -401,7 +395,9 @@ export function EnrollmentModal({
                 >
                   <CalendarDays size={14} /> Buscar otras fechas de este curso
                 </Link>
-                {price && <div className="enrollment-modal-price">{price}</div>}
+                {price && step === 'individual' && (
+                  <div className="enrollment-modal-price">{price}</div>
+                )}
 
                 {step === 'individual' && (
                   <button
@@ -429,12 +425,6 @@ export function EnrollmentModal({
               </aside>
             )}
           </div>
-        </div>
-
-        <div className="enrollment-modal-footer">
-          <button type="button" onClick={onClose}>
-            Cerrar
-          </button>
         </div>
       </div>
     </div>

@@ -54,10 +54,8 @@ function getMonthLabel(dateString: string) {
   return toTitleCase(monthFormatter.format(new Date(dateString)))
 }
 
-function getDurationLabel(hours: number | null) {
-  if (!hours) return 'Consultar'
-  const rounded = Number(hours)
-  return Number.isInteger(rounded) ? `${rounded} horas` : `${rounded.toFixed(1)} horas`
+function getDurationLabel(hours: number) {
+  return Number.isInteger(hours) ? `${hours} horas` : `${hours.toFixed(1)} horas`
 }
 
 function matchesDurationFilter(filter: string, hours: number | null) {
@@ -622,8 +620,8 @@ export function RegistrationPage() {
             </div>
 
             {loading ? (
-              <div className="registration-empty" role="status">
-                <h3>Cargando convocatorias...</h3>
+              <div className="registration-empty registration-loading" role="status">
+                <span className="registration-spinner" />
               </div>
             ) : error ? (
               <div className="registration-empty" role="alert">
@@ -653,35 +651,41 @@ export function RegistrationPage() {
                         </div>
 
                         <div className="registration-session-course">
-                          <h3>{session.courseTitle}</h3>
-                          <p>{session.category}</p>
-                          <div className="registration-session-meta">
-                            <span>
-                              <UserRound size={14} /> {session.modality}
-                            </span>
-                            <span>
-                              <Clock3 size={14} /> {getDurationLabel(session.durationHours)}
-                            </span>
-                            <span>
-                              <MapPin size={14} /> {session.city}
-                            </span>
+                          <div className="registration-session-title">
+                            <h3>{session.courseTitle}</h3>
+                            <p>{session.category}</p>
                           </div>
-                          <div className="registration-session-certificate">
-                            <FileCheck2 size={14} /> {meta.certificateLabel}
+                          <div className="registration-session-meta-block">
+                            <div className="registration-session-meta">
+                              <span className="registration-field-modality">
+                                <UserRound size={14} /> {session.modality}
+                              </span>
+                              {session.durationHours ? (
+                                <span className="registration-field-duration">
+                                  <Clock3 size={14} /> {getDurationLabel(session.durationHours)}
+                                </span>
+                              ) : null}
+                              <span className="registration-field-city">
+                                <MapPin size={14} /> {session.city}
+                              </span>
+                            </div>
+                            <div className="registration-session-certificate">
+                              <FileCheck2 size={14} /> {meta.certificateLabel}
+                            </div>
                           </div>
                         </div>
 
                         <div className="registration-session-details">
-                          <strong>
+                          <strong className="registration-field-date">
                             <CalendarDays size={14} /> {formatSessionDate(session.startsAt)}
                           </strong>
-                          <span>
+                          <span className="registration-field-schedule">
                             <Clock3 size={14} /> {formatSchedule(session.startsAt, session.endsAt)}
                           </span>
-                          <span>
+                          <span className="registration-field-venue">
                             <MapPin size={14} /> {session.venue}
                           </span>
-                          <small>
+                          <small className="registration-field-nextdates">
                             Próximas fechas: {meta.nextDates[0]} · {meta.nextDates[1]}
                           </small>
                         </div>
