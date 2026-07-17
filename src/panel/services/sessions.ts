@@ -53,18 +53,6 @@ export async function listSessions(): Promise<CourseSession[]> {
   return (data as unknown as SessionRow[]).map(mapSession)
 }
 
-export async function getSession(id: string): Promise<CourseSession | null> {
-  const client = requireClient()
-  const { data, error } = await client
-    .from('course_sessions')
-    .select(sessionColumns)
-    .eq('id', id)
-    .maybeSingle()
-
-  if (error) throw new Error(`No se pudo cargar la convocatoria: ${error.message}`)
-  return data ? mapSession(data as unknown as SessionRow) : null
-}
-
 export interface SessionInput {
   courseId: string
   venueId: string | null

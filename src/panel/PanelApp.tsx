@@ -8,7 +8,6 @@ import { CoursesPage } from './pages/courses/CoursesPage'
 import { CourseFormPage } from './pages/courses/CourseFormPage'
 import { CategoriesPage } from './pages/courses/CategoriesPage'
 import { SessionsPage } from './pages/sessions/SessionsPage'
-import { SessionFormPage } from './pages/sessions/SessionFormPage'
 import { BlogPostsPage } from './pages/blog/BlogPostsPage'
 import { BlogPostFormPage } from './pages/blog/BlogPostFormPage'
 import { BlogCategoriesPage } from './pages/blog/BlogCategoriesPage'
@@ -31,8 +30,6 @@ export function PanelApp() {
               <Route path="cursos/:id" element={<CourseFormPage />} />
               <Route path="categorias" element={<CategoriesPage />} />
               <Route path="convocatorias" element={<SessionsPage />} />
-              <Route path="convocatorias/nueva" element={<SessionFormPage />} />
-              <Route path="convocatorias/:id" element={<SessionFormPage />} />
               <Route path="blog" element={<BlogPostsPage />} />
               <Route path="blog/nuevo" element={<BlogPostFormPage />} />
               <Route path="blog/:id" element={<BlogPostFormPage />} />

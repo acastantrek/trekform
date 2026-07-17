@@ -365,7 +365,7 @@
 
 .panel-app .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 16px;
 }
 
@@ -374,6 +374,7 @@
   flex-direction: column;
   gap: 6px;
   margin-bottom: 16px;
+  min-width: 0;
 }
 
 .panel-app .form-field label {
@@ -385,6 +386,9 @@
 .panel-app .form-field input,
 .panel-app .form-field select,
 .panel-app .form-field textarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
   border: 1px solid var(--panel-border);
   border-radius: 6px;
   padding: 9px 12px;
@@ -514,6 +518,20 @@
   padding: 24px;
   width: 100%;
   max-width: 420px;
+}
+
+.panel-app .modal-card--form {
+  max-width: 640px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  text-align: left;
+}
+
+.panel-app .modal-card--form .form {
+  background: none;
+  border: 0;
+  padding: 0;
+  max-width: none;
 }
 
 .panel-app .modal-card h2 {
