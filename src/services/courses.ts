@@ -120,6 +120,9 @@ export interface CourseDetail {
   heroText: string
   description: string
   objectives: string
+  accreditationTitle: string | null
+  accreditationItems: string | null
+  benefitsItems: string | null
   audienceDescription: string
   audience: 'individuals' | 'companies' | 'both'
   image: string
@@ -150,6 +153,9 @@ interface CourseDetailRow {
   hero_text: string | null
   description: string | null
   objectives: string | null
+  accreditation_title: string | null
+  accreditation_items: string | null
+  benefits_items: string | null
   audience_description: string | null
   audience: 'individuals' | 'companies' | 'both'
   featured_image_url: string | null
@@ -223,6 +229,9 @@ function mapCourseDetail(row: CourseDetailRow): CourseDetail {
     description:
       row.description ?? 'Curso orientado a adquirir conocimientos prácticos y trabajar con seguridad.',
     objectives: row.objectives ?? '',
+    accreditationTitle: row.accreditation_title,
+    accreditationItems: row.accreditation_items,
+    benefitsItems: row.benefits_items,
     audienceDescription: row.audience_description ?? '',
     audience: row.audience,
     image: row.featured_image_url ?? fallbackImage,
@@ -260,7 +269,7 @@ export async function getCourseDetail(slug: string): Promise<CourseDetail | null
   const result = await client
     .from('courses')
     .select(
-      'id, slug, title, short_title, excerpt, hero_text, description, objectives, audience_description, audience, featured_image_url, modality, methodology, duration_minutes, brochure_url, certification_name, is_official_certification, is_fundae_eligible, sidebar_certification_title, sidebar_certification_text, sidebar_quality_title, sidebar_quality_text, sidebar_fundae_title, sidebar_fundae_text, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_modules(id, title, description, duration_minutes, sort_order), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
+      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, methodology, duration_minutes, brochure_url, certification_name, is_official_certification, is_fundae_eligible, sidebar_certification_title, sidebar_certification_text, sidebar_quality_title, sidebar_quality_text, sidebar_fundae_title, sidebar_fundae_text, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_modules(id, title, description, duration_minutes, sort_order), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
     )
     .eq('slug', slug)
     .eq('status', 'published')

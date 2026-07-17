@@ -41,8 +41,15 @@
   display: inline-flex;
   color: #444;
 }
+.enrollment-modal-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
 .enrollment-modal-hero {
   position: relative;
+  flex: none;
   min-height: 110px;
   padding: 14px 24px;
   display: flex;
@@ -77,19 +84,6 @@
   line-height: 1.1;
   color: var(--orange);
 }
-.enrollment-modal-hero-tag {
-  position: relative;
-  z-index: 1;
-  width: fit-content;
-  padding: 3px 9px;
-  border-radius: 4px;
-  background: var(--orange);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-}
 .enrollment-modal-hero p {
   position: relative;
   z-index: 1;
@@ -108,7 +102,13 @@
   grid-template-columns: minmax(0, 1fr) 280px;
   gap: 20px;
   padding: 18px 24px;
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.enrollment-modal-content--full {
+  grid-template-columns: 1fr;
 }
 .enrollment-modal-main {
   display: grid;
@@ -397,29 +397,95 @@
   color: #a53c22;
   font-size: 12px;
 }
-.enrollment-modal-note {
-  margin: 0;
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  color: #666;
-  font-size: 11.5px;
-  line-height: 1.35;
-}
-.enrollment-modal-note svg {
-  flex: none;
-  margin-top: 1px;
-  color: var(--orange);
-}
-.enrollment-modal-phone {
-  margin: 0;
-  padding-top: 8px;
+.enrollment-modal-trust {
+  padding-top: 10px;
   border-top: 1px solid #e5e5e2;
+  display: grid;
+  gap: 6px;
+}
+.enrollment-modal-trust-title {
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 6px;
+  color: #181818;
+  font-size: 12.5px;
+  font-weight: 800;
+}
+.enrollment-modal-trust-title svg {
+  flex: none;
+  color: var(--orange);
+}
+.enrollment-modal-trust-label {
+  margin: 2px 0 0;
+  color: #888;
+  font-size: 11px;
+}
+.enrollment-modal-payment-icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+.payment-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 22px;
+  padding: 0 8px;
+  border: 1px solid #d9d9d5;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  color: #333;
+}
+.payment-badge--visa {
+  color: #1a1f71;
+  font-style: italic;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+}
+.payment-badge--mastercard {
+  gap: 0;
+}
+.payment-badge--mastercard i {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #eb001b;
+}
+.payment-badge--mastercard i + i {
+  margin-left: -5px;
+  background: #f79e1b;
+  mix-blend-mode: multiply;
+}
+.payment-badge--card svg {
+  color: #2f6fd6;
+}
+.payment-badge--gpay {
+  color: #5f6368;
+}
+.payment-badge--gpay b {
+  color: #4285f4;
+  font-weight: 900;
+}
+.enrollment-modal-phone {
+  margin: 0;
+  padding-top: 4px;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
   font-size: 12px;
   color: #444;
+  line-height: 1.45;
+}
+.enrollment-modal-phone svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--orange);
 }
 .enrollment-modal-phone a {
   color: var(--orange);
@@ -441,6 +507,10 @@
     padding: 18px 20px;
   }
   .enrollment-modal-logo {
+    display: none;
+  }
+  .enrollment-modal-content--individual .enrollment-modal-accreditation,
+  .enrollment-modal-content--individual .enrollment-modal-description {
     display: none;
   }
 }

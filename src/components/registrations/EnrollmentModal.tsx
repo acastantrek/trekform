@@ -1,8 +1,10 @@
 import {
   ArrowRight,
+  Award,
   Building2,
   CalendarDays,
   CheckCircle2,
+  CreditCard,
   MapPin,
   Phone,
   ShieldCheck,
@@ -40,13 +42,18 @@ function formatPrice(cents: number | null) {
   return priceFormatter.format(cents / 100)
 }
 
-function getAccreditationPoints(session: RegistrationSession) {
-  const fromObjectives = session.objectives
+function splitLines(value: string | null) {
+  return (value ?? '')
     .split(/\n{2,}|\n/)
     .map((line) => line.trim())
     .filter(Boolean)
-    .slice(0, 3)
+}
 
+function getAccreditationPoints(session: RegistrationSession) {
+  const fromField = splitLines(session.accreditationItems)
+  if (fromField.length > 0) return fromField
+
+  const fromObjectives = splitLines(session.objectives).slice(0, 3)
   if (fromObjectives.length > 0) return fromObjectives
 
   return [
@@ -55,6 +62,8 @@ function getAccreditationPoints(session: RegistrationSession) {
     'Grupos reducidos con instructores especializados.',
   ]
 }
+
+const benefitIcons = [CreditCard, Award, ShieldCheck]
 
 export function EnrollmentModal({
   session,
@@ -83,6 +92,8 @@ export function EnrollmentModal({
   }, [onClose])
 
   const accreditationPoints = getAccreditationPoints(session)
+  const accreditationTitle = session.accreditationTitle?.trim() || 'Acreditación y titulación incluida'
+  const benefitsPoints = splitLines(session.benefitsItems)
   const price = formatPrice(session.priceCents)
   const sessionDate = dateFormatter.format(new Date(session.startsAt))
   const sessionShortDate = shortDateFormatter.format(new Date(session.startsAt)).replace(/\//g, '-')
@@ -240,29 +251,18 @@ export function EnrollmentModal({
           >
             <img className="enrollment-modal-logo" src="/brand/logo-trekform-white.png" alt="" />
             <h2>{session.courseTitle}</h2>
-            <span className="enrollment-modal-hero-tag">{session.category}</span>
             <p>
               Por tu seguridad, escoge <span>Trekform</span>
             </p>
           </div>
 
-          <div className="enrollment-modal-content">
+          <div
+            className={`enrollment-modal-content${step === 'individual' ? ' enrollment-modal-content--individual' : ' enrollment-modal-content--full'}`}
+          >
             <div className="enrollment-modal-main">
-              <section>
+              <section className="enrollment-modal-description">
                 <h3>Descripción</h3>
                 <p>{session.excerpt}</p>
-              </section>
-
-              <section>
-                <h3>Acreditación y titulación incluida</h3>
-                <div className="enrollment-modal-checks">
-                  {accreditationPoints.map((point) => (
-                    <div key={point}>
-                      <CheckCircle2 size={16} />
-                      <span>{point}</span>
-                    </div>
-                  ))}
-                </div>
               </section>
 
               {step === 'choose' && (
@@ -308,6 +308,18 @@ export function EnrollmentModal({
                   </div>
                 </section>
               )}
+
+              <section className="enrollment-modal-accreditation">
+                <h3>{accreditationTitle}</h3>
+                <div className="enrollment-modal-checks">
+                  {accreditationPoints.map((point) => (
+                    <div key={point}>
+                      <CheckCircle2 size={16} />
+                      <span>{point}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
 
               {step === 'individual' && (
                 <section>
@@ -360,6 +372,23 @@ export function EnrollmentModal({
                 </section>
               )}
 
+              {step === 'individual' && benefitsPoints.length > 0 && (
+                <section className="enrollment-modal-benefits">
+                  <h3>Qué recibirás</h3>
+                  <div className="enrollment-modal-checks">
+                    {benefitsPoints.map((point, index) => {
+                      const Icon = benefitIcons[index % benefitIcons.length]
+                      return (
+                        <div key={point}>
+                          <Icon size={16} />
+                          <span>{point}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
+
               {step === 'individual-success' && (
                 <section className="enrollment-modal-success">
                   <CheckCircle2 size={34} />
@@ -372,20 +401,20 @@ export function EnrollmentModal({
               )}
             </div>
 
-            {step !== 'individual-success' && (
+            {step === 'individual' && (
               <aside className="enrollment-modal-sidebar">
                 <h4>{session.courseTitle}</h4>
+                <div className="enrollment-modal-sidebar-block">
+                  <span className="enrollment-modal-sidebar-label">Fecha | Horario</span>
+                  <p>
+                    {sessionDate} · {sessionSchedule}
+                  </p>
+                </div>
                 <div className="enrollment-modal-sidebar-block">
                   <span className="enrollment-modal-sidebar-label">Instalaciones</span>
                   <strong>{session.venue}</strong>
                   <p>
                     <MapPin size={14} /> {session.address || session.city}
-                  </p>
-                </div>
-                <div className="enrollment-modal-sidebar-block">
-                  <span className="enrollment-modal-sidebar-label">Fecha | Horario</span>
-                  <p>
-                    {sessionDate} · {sessionSchedule}
                   </p>
                 </div>
                 <Link
@@ -395,33 +424,45 @@ export function EnrollmentModal({
                 >
                   <CalendarDays size={14} /> Buscar otras fechas de este curso
                 </Link>
-                {price && step === 'individual' && (
-                  <div className="enrollment-modal-price">{price}</div>
-                )}
+                {price && <div className="enrollment-modal-price">{price}</div>}
 
-                {step === 'individual' && (
-                  <button
-                    type="submit"
-                    form="enrollment-individual-form"
-                    className="enrollment-modal-cta"
-                    disabled={sending}
-                  >
-                    {sending ? 'Enviando...' : 'Realizar pago'}
-                  </button>
-                )}
+                <button
+                  type="submit"
+                  form="enrollment-individual-form"
+                  className="enrollment-modal-cta"
+                  disabled={sending}
+                >
+                  {sending ? 'Enviando...' : 'Realizar pago'}
+                </button>
                 {error && <p className="enrollment-modal-error">{error}</p>}
 
-                {step === 'individual' && (
-                  <p className="enrollment-modal-note">
-                    <ShieldCheck size={14} /> Nos pondremos en contacto para confirmar la plaza y
-                    gestionar el pago de forma segura.
+                <div className="enrollment-modal-trust">
+                  <p className="enrollment-modal-trust-title">
+                    <ShieldCheck size={14} /> Pago 100% seguro con STRIPE
                   </p>
-                )}
-
-                <p className="enrollment-modal-phone">
-                  <Phone size={14} /> ¿Prefieres que hablemos? Llámanos al{' '}
-                  <a href="tel:+34932640532">93 264 05 32</a>
-                </p>
+                  <p className="enrollment-modal-trust-label">Aceptamos</p>
+                  <div className="enrollment-modal-payment-icons">
+                    <span className="payment-badge payment-badge--visa">VISA</span>
+                    <span className="payment-badge payment-badge--mastercard" aria-label="Mastercard">
+                      <i /> <i />
+                    </span>
+                    <span className="payment-badge payment-badge--card" aria-hidden="true">
+                      <CreditCard size={16} />
+                    </span>
+                    <span className="payment-badge payment-badge--gpay">
+                      <b>G</b> Pay
+                    </span>
+                  </div>
+                  <p className="enrollment-modal-phone">
+                    <Phone size={14} />
+                    <span>
+                      ¿Prefieres que hablemos?
+                      <br />
+                      Llámanos al <a href="tel:+34932640532">93 264 05 32</a> o{' '}
+                      <a href="tel:+34917376166">91 737 61 66</a>
+                    </span>
+                  </p>
+                </div>
               </aside>
             )}
           </div>
