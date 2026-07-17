@@ -494,8 +494,8 @@ export function CoursesPage() {
             </div>
 
             {loading ? (
-              <div className="catalog-empty" role="status">
-                <h2>Cargando cursos...</h2>
+              <div className="catalog-empty catalog-loading" role="status">
+                <span className="catalog-spinner" />
               </div>
             ) : error ? (
               <div className="catalog-empty" role="alert">
