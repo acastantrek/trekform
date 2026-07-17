@@ -89,14 +89,6 @@ export async function getCourses(options: { featured?: boolean } = {}): Promise<
   return (result.data as CourseRow[]).map(mapCourse)
 }
 
-export interface CourseModule {
-  id: string
-  title: string
-  description: string
-  durationMinutes: number | null
-  position: number
-}
-
 export interface CourseSession {
   id: string
   slug: string
@@ -140,7 +132,6 @@ export interface CourseDetail {
   sidebarFundaeTitle: string
   sidebarFundaeText: string
   categories: string[]
-  modules: CourseModule[]
   sessions: CourseSession[]
 }
 
@@ -174,13 +165,6 @@ interface CourseDetailRow {
   sidebar_fundae_text: string | null
   course_categories: { name: string } | null
   course_category_assignments: Array<{ course_categories: { name: string } | null }>
-  course_modules: Array<{
-    id: string
-    title: string
-    description: string | null
-    duration_minutes: number | null
-    sort_order: number
-  }>
   course_sessions: Array<{
     id: string
     slug: string
@@ -249,15 +233,6 @@ function mapCourseDetail(row: CourseDetailRow): CourseDetail {
     sidebarFundaeTitle: row.sidebar_fundae_title ?? 'Bonificaciones',
     sidebarFundaeText: row.sidebar_fundae_text ?? '',
     categories,
-    modules: row.course_modules
-      .map((module) => ({
-        id: module.id,
-        title: module.title,
-        description: module.description ?? '',
-        durationMinutes: module.duration_minutes,
-        position: module.sort_order,
-      }))
-      .sort((a, b) => a.position - b.position),
     sessions: mapSessions(row.course_sessions),
   }
 }
@@ -269,7 +244,7 @@ export async function getCourseDetail(slug: string): Promise<CourseDetail | null
   const result = await client
     .from('courses')
     .select(
-      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, methodology, duration_minutes, brochure_url, certification_name, is_official_certification, is_fundae_eligible, sidebar_certification_title, sidebar_certification_text, sidebar_quality_title, sidebar_quality_text, sidebar_fundae_title, sidebar_fundae_text, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_modules(id, title, description, duration_minutes, sort_order), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
+      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, methodology, duration_minutes, brochure_url, certification_name, is_official_certification, is_fundae_eligible, sidebar_certification_title, sidebar_certification_text, sidebar_quality_title, sidebar_quality_text, sidebar_fundae_title, sidebar_fundae_text, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
     )
     .eq('slug', slug)
     .eq('status', 'published')

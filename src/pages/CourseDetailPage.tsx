@@ -3,16 +3,12 @@
   ArrowRight,
   Award,
   BookOpen,
-  CalendarDays,
   Check,
   ChevronRight,
   Clock3,
   FileText,
-  MapPin,
   Monitor,
-  Percent,
   ShieldCheck,
-  Star,
   UsersRound,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -21,15 +17,16 @@ import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
 import { getCourseDetail, type CourseDetail, type CourseSession } from '../services/courses'
 import type { RegistrationSession } from '../services/registrations'
 
-const dateFormatter = new Intl.DateTimeFormat('es-ES', {
-  day: '2-digit',
-  month: 'long',
-  year: 'numeric',
-})
-const timeFormatter = new Intl.DateTimeFormat('es-ES', {
-  hour: '2-digit',
-  minute: '2-digit',
-})
+const TYPOLOGY_CARDS = [
+  {
+    title: 'Curso Abierto',
+    text: 'Dirigido a particulares y empresas. Se imparte en nuestras instalaciones presentes en todo el territorio nacional. Calendario de cursos flexible y actualizado.',
+  },
+  {
+    title: 'Curso In-Company (a medida)',
+    text: 'Personalizado para grupos de trabajadores de una misma empresa. Formación en nuestras instalaciones o directamente en las de tu empresa para mayor comodidad. Adaptable en fechas y horarios según tus necesidades.',
+  },
+]
 
 function accentedTitle(text: string) {
   const words = text.split(' ')
@@ -148,30 +145,26 @@ export function CourseDetailPage() {
     )
   }
 
-  const descriptionParagraphs = splitParagraphs(course.description)
   const objectiveParagraphs = splitParagraphs(course.objectives)
   const audienceParagraphs = splitParagraphs(course.audienceDescription)
-  const methodologyParagraphs = splitParagraphs(course.methodology)
   const modality = getModalityLabel(course.modality)
   const durationLabel = formatDuration(course.durationMinutes)
   const methodologyLabel = course.methodology || 'Teórico-práctica'
   const certificationLabel = course.certificationName || 'Diploma acreditativo Trekform'
   const nextOpenSession = course.sessions.find((session) => session.status === 'open')
+  const showTypology = course.modality !== 'online'
   const trustCards = [
     {
       title: course.sidebarCertificationTitle,
       text: course.sidebarCertificationText,
-      icon: <ShieldCheck size={22} />,
     },
     {
       title: course.sidebarQualityTitle,
       text: course.sidebarQualityText,
-      icon: <Star size={22} />,
     },
     {
       title: course.sidebarFundaeTitle,
       text: course.sidebarFundaeText,
-      icon: <Percent size={22} />,
     },
   ].filter((item) => item.text)
   const factCards = [
@@ -184,26 +177,20 @@ export function CourseDetailPage() {
     { label: 'Metodología', value: methodologyLabel, icon: <BookOpen size={20} /> },
     { label: 'Certificación', value: certificationLabel, icon: <Award size={20} /> },
   ]
-  const contentSections = [
-    {
-      kicker: 'OBJETIVOS',
-      title: 'Qué vas a conseguir',
-      paragraphs: objectiveParagraphs,
-      variant: 'list' as const,
-    },
-    {
-      kicker: 'A QUIÉN VA DIRIGIDO',
-      title: `Pensado para ${getAudienceLabel(course.audience).toLowerCase()}`,
-      paragraphs: audienceParagraphs,
-      variant: 'list' as const,
-    },
-    {
-      kicker: 'METODOLOGÍA',
-      title: 'Cómo se desarrolla la formación',
-      paragraphs: methodologyParagraphs,
-      variant: 'text' as const,
-    },
-  ].filter((section) => section.paragraphs.length)
+  const audienceSection = audienceParagraphs.length
+    ? {
+        kicker: 'A QUIÉN VA DIRIGIDO',
+        title: `Pensado para ${getAudienceLabel(course.audience).toLowerCase()}`,
+        paragraphs: audienceParagraphs,
+      }
+    : null
+  const objectivesSection = objectiveParagraphs.length
+    ? {
+        kicker: 'OBJETIVOS',
+        title: 'Qué vas a conseguir',
+        paragraphs: objectiveParagraphs,
+      }
+    : null
 
   return (
     <div className="course-detail-page">
@@ -217,12 +204,6 @@ export function CourseDetailPage() {
         />
         <div className="course-detail-hero-grid">
           <div className="course-detail-copy">
-            <div className="course-detail-categories">
-              {course.categories.map((category) => (
-                <span key={category}>{category}</span>
-              ))}
-              <span>{modality}</span>
-            </div>
             <h1>{accentedTitle(course.title)}</h1>
             <p className="course-detail-excerpt">{course.heroText || course.excerpt}</p>
             <div className="course-detail-hero-actions">
@@ -297,75 +278,46 @@ export function CourseDetailPage() {
 
       <section className="course-detail-main">
         <div className="course-detail-content-column">
-          <div className="course-detail-intro-card">
-            <span className="course-detail-kicker">SOBRE EL CURSO</span>
-            <h2>
-              Formación diseñada para <span>aplicarse de verdad.</span>
-            </h2>
-            {descriptionParagraphs.map((paragraph, index) => (
-              <p key={`${paragraph}-${index}`}>{paragraph}</p>
-            ))}
-          </div>
-
-          {contentSections.length ? (
-            <div className="course-detail-story-grid">
-              {contentSections.map((section) => (
-                <article className="course-detail-story-card" key={section.kicker}>
-                  <span className="course-detail-kicker">{section.kicker}</span>
-                  <h3>{section.title}</h3>
-                  {section.variant === 'list' ? (
-                    <ul>
-                      {section.paragraphs.map((paragraph, index) => (
-                        <li key={`${section.kicker}-${index}`}>
-                          <Check size={15} />
-                          <span>{paragraph}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    section.paragraphs.map((paragraph, index) => (
-                      <p key={`${section.kicker}-${index}`}>{paragraph}</p>
-                    ))
-                  )}
-                </article>
+          {audienceSection ? (
+            <article className="course-detail-story-card">
+              <span className="course-detail-kicker">{audienceSection.kicker}</span>
+              <h2>{audienceSection.title}</h2>
+              {audienceSection.paragraphs.map((paragraph, index) => (
+                <p key={`audience-${index}`}>{paragraph}</p>
               ))}
-            </div>
+            </article>
           ) : null}
 
-          {trustCards.length ? (
-            <div className="course-detail-trust-row">
-              {trustCards.map((card) => (
-                <article key={card.title}>
-                  {card.icon}
+          {showTypology ? (
+            <div className="course-detail-story-grid">
+              {TYPOLOGY_CARDS.map((card) => (
+                <article className="course-detail-story-card" key={card.title}>
                   <h3>{card.title}</h3>
                   <p>{card.text}</p>
                 </article>
               ))}
             </div>
           ) : null}
+
+          {objectivesSection ? (
+            <article className="course-detail-story-card">
+              <span className="course-detail-kicker">{objectivesSection.kicker}</span>
+              <h2>{objectivesSection.title}</h2>
+              <ul>
+                {objectivesSection.paragraphs.map((paragraph, index) => (
+                  <li key={`objective-${index}`}>
+                    <Check size={15} />
+                    <span>{paragraph}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ) : null}
         </div>
 
         <aside className="course-detail-sidebar">
           <span>INFORMACIÓN DEL CURSO</span>
           <h2>{accentedTitle(course.shortTitle)}</h2>
-          <dl>
-            <div>
-              <dt>Duración</dt>
-              <dd>{durationLabel}</dd>
-            </div>
-            <div>
-              <dt>Modalidad</dt>
-              <dd>{modality}</dd>
-            </div>
-            <div>
-              <dt>Dirigido a</dt>
-              <dd>{getAudienceLabel(course.audience)}</dd>
-            </div>
-            <div>
-              <dt>Certificación</dt>
-              <dd>{certificationLabel}</dd>
-            </div>
-          </dl>
           {nextOpenSession ? (
             <button
               type="button"
@@ -379,6 +331,36 @@ export function CourseDetailPage() {
               Inscríbete ahora <ArrowRight size={18} />
             </Link>
           )}
+          <dl>
+            <div>
+              <dt>Duración</dt>
+              <dd>{durationLabel}</dd>
+            </div>
+            <div>
+              <dt>Modalidad</dt>
+              <dd>{modality}</dd>
+            </div>
+            <div>
+              <dt>Metodología</dt>
+              <dd>{methodologyLabel}</dd>
+            </div>
+            <div>
+              <dt>Calendario</dt>
+              <dd>
+                <Link to="/inscripciones">Cursos Trekform</Link>
+              </dd>
+            </div>
+          </dl>
+          {trustCards.length ? (
+            <div className="course-detail-sidebar-trust">
+              {trustCards.map((card) => (
+                <article key={card.title}>
+                  <h3>{card.title}</h3>
+                  <p>{card.text}</p>
+                </article>
+              ))}
+            </div>
+          ) : null}
           <p className="course-detail-sidebar-note">
             <ShieldCheck size={14} /> Sin compromiso · Respuesta en menos de 24h
           </p>
@@ -393,115 +375,6 @@ export function CourseDetailPage() {
             </Link>
           </div>
         </aside>
-      </section>
-
-      {course.modules.length ? (
-        <section className="course-detail-program">
-        <div className="course-detail-section-heading">
-          <div>
-            <span className="course-detail-kicker">PROGRAMA FORMATIVO</span>
-            <h2>
-              Qué <span>aprenderás.</span>
-            </h2>
-          </div>
-          <p>Un recorrido claro, progresivo y orientado a situaciones reales de trabajo.</p>
-        </div>
-          <div className="course-detail-modules">
-            {course.modules.map((module, index) => (
-              <details key={module.id}>
-                <summary>
-                  <span>{String(index + 1).padStart(2, '0')}</span>
-                  <strong>{module.title}</strong>
-                  {module.durationMinutes ? <small>{formatDuration(module.durationMinutes)}</small> : null}
-                  <i>+</i>
-                </summary>
-                <p>{module.description}</p>
-              </details>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      <section className="course-detail-social-proof">
-        <div className="course-detail-social-rating">
-          <div className="course-detail-stars">
-            {Array.from({ length: 5 }, (_, index) => (
-              <Star key={index} fill="currentColor" />
-            ))}
-            <strong>4,8/5</strong>
-          </div>
-          <p>Basado en +2.300 valoraciones de alumnos</p>
-        </div>
-        <blockquote>
-          “Formación muy práctica y profesores excelentes. Las instalaciones y la maquinaria en
-          perfecto estado.”
-          <cite>— Marta C.</cite>
-        </blockquote>
-      </section>
-
-      <section className="course-detail-sessions" id="convocatorias">
-        <div className="course-detail-section-heading">
-          <div>
-            <span className="course-detail-kicker">PRÓXIMAS CONVOCATORIAS</span>
-            <h2>
-              Elige tu fecha <span>y avanza.</span>
-            </h2>
-          </div>
-          <p>Consulta la disponibilidad actual o pídenos una convocatoria adaptada a tu empresa.</p>
-        </div>
-        {course.sessions.length ? (
-          <div className="course-detail-session-grid">
-            {course.sessions.map((session) => (
-              <article key={session.id}>
-                <div className="course-detail-session-date">
-                  <CalendarDays size={18} />
-                  <strong>{dateFormatter.format(new Date(session.startsAt))}</strong>
-                  <span>
-                    {timeFormatter.format(new Date(session.startsAt))}–
-                    {timeFormatter.format(new Date(session.endsAt))}
-                  </span>
-                </div>
-                <div className="course-detail-session-body">
-                  <span className={`course-detail-status ${session.status}`}>
-                    {session.status === 'full' ? 'Completo' : 'Plazas disponibles'}
-                  </span>
-                  <h3>
-                    {session.city}
-                    {session.province ? `, ${session.province}` : ''}
-                  </h3>
-                  <p>
-                    <MapPin size={15} /> {session.venue}
-                  </p>
-                </div>
-                <div className="course-detail-session-price">
-                  {session.status === 'open' ? (
-                    <button
-                      type="button"
-                      onClick={() => setActiveSession(toRegistrationSession(course, session))}
-                    >
-                      Inscríbete <ArrowRight size={16} />
-                    </button>
-                  ) : (
-                    <span>Sin plazas</span>
-                  )}
-                </div>
-              </article>
-            ))}
-          </div>
-        ) : (
-          <div className="course-detail-no-sessions">
-            <CalendarDays size={31} />
-            <div>
-              <h3>
-                Consulta las <span>próximas fechas.</span>
-              </h3>
-              <p>Podemos organizar esta formación en convocatoria abierta o in-company.</p>
-            </div>
-            <Link to="/contacto">
-              Solicitar información <ArrowRight size={17} />
-            </Link>
-          </div>
-        )}
       </section>
 
       <section className="course-detail-final-cta">
