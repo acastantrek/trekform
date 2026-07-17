@@ -299,6 +299,9 @@
   color: #62625f;
   font-size: 12px;
 }
+.catalog-sort-select > div {
+  position: relative;
+}
 .catalog-summary select {
   width: 185px;
   height: 38px;
@@ -311,6 +314,14 @@
   outline: none;
   appearance: none;
   color-scheme: light;
+}
+.catalog-sort-select svg {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  color: #656565;
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 .catalog-summary option {
   background: #fff;

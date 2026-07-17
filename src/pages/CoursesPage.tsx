@@ -6,6 +6,7 @@
   Check,
   ChevronDown,
   Clock3,
+  Download,
   Grid3X3,
   MapPin,
   RotateCcw,
@@ -39,7 +40,6 @@ const categoryOrder = [
 const cities = ['Todas las ciudades', 'Barcelona', 'Madrid', 'Valencia', 'Sevilla', 'Bilbao']
 const modalities = ['Todas las modalidades', 'Presencial', 'Online', 'Blended', 'In-company']
 const dates = ['Cualquier fecha', 'Junio 2026', 'Julio 2026', 'Agosto 2026']
-const clientTypes = ['Particulares y empresas', 'Particulares', 'Empresas']
 const durations = ['Hasta 4 horas', '4 - 8 horas', '8 - 16 horas', '+16 horas']
 const certifications = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
 
@@ -124,7 +124,6 @@ export function CoursesPage() {
   const [city, setCityDraft] = useState(cities[0])
   const [modality, setModalityDraft] = useState(modalities[0])
   const [date, setDate] = useState(dates[0])
-  const [clientType, setClientType] = useState(clientTypes[0])
   const [durationFilters, setDurationFilters] = useState<string[]>([])
   const [certificationFilters, setCertificationFilters] = useState<string[]>([])
   const [appliedCategory, setAppliedCategory] = useState('Todos')
@@ -267,7 +266,6 @@ export function CoursesPage() {
     setModalityDraft(modalities[0])
     setAppliedModality(modalities[0])
     setDate(dates[0])
-    setClientType(clientTypes[0])
     setDurationFilters([])
     setCertificationFilters([])
     setPage(1)
@@ -290,11 +288,11 @@ export function CoursesPage() {
             </a>
             <a
               className="hero-calendar-link"
-              href="https://drive.google.com/"
+              href="https://drive.google.com/file/d/0B7Ghcuo4WDYtYTlrWGxtXzhnNTg/view?resourcekey=0-M3q-VqD92HG26e_bJn9KTw"
               target="_blank"
               rel="noreferrer"
             >
-              Descargar calendario <CalendarDays size={18} />
+              Calendario cursos <Download size={18} />
             </a>
           </div>
           <div className="courses-hero-metrics">
@@ -365,12 +363,6 @@ export function CoursesPage() {
               onChange={setModality}
             />
             <CatalogSelect label="Fecha / Mes" value={date} options={dates} onChange={setDate} />
-            <CatalogSelect
-              label="Tipo de cliente"
-              value={clientType}
-              options={clientTypes}
-              onChange={setClientType}
-            />
             <div className="registration-toolbar-actions registration-toolbar-actions-wide">
               <button type="button" className="registration-toolbar-reset" onClick={clearFilters}>
                 <RotateCcw size={15} /> Limpiar filtros
@@ -473,16 +465,16 @@ export function CoursesPage() {
 
           <div className="catalog-results">
             <div className="catalog-summary">
-              <p>
-                <strong>{filteredCourses.length}</strong> cursos encontrados
-              </p>
               <div>
-                <label>
-                  Ordenar por:
-                  <select defaultValue="Más relevantes">
-                    <option>Más relevantes</option>
-                    <option>Próximas fechas</option>
-                  </select>
+                <label className="catalog-sort-select">
+                  <span>Ordenar por:</span>
+                  <div>
+                    <select defaultValue="Más relevantes">
+                      <option>Más relevantes</option>
+                      <option>Próximas fechas</option>
+                    </select>
+                    <ChevronDown size={15} />
+                  </div>
                 </label>
                 <button type="button" className="view-toggle active">
                   <Grid3X3 size={15} /> Catálogo

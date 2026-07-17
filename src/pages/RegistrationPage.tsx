@@ -6,6 +6,7 @@
   Check,
   ChevronDown,
   Clock3,
+  Download,
   FileCheck2,
   Grid3X3,
   MapPin,
@@ -103,7 +104,6 @@ function formatUpcomingDate(dateString: string, offsetDays: number) {
   return dayMonthFormatter.format(date).replace('.', '')
 }
 
-const clientTypeOptions = ['Particulares y empresas', 'Particulares', 'Empresas']
 const certificationOptions = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
 
 function getSessionMeta(session: RegistrationSession, index: number) {
@@ -161,7 +161,6 @@ export function RegistrationPage() {
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías')
   const [selectedModality, setSelectedModality] = useState('Todas las modalidades')
   const [selectedMonth, setSelectedMonth] = useState('Cualquier fecha')
-  const [selectedClientType, setSelectedClientType] = useState(clientTypeOptions[0])
   const [appliedCity, setAppliedCity] = useState('Todas las ciudades')
   const [appliedCategory, setAppliedCategory] = useState('Todas las categorías')
   const [appliedModality, setAppliedModality] = useState('Todas las modalidades')
@@ -336,7 +335,6 @@ export function RegistrationPage() {
     setAppliedModality(modalityOptions[0] ?? 'Todas las modalidades')
     setSelectedMonth(monthOptions[0] ?? 'Cualquier fecha')
     setAppliedMonth(monthOptions[0] ?? 'Cualquier fecha')
-    setSelectedClientType(clientTypeOptions[0])
     setDurationFilters([])
     setCertificationFilters([])
     setOnlyAvailable(false)
@@ -370,11 +368,11 @@ export function RegistrationPage() {
             </a>
             <a
               className="hero-calendar-link"
-              href="https://drive.google.com/"
+              href="https://drive.google.com/file/d/0B7Ghcuo4WDYtYTlrWGxtXzhnNTg/view?resourcekey=0-M3q-VqD92HG26e_bJn9KTw"
               target="_blank"
               rel="noreferrer"
             >
-              Descargar calendario <CalendarDays size={18} />
+              Calendario cursos <Download size={18} />
             </a>
           </div>
           <div className="courses-hero-metrics">
@@ -449,12 +447,6 @@ export function RegistrationPage() {
               value={selectedMonth}
               options={monthOptions}
               onChange={updateMonth}
-            />
-            <ToolbarSelect
-              label="Tipo de cliente"
-              value={selectedClientType}
-              options={clientTypeOptions}
-              onChange={setSelectedClientType}
             />
             <div className="registration-toolbar-actions registration-toolbar-actions-wide">
               <button type="button" className="registration-toolbar-reset" onClick={resetFilters}>
@@ -574,9 +566,6 @@ export function RegistrationPage() {
 
           <div className="registration-results" id="registration-results">
             <div className="registration-summary">
-              <p>
-                <strong>{filteredSessions.length}</strong> convocatorias encontradas
-              </p>
               <div className="registration-summary-controls">
                 <label className="availability-toggle">
                   <span>Solo plazas disponibles</span>
