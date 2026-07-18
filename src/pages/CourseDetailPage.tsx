@@ -8,13 +8,16 @@
   Clock3,
   FileText,
   MapPin,
+  MessageCircle,
   Monitor,
+  Play,
   ShieldCheck,
   Star,
   UsersRound,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { YoutubeLightbox } from '../components/common/YoutubeLightbox'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
 import { getCourseDetail, type CourseDetail, type CourseSession } from '../services/courses'
 import type { RegistrationSession } from '../services/registrations'
@@ -57,6 +60,12 @@ function formatDuration(minutes: number | null) {
   if (!hours) return `${remainder} min`
 
   return `${hours} h ${remainder} min`
+}
+
+function getYoutubeId(url: string | null) {
+  if (!url) return null
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/)
+  return match ? match[1] : null
 }
 
 function getModalityLabel(modality: string) {
@@ -123,6 +132,7 @@ export function CourseDetailPage() {
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
   const [error, setError] = useState('')
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const [isVideoOpen, setIsVideoOpen] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -182,6 +192,7 @@ export function CourseDetailPage() {
 
   const objectiveParagraphs = splitParagraphs(course.objectives)
   const audienceParagraphs = splitParagraphs(course.audienceDescription)
+  const videoId = getYoutubeId(course.videoUrl)
   const modality = getModalityLabel(course.modality)
   const durationLabel = formatDuration(course.durationMinutes)
   const methodologyLabel = course.methodology || 'Teórico-práctica'
@@ -239,6 +250,23 @@ export function CourseDetailPage() {
         />
         <div className="course-detail-hero-grid">
           <div className="course-detail-copy">
+            <ul className="course-detail-breadcrumb" aria-label="Breadcrumb">
+              <li>
+                <Link to="/">Inicio</Link>
+              </li>
+              <li>
+                <ChevronRight size={12} />
+              </li>
+              <li>
+                <Link to="/cursos-trekform">Cursos</Link>
+              </li>
+              <li>
+                <ChevronRight size={12} />
+              </li>
+              <li>
+                <span>{course.categories[0]}</span>
+              </li>
+            </ul>
             <h1>{accentedTitle(course.title)}</h1>
             <p className="course-detail-excerpt">{course.heroText || course.excerpt}</p>
             <div className="course-detail-hero-actions">
@@ -278,27 +306,6 @@ export function CourseDetailPage() {
             </div>
           </aside>
         </div>
-
-        <div className="course-detail-breadcrumb-box">
-          <ul className="course-detail-breadcrumb" aria-label="Breadcrumb">
-            <li>
-              <Link to="/">Inicio</Link>
-            </li>
-            <li>
-              <ChevronRight size={12} />
-            </li>
-            <li>
-              <Link to="/cursos-trekform">Cursos</Link>
-            </li>
-            <li>
-              <ChevronRight size={12} />
-            </li>
-            <li>
-              <span>{course.categories[0]}</span>
-            </li>
-          </ul>
-        </div>
-
       </section>
 
       <div className="course-detail-overview">
@@ -313,6 +320,23 @@ export function CourseDetailPage() {
 
       <section className="course-detail-main">
         <div className="course-detail-content-column">
+          {videoId ? (
+            <article className="course-detail-story-card course-detail-video-card">
+              <span className="course-detail-kicker">VÍDEO DEL CURSO</span>
+              <h2>Descubre cómo es la formación</h2>
+              <button
+                type="button"
+                className="course-detail-video-trigger"
+                onClick={() => setIsVideoOpen(true)}
+              >
+                <img src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`} alt="" />
+                <span className="course-detail-video-play">
+                  <Play size={22} fill="currentColor" />
+                </span>
+              </button>
+            </article>
+          ) : null}
+
           {audienceSection ? (
             <article className="course-detail-story-card">
               <span className="course-detail-kicker">{audienceSection.kicker}</span>
@@ -368,21 +392,23 @@ export function CourseDetailPage() {
           )}
           <dl>
             <div>
-              <dt>Duración</dt>
-              <dd>{durationLabel}</dd>
-            </div>
-            <div>
-              <dt>Modalidad</dt>
-              <dd>{modality}</dd>
-            </div>
-            <div>
-              <dt>Metodología</dt>
-              <dd>{methodologyLabel}</dd>
+              <dt>Próxima convocatoria</dt>
+              <dd>
+                {nextOpenSession ? (
+                  sessionDateFormatter.format(new Date(nextOpenSession.startsAt))
+                ) : (
+                  <Link to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}>
+                    Consultar fechas
+                  </Link>
+                )}
+              </dd>
             </div>
             <div>
               <dt>Calendario</dt>
               <dd>
-                <Link to="/inscripciones">Cursos Trekform</Link>
+                <Link to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}>
+                  Ver todas las convocatorias
+                </Link>
               </dd>
             </div>
           </dl>
@@ -406,7 +432,7 @@ export function CourseDetailPage() {
               </a>
             ) : null}
             <Link to="/contacto" className="course-detail-contact">
-              Habla con nuestro equipo
+              <MessageCircle size={16} /> Habla con nuestro equipo
             </Link>
           </div>
         </aside>
@@ -497,7 +523,9 @@ export function CourseDetailPage() {
         <div>
           <span>¿TIENES DUDAS?</span>
           <h2>
-            Te ayudamos <span>a elegir la formación adecuada.</span>
+            Te ayudamos
+            <br />
+            <span>a elegir la formación adecuada.</span>
           </h2>
         </div>
         <p>
@@ -511,6 +539,14 @@ export function CourseDetailPage() {
       {activeSession && (
         <EnrollmentModal session={activeSession} onClose={() => setActiveSession(null)} />
       )}
+
+      {isVideoOpen && videoId ? (
+        <YoutubeLightbox
+          videoId={videoId}
+          title={`Vídeo del curso: ${course.title}`}
+          onClose={() => setIsVideoOpen(false)}
+        />
+      ) : null}
     </div>
   )
 }

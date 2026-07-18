@@ -1,5 +1,6 @@
-import { ArrowRight, Play, X } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { ArrowRight, Play } from 'lucide-react'
+import { useState } from 'react'
+import { YoutubeLightbox } from '../common/YoutubeLightbox'
 
 const VIDEO_ID = '03iV9FR58xY'
 const videoBg =
@@ -7,22 +8,6 @@ const videoBg =
 
 export function TrekformVideoSection() {
   const [isOpen, setIsOpen] = useState(false)
-
-  useEffect(() => {
-    if (!isOpen) return
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false)
-    }
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [isOpen])
 
   return (
     <>
@@ -54,30 +39,11 @@ export function TrekformVideoSection() {
       </section>
 
       {isOpen ? (
-        <div
-          className="video-lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Vídeo corporativo Trekform"
-          onClick={() => setIsOpen(false)}
-        >
-          <button
-            type="button"
-            className="video-lightbox__close"
-            onClick={() => setIsOpen(false)}
-            aria-label="Cerrar vídeo"
-          >
-            <X size={22} />
-          </button>
-          <div className="video-lightbox__frame" onClick={(event) => event.stopPropagation()}>
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${VIDEO_ID}?autoplay=1&rel=0`}
-              title="Vídeo corporativo Trekform"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          </div>
-        </div>
+        <YoutubeLightbox
+          videoId={VIDEO_ID}
+          title="Vídeo corporativo Trekform"
+          onClose={() => setIsOpen(false)}
+        />
       ) : null}
     </>
   )

@@ -321,6 +321,23 @@ export function EnrollmentModal({
                 </div>
               </section>
 
+              {benefitsPoints.length > 0 && (
+                <section className="enrollment-modal-benefits">
+                  <h3>Qué recibirás</h3>
+                  <div className="enrollment-modal-checks">
+                    {benefitsPoints.map((point, index) => {
+                      const Icon = benefitIcons[index % benefitIcons.length]
+                      return (
+                        <div key={point}>
+                          <Icon size={16} />
+                          <span>{point}</span>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </section>
+              )}
+
               {step === 'individual' && (
                 <section>
                   <h3>Datos del alumno</h3>
@@ -369,23 +386,6 @@ export function EnrollmentModal({
                       </span>
                     </label>
                   </form>
-                </section>
-              )}
-
-              {step === 'individual' && benefitsPoints.length > 0 && (
-                <section className="enrollment-modal-benefits">
-                  <h3>Qué recibirás</h3>
-                  <div className="enrollment-modal-checks">
-                    {benefitsPoints.map((point, index) => {
-                      const Icon = benefitIcons[index % benefitIcons.length]
-                      return (
-                        <div key={point}>
-                          <Icon size={16} />
-                          <span>{point}</span>
-                        </div>
-                      )
-                    })}
-                  </div>
                 </section>
               )}
 
