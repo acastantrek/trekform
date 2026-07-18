@@ -14,7 +14,7 @@ export function LatestNews() {
 
   return (
     <div className="home-news-list">
-      {posts.map((post) => (
+      {/* {posts.map((post) => (
         <Link to={`/blog/${post.slug}`} key={post.id} data-reveal data-reveal-delay="0.1">
           <img src={post.image} alt="" />
           <span>{post.title}</span>
@@ -22,7 +22,8 @@ export function LatestNews() {
             Leer más <ArrowRight size={12} />
           </small>
         </Link>
-      ))}
+      ))} */}
+      <h1>OLAAAA</h1>
     </div>
   )
 }
