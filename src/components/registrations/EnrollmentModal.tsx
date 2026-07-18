@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { useMediaQuery } from '../../hooks/useMediaQuery'
 import { submitContactRequest } from '../../services/contact'
 import { submitSimulatedPayment } from '../../services/enrollments'
 import type { RegistrationSession } from '../../services/registrations'
@@ -75,6 +76,7 @@ export function EnrollmentModal({
   const [step, setStep] = useState<Step>('choose')
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
+  const isMobile = useMediaQuery('(max-width: 720px)')
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow
@@ -309,19 +311,21 @@ export function EnrollmentModal({
                 </section>
               )}
 
-              <section className="enrollment-modal-accreditation">
-                <h3>{accreditationTitle}</h3>
-                <div className="enrollment-modal-checks">
-                  {accreditationPoints.map((point) => (
-                    <div key={point}>
-                      <CheckCircle2 size={16} />
-                      <span>{point}</span>
-                    </div>
-                  ))}
-                </div>
-              </section>
+              {(!isMobile || step === 'choose') && (
+                <section className="enrollment-modal-accreditation">
+                  <h3>{accreditationTitle}</h3>
+                  <div className="enrollment-modal-checks">
+                    {accreditationPoints.map((point) => (
+                      <div key={point}>
+                        <CheckCircle2 size={16} />
+                        <span>{point}</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
 
-              {benefitsPoints.length > 0 && (
+              {(!isMobile || step === 'choose') && benefitsPoints.length > 0 && (
                 <section className="enrollment-modal-benefits">
                   <h3>Qué recibirás</h3>
                   <div className="enrollment-modal-checks">

@@ -195,7 +195,6 @@ export function CourseDetailPage() {
   const videoId = getYoutubeId(course.videoUrl)
   const modality = getModalityLabel(course.modality)
   const durationLabel = formatDuration(course.durationMinutes)
-  const methodologyLabel = course.methodology || 'Teórico-práctica'
   const certificationLabel = 'Diploma acreditativo Trekform'
   const nextOpenSession = course.sessions.find((session) => session.status === 'open')
   const showTypology = course.modality !== 'online'
@@ -220,7 +219,7 @@ export function CourseDetailPage() {
       value: modality,
       icon: course.modality === 'online' ? <Monitor size={20} /> : <UsersRound size={20} />,
     },
-    { label: 'Metodología', value: methodologyLabel, icon: <BookOpen size={20} /> },
+    { label: 'Metodología', value: 'Teórico-práctica', icon: <BookOpen size={20} /> },
     { label: 'Certificación', value: certificationLabel, icon: <Award size={20} /> },
   ]
   const audienceSection = audienceParagraphs.length

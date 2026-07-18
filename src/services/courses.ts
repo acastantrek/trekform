@@ -119,7 +119,6 @@ export interface CourseDetail {
   audience: 'individuals' | 'companies' | 'both'
   image: string
   modality: string
-  methodology: string
   durationMinutes: number | null
   brochureUrl: string
   videoUrl: string | null
@@ -145,7 +144,6 @@ interface CourseDetailRow {
   audience: 'individuals' | 'companies' | 'both'
   featured_image_url: string | null
   modality: string
-  methodology: string | null
   duration_minutes: number | null
   brochure_url: string | null
   video_url: string | null
@@ -208,7 +206,6 @@ function mapCourseDetail(row: CourseDetailRow): CourseDetail {
     audience: row.audience,
     image: row.featured_image_url ?? fallbackImage,
     modality: row.modality,
-    methodology: row.methodology ?? '',
     durationMinutes: row.duration_minutes,
     brochureUrl: row.brochure_url ?? '',
     videoUrl: row.video_url,
@@ -226,7 +223,7 @@ export async function getCourseDetail(slug: string): Promise<CourseDetail | null
   const result = await client
     .from('courses')
     .select(
-      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, methodology, duration_minutes, brochure_url, video_url, is_official_certification, is_fundae_eligible, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
+      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, duration_minutes, brochure_url, video_url, is_official_certification, is_fundae_eligible, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
     )
     .eq('slug', slug)
     .eq('status', 'published')
