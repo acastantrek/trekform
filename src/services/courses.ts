@@ -122,15 +122,8 @@ export interface CourseDetail {
   methodology: string
   durationMinutes: number | null
   brochureUrl: string
-  certificationName: string
   isOfficialCertification: boolean
   isFundaeEligible: boolean
-  sidebarCertificationTitle: string
-  sidebarCertificationText: string
-  sidebarQualityTitle: string
-  sidebarQualityText: string
-  sidebarFundaeTitle: string
-  sidebarFundaeText: string
   categories: string[]
   sessions: CourseSession[]
 }
@@ -154,15 +147,8 @@ interface CourseDetailRow {
   methodology: string | null
   duration_minutes: number | null
   brochure_url: string | null
-  certification_name: string | null
   is_official_certification: boolean
   is_fundae_eligible: boolean
-  sidebar_certification_title: string | null
-  sidebar_certification_text: string | null
-  sidebar_quality_title: string | null
-  sidebar_quality_text: string | null
-  sidebar_fundae_title: string | null
-  sidebar_fundae_text: string | null
   course_categories: { name: string } | null
   course_category_assignments: Array<{ course_categories: { name: string } | null }>
   course_sessions: Array<{
@@ -223,15 +209,8 @@ function mapCourseDetail(row: CourseDetailRow): CourseDetail {
     methodology: row.methodology ?? '',
     durationMinutes: row.duration_minutes,
     brochureUrl: row.brochure_url ?? '',
-    certificationName: row.certification_name ?? 'Diploma acreditativo Trekform',
     isOfficialCertification: row.is_official_certification,
     isFundaeEligible: row.is_fundae_eligible,
-    sidebarCertificationTitle: row.sidebar_certification_title ?? 'Certificación oficial',
-    sidebarCertificationText: row.sidebar_certification_text ?? '',
-    sidebarQualityTitle: row.sidebar_quality_title ?? 'Calidad garantizada',
-    sidebarQualityText: row.sidebar_quality_text ?? '',
-    sidebarFundaeTitle: row.sidebar_fundae_title ?? 'Bonificaciones',
-    sidebarFundaeText: row.sidebar_fundae_text ?? '',
     categories,
     sessions: mapSessions(row.course_sessions),
   }
@@ -244,7 +223,7 @@ export async function getCourseDetail(slug: string): Promise<CourseDetail | null
   const result = await client
     .from('courses')
     .select(
-      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, methodology, duration_minutes, brochure_url, certification_name, is_official_certification, is_fundae_eligible, sidebar_certification_title, sidebar_certification_text, sidebar_quality_title, sidebar_quality_text, sidebar_fundae_title, sidebar_fundae_text, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
+      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, methodology, duration_minutes, brochure_url, is_official_certification, is_fundae_eligible, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
     )
     .eq('slug', slug)
     .eq('status', 'published')

@@ -57,7 +57,7 @@ function getAccreditationPoints(session: RegistrationSession) {
   if (fromObjectives.length > 0) return fromObjectives
 
   return [
-    session.certificationName,
+    'Diploma acreditativo Trekform',
     'Formación práctica orientada a la seguridad en el puesto de trabajo.',
     'Grupos reducidos con instructores especializados.',
   ]

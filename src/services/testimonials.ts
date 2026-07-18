@@ -50,3 +50,17 @@ export async function getTestimonials(): Promise<Testimonial[]> {
   if (!data?.length) return fallbackTestimonials
   return (data as TestimonialRow[]).map(mapTestimonial)
 }
+
+export async function getTestimonialsByCourse(courseId: string): Promise<Testimonial[]> {
+  if (!supabase) return []
+
+  const { data, error } = await supabase
+    .from('testimonials')
+    .select('id, author_name, author_role, content, rating')
+    .eq('course_id', courseId)
+    .eq('is_published', true)
+    .order('sort_order', { ascending: true })
+
+  if (error) throw new Error(`No se pudieron cargar los testimonios: ${error.message}`)
+  return ((data as TestimonialRow[]) ?? []).map(mapTestimonial)
+}

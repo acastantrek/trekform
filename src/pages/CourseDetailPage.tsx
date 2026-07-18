@@ -7,8 +7,10 @@
   ChevronRight,
   Clock3,
   FileText,
+  MapPin,
   Monitor,
   ShieldCheck,
+  Star,
   UsersRound,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
@@ -16,6 +18,7 @@ import { Link, useParams } from 'react-router-dom'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
 import { getCourseDetail, type CourseDetail, type CourseSession } from '../services/courses'
 import type { RegistrationSession } from '../services/registrations'
+import { getTestimonialsByCourse, type Testimonial } from '../services/testimonials'
 
 const TYPOLOGY_CARDS = [
   {
@@ -62,10 +65,27 @@ function getModalityLabel(modality: string) {
   return 'Presencial'
 }
 
+const sessionDayFormatter = new Intl.DateTimeFormat('es-ES', { day: '2-digit' })
+const sessionMonthFormatter = new Intl.DateTimeFormat('es-ES', { month: 'short' })
+const sessionDateFormatter = new Intl.DateTimeFormat('es-ES', {
+  day: '2-digit',
+  month: 'long',
+  year: 'numeric',
+})
+
 function getAudienceLabel(audience: CourseDetail['audience']) {
   if (audience === 'companies') return 'Empresas'
   if (audience === 'individuals') return 'Particulares'
   return 'Particulares y empresas'
+}
+
+function initials(name: string) {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('')
 }
 
 function toRegistrationSession(course: CourseDetail, session: CourseSession): RegistrationSession {
@@ -80,7 +100,6 @@ function toRegistrationSession(course: CourseDetail, session: CourseSession): Re
     accreditationTitle: course.accreditationTitle,
     accreditationItems: course.accreditationItems,
     benefitsItems: course.benefitsItems,
-    certificationName: course.certificationName,
     isOfficialCertification: course.isOfficialCertification,
     image: course.image,
     city: session.city,
@@ -103,6 +122,7 @@ export function CourseDetailPage() {
   const [loading, setLoading] = useState(true)
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
   const [error, setError] = useState('')
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
 
   useEffect(() => {
     let active = true
@@ -120,6 +140,21 @@ export function CourseDetailPage() {
       active = false
     }
   }, [slug])
+
+  useEffect(() => {
+    if (!course) return
+    let active = true
+    getTestimonialsByCourse(course.id)
+      .then((data) => {
+        if (active) setTestimonials(data)
+      })
+      .catch(() => {
+        if (active) setTestimonials([])
+      })
+    return () => {
+      active = false
+    }
+  }, [course])
 
   if (loading) {
     return (
@@ -150,23 +185,23 @@ export function CourseDetailPage() {
   const modality = getModalityLabel(course.modality)
   const durationLabel = formatDuration(course.durationMinutes)
   const methodologyLabel = course.methodology || 'Teórico-práctica'
-  const certificationLabel = course.certificationName || 'Diploma acreditativo Trekform'
+  const certificationLabel = 'Diploma acreditativo Trekform'
   const nextOpenSession = course.sessions.find((session) => session.status === 'open')
   const showTypology = course.modality !== 'online'
   const trustCards = [
     {
-      title: course.sidebarCertificationTitle,
-      text: course.sidebarCertificationText,
+      title: 'Certificación oficial',
+      text: 'Estamos inscritos en el registro estatal de entidades de formación con el código 2577, y certificados con ISO 9001, garantía de calidad y formación de confianza.',
     },
     {
-      title: course.sidebarQualityTitle,
-      text: course.sidebarQualityText,
+      title: 'Calidad garantizada',
+      text: 'Ofrecemos formación adaptada a las necesidades de empresas y profesionales, garantizando un aprendizaje práctico y efectivo.',
     },
     {
-      title: course.sidebarFundaeTitle,
-      text: course.sidebarFundaeText,
+      title: 'Bonificaciones',
+      text: 'Gestionamos todos los trámites necesarios para que las empresas puedan bonificar su formación a través de FUNDAE, asegurando un acceso ágil y optimizado a la formación subvencionada.',
     },
-  ].filter((item) => item.text)
+  ]
   const factCards = [
     { label: 'Duración', value: durationLabel, icon: <Clock3 size={20} /> },
     {
@@ -376,6 +411,87 @@ export function CourseDetailPage() {
           </div>
         </aside>
       </section>
+
+      {course.sessions.length > 0 ? (
+        <section className="course-detail-sessions">
+          <div className="course-detail-section-heading">
+            <div>
+              <span className="course-detail-kicker">PRÓXIMAS CONVOCATORIAS</span>
+              <h2>Elige la fecha que mejor te encaje</h2>
+            </div>
+            <p>Todas las convocatorias incluyen materiales, certificado y seguimiento personalizado.</p>
+          </div>
+
+          <div className="course-detail-sessions-list">
+            {course.sessions.map((session) => (
+              <article className="course-detail-session-card" key={session.id}>
+                <div className="course-detail-session-date">
+                  <span>{sessionMonthFormatter.format(new Date(session.startsAt))}</span>
+                  <strong>{sessionDayFormatter.format(new Date(session.startsAt))}</strong>
+                </div>
+
+                <div className="course-detail-session-info">
+                  <h3>{sessionDateFormatter.format(new Date(session.startsAt))}</h3>
+                  <p>
+                    <MapPin size={14} />
+                    {session.venue}
+                    {session.city ? ` · ${session.city}` : ''}
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  className="course-detail-session-cta"
+                  disabled={session.status !== 'open'}
+                  onClick={() => setActiveSession(toRegistrationSession(course, session))}
+                >
+                  {session.status === 'open' ? (
+                    <>
+                      Inscríbete <ArrowRight size={16} />
+                    </>
+                  ) : (
+                    'Plazas completas'
+                  )}
+                </button>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      {testimonials.length > 0 ? (
+        <section className="course-detail-reviews">
+          <div className="course-detail-section-heading">
+            <div>
+              <span className="course-detail-kicker">OPINIONES</span>
+              <h2>Lo que dicen nuestros alumnos</h2>
+            </div>
+            <p>Experiencias reales de quienes ya han hecho este curso.</p>
+          </div>
+
+          <div className="course-detail-reviews-list">
+            {testimonials.map((testimonial) => (
+              <article className="course-detail-review-card" key={testimonial.id}>
+                <div className="course-detail-review-stars">
+                  {Array.from({ length: 5 }, (_, position) => (
+                    <Star key={position} size={15} fill={position < testimonial.rating ? 'currentColor' : 'none'} />
+                  ))}
+                </div>
+                <blockquote>&ldquo;{testimonial.content}&rdquo;</blockquote>
+                <div className="course-detail-review-author">
+                  <div className="course-detail-review-avatar" aria-hidden="true">
+                    {initials(testimonial.authorName)}
+                  </div>
+                  <div>
+                    <strong>{testimonial.authorName}</strong>
+                    <span>{testimonial.authorRole}</span>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="course-detail-final-cta">
         <div>

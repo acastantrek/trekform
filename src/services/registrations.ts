@@ -13,7 +13,6 @@ export interface RegistrationSession {
   accreditationTitle: string | null
   accreditationItems: string | null
   benefitsItems: string | null
-  certificationName: string
   isOfficialCertification: boolean
   image: string
   city: string
@@ -50,7 +49,6 @@ interface CourseRow {
   accreditation_title: string | null
   accreditation_items: string | null
   benefits_items: string | null
-  certification_name: string | null
   is_official_certification: boolean | null
   modality: string | null
   duration_hours: number | null
@@ -110,7 +108,7 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
     client
       .from('courses')
       .select(
-        'id, slug, title, excerpt, objectives, accreditation_title, accreditation_items, benefits_items, certification_name, is_official_certification, modality, duration_hours, image_url, category_id',
+        'id, slug, title, excerpt, objectives, accreditation_title, accreditation_items, benefits_items, is_official_certification, modality, duration_hours, image_url, category_id',
       )
       .eq('status', 'published')
       .order('title', { ascending: true }),
@@ -161,7 +159,6 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
         accreditationTitle: course.accreditation_title,
         accreditationItems: course.accreditation_items,
         benefitsItems: course.benefits_items,
-        certificationName: course.certification_name ?? 'Diploma acreditativo Trekform',
         isOfficialCertification: course.is_official_certification ?? false,
         image: course.image_url ?? fallbackImage,
         city,

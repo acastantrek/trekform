@@ -1,10 +1,13 @@
 ﻿import { ArrowRight, CheckCircle2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { CourseCatalog } from '../components/courses/CourseCatalog'
+import { CategoriesShowcase } from '../components/home/CategoriesShowcase'
+import { HomeFaqSection } from '../components/home/HomeFaqSection'
 import { LatestNews } from '../components/home/LatestNews'
 import { TestimonialsCarousel } from '../components/home/TestimonialsCarousel'
 import { TrekformHeroSection } from '../components/home/TrekformHeroSection'
 import { TrekformStatsSection } from '../components/home/TrekformStatsSection'
+import { TrekformVideoSection } from '../components/home/TrekformVideoSection'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
@@ -29,7 +32,9 @@ export function HomePage() {
         </div>
         <CourseCatalog />
       </section>
+      <CategoriesShowcase />
       <TrekformStatsSection />
+      <TrekformVideoSection />
       <section className="home-info-grid" data-reveal>
         <article data-reveal data-reveal-delay="0.05">
           <span className="kicker">SOBRE TREKFORM</span>
@@ -67,6 +72,7 @@ export function HomePage() {
           <LatestNews />
         </article>
       </section>
+      <HomeFaqSection />
     </>
   )
 }
