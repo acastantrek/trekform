@@ -136,6 +136,9 @@ export function CourseDetailPage() {
 
   useEffect(() => {
     let active = true
+    setLoading(true)
+    setError('')
+    setCourse(null)
     getCourseDetail(slug)
       .then((data) => {
         if (active) setCourse(data)
@@ -332,6 +335,7 @@ export function CourseDetailPage() {
                 <span className="course-detail-video-play">
                   <Play size={22} fill="currentColor" />
                 </span>
+                <span className="sr-only">Reproducir vídeo del curso {course.title}</span>
               </button>
             </article>
           ) : null}
@@ -385,7 +389,7 @@ export function CourseDetailPage() {
               Inscríbete ahora <ArrowRight size={18} />
             </button>
           ) : (
-            <Link to="/inscripciones">
+            <Link to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}>
               Inscríbete ahora <ArrowRight size={18} />
             </Link>
           )}
