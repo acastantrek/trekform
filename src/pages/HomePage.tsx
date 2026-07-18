@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import { CourseCatalog } from '../components/courses/CourseCatalog'
 import { CategoriesShowcase } from '../components/home/CategoriesShowcase'
+import { ContactCtaBanner } from '../components/home/ContactCtaBanner'
 import { HomeFaqSection } from '../components/home/HomeFaqSection'
 import { LatestNews } from '../components/home/LatestNews'
 import { TestimonialsCarousel } from '../components/home/TestimonialsCarousel'
@@ -73,6 +74,7 @@ export function HomePage() {
         </article>
       </section>
       <HomeFaqSection />
+      <ContactCtaBanner />
     </>
   )
 }

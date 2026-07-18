@@ -554,6 +554,59 @@
   color: #eb7615;
   font-weight: 900;
 }
+.home-cta-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: min(1430px, calc(100% - 72px));
+  margin: 0 auto 48px;
+  padding: 36px 40px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffaa17, #eb7615);
+  box-shadow: 0 24px 50px rgba(235, 118, 21, 0.28);
+}
+.home-cta-banner span {
+  display: block;
+  margin-bottom: 8px;
+  color: #3a1f00;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.home-cta-banner h3 {
+  max-width: 560px;
+  margin: 0;
+  font-family: 'Inter Tight', sans-serif;
+  font-size: clamp(21px, 2.1vw, 28px);
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #111;
+}
+.home-cta-banner-button {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 26px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.home-cta-banner-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.3);
+}
 @media (max-width: 1120px) {
   .course-grid,
   .stats-grid {
@@ -568,6 +621,16 @@
   .stats-grid,
   .category-grid {
     grid-template-columns: 1fr;
+  }
+  .home-cta-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: calc(100% - 28px);
+    padding: 28px 24px;
+  }
+  .home-cta-banner-button {
+    width: 100%;
+    justify-content: center;
   }
   .stats-section,
   .video-section,

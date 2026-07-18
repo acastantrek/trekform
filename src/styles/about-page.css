@@ -435,6 +435,7 @@
   line-height: 1.65;
   margin: 0;
   padding: 0 42px 24px 0;
+  white-space: pre-line;
 }
 .about-cta {
   text-align: center;

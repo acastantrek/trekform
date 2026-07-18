@@ -11,10 +11,11 @@
   ShieldCheck,
   Zap,
 } from 'lucide-react'
-import { type CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { getGeneralFaqs, type Faq } from '../services/faqs'
 
 const strengths = [
   {
@@ -49,47 +50,16 @@ const strengths = [
   },
 ]
 
-const faqs = [
-  {
-    question: '¿Dónde puedo realizar el curso?',
-    answer:
-      'Impartimos formación abierta y a medida en todo el territorio nacional, incluyendo Barcelona, Madrid, Zaragoza, Valencia, Canarias, Sevilla, Bilbao y Pontevedra.',
-  },
-  {
-    question: '¿Puedo bonificar mi formación si soy empresa?',
-    answer:
-      'Sí. Las empresas pueden utilizar su crédito FUNDAE y nuestro equipo puede encargarse de la gestión administrativa.',
-  },
-  {
-    question: '¿Necesito el carnet de conducir B para manejar carretillas elevadoras?',
-    answer:
-      'No es necesario dentro de instalaciones privadas. Para circular por vías públicas sí se requiere el permiso correspondiente.',
-  },
-  {
-    question: '¿Cuándo caduca el carnet de carretillero?',
-    answer:
-      'No tiene una caducidad legal fija, aunque se recomienda actualizar la formación cada cuatro o cinco años.',
-  },
-  {
-    question: '¿Qué tipo de carretilla se puede conducir con el carnet de carretillero?',
-    answer:
-      'La formación habilita para operar carretilla frontal, carretilla retráctil, carretilla apiladora, carretilla recogepedidos y transpaleta, según el alcance práctico del curso realizado.',
-  },
-  {
-    question: '¿Cuándo es obligatoria la formación de trabajos en altura?',
-    answer:
-      'Los trabajadores que realicen tareas a más de 2 metros de altura deben recibir formación específica sobre riesgos, medidas de seguridad y uso de equipos de protección. La empresa es responsable de garantizar esta formación.',
-  },
-  {
-    question: '¿Los formadores son especialistas en prevención de riesgos laborales (PRL)?',
-    answer:
-      'Sí. Todos nuestros formadores son técnicos especialistas en prevención de riesgos laborales con experiencia acreditada en formación.',
-  },
-]
-
 export function AboutPage() {
   useScrollReveal()
   const isMobile = useMediaQuery('(max-width: 640px)')
+  const [faqs, setFaqs] = useState<Faq[]>([])
+
+  useEffect(() => {
+    getGeneralFaqs()
+      .then(setFaqs)
+      .catch(() => setFaqs([]))
+  }, [])
 
   return (
     <>
@@ -230,32 +200,35 @@ export function AboutPage() {
         </div>
       </section>
 
-      <section className="faq-section" data-reveal>
-        <div className="faq-heading" data-reveal data-reveal-delay="0.05">
-          <span className="kicker">PREGUNTAS FRECUENTES</span>
-          <h2>
-            Trekform <span>responde</span>
-          </h2>
-          <p>
-            Resolvemos las dudas habituales sobre cursos, acreditaciones y formación para empresas.
-          </p>
-        </div>
-        <div className="faq-list">
-          {faqs.map((faq, index) => (
-            <details
-              key={faq.question}
-              data-reveal
-              style={{ '--reveal-delay': `${0.06 + index * 0.04}s` } as CSSProperties}
-            >
-              <summary>
-                {faq.question}
-                <ChevronDown />
-              </summary>
-              <p>{faq.answer}</p>
-            </details>
-          ))}
-        </div>
-      </section>
+      {faqs.length > 0 ? (
+        <section className="faq-section" data-reveal>
+          <div className="faq-heading" data-reveal data-reveal-delay="0.05">
+            <span className="kicker">PREGUNTAS FRECUENTES</span>
+            <h2>
+              Trekform <span>responde</span>
+            </h2>
+            <p>
+              Resolvemos las dudas habituales sobre cursos, acreditaciones y formación para
+              empresas.
+            </p>
+          </div>
+          <div className="faq-list">
+            {faqs.map((faq, index) => (
+              <details
+                key={faq.id}
+                data-reveal
+                style={{ '--reveal-delay': `${0.06 + index * 0.04}s` } as CSSProperties}
+              >
+                <summary>
+                  {faq.question}
+                  <ChevronDown />
+                </summary>
+                <p>{faq.answer}</p>
+              </details>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="about-cta" data-reveal>
         <span data-reveal data-reveal-delay="0.04">¡POR TU SEGURIDAD, ESCOGE TREKFORM!</span>
