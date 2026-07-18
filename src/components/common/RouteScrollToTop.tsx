@@ -6,6 +6,6 @@ export function RouteScrollToTop() {
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
   }, [pathname])
-  
+    
   return null
 }
