@@ -296,7 +296,7 @@ export function CoursesPage() {
       </section>
 
       <section className="registration-toolbar-wrap">
-        <div className="registration-toolbar">
+        <div className="registration-toolbar courses-toolbar">
           <div className="registration-toolbar-primary">
             <label className="registration-search-field" htmlFor="course-search">
               <span>¿Qué curso buscas?</span>

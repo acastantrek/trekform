@@ -106,6 +106,64 @@ function formatUpcomingDate(dateString: string, offsetDays: number) {
 
 const certificationOptions = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
 
+const otherSpanishProvinces = [
+  'Álava',
+  'Albacete',
+  'Alicante',
+  'Almería',
+  'Asturias',
+  'Ávila',
+  'Badajoz',
+  'Baleares',
+  'Burgos',
+  'Cáceres',
+  'Cádiz',
+  'Cantabria',
+  'Castellón',
+  'Ciudad Real',
+  'Córdoba',
+  'Cuenca',
+  'Gerona',
+  'Granada',
+  'Guadalajara',
+  'Guipúzcoa',
+  'Huelva',
+  'Huesca',
+  'Jaén',
+  'La Coruña',
+  'La Rioja',
+  'Las Palmas',
+  'León',
+  'Lérida',
+  'Lugo',
+  'Málaga',
+  'Murcia',
+  'Navarra',
+  'Orense',
+  'Palencia',
+  'Pontevedra',
+  'Salamanca',
+  'Santa Cruz de Tenerife',
+  'Segovia',
+  'Sevilla',
+  'Soria',
+  'Tarragona',
+  'Teruel',
+  'Toledo',
+  'Valencia',
+  'Valladolid',
+  'Vizcaya',
+  'Zamora',
+  'Zaragoza',
+].sort((a, b) => a.localeCompare(b, 'es'))
+
+const provinceOptions = [
+  'Todas las provincias',
+  'Madrid',
+  'Barcelona',
+  ...otherSpanishProvinces,
+]
+
 function getSessionMeta(session: RegistrationSession, index: number) {
   const isOnline = session.modality === 'Online'
   const bonificable = !isOnline && index % 2 === 0
@@ -157,11 +215,11 @@ export function RegistrationPage() {
   const courseQuery = searchParams.get('curso')
   const [search, setSearch] = useState(courseQuery ?? '')
   const [syncedCourseQuery, setSyncedCourseQuery] = useState(courseQuery)
-  const [selectedCity, setSelectedCity] = useState('Todas las ciudades')
+  const [selectedProvince, setSelectedProvince] = useState(provinceOptions[0])
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías')
   const [selectedModality, setSelectedModality] = useState('Todas las modalidades')
   const [selectedMonth, setSelectedMonth] = useState('Cualquier fecha')
-  const [appliedCity, setAppliedCity] = useState('Todas las ciudades')
+  const [appliedProvince, setAppliedProvince] = useState(provinceOptions[0])
   const [appliedCategory, setAppliedCategory] = useState('Todas las categorías')
   const [appliedModality, setAppliedModality] = useState('Todas las modalidades')
   const [appliedMonth, setAppliedMonth] = useState('Cualquier fecha')
@@ -187,9 +245,9 @@ export function RegistrationPage() {
     }
   }, [searchParams])
 
-  const updateCity = (value: string) => {
-    setSelectedCity(value)
-    if (!isMobileFilters) setAppliedCity(value)
+  const updateProvince = (value: string) => {
+    setSelectedProvince(value)
+    if (!isMobileFilters) setAppliedProvince(value)
     setPage(1)
   }
   const updateCategory = (value: string) => {
@@ -208,10 +266,6 @@ export function RegistrationPage() {
     setPage(1)
   }
 
-  const cityOptions = useMemo(
-    () => ['Todas las ciudades', ...new Set(sessions.map((session) => session.city))],
-    [sessions],
-  )
   const categoryOptions = useMemo(
     () => ['Todas las categorías', ...new Set(sessions.map((session) => session.category))],
     [sessions],
@@ -252,7 +306,8 @@ export function RegistrationPage() {
           ].join(' '),
         ).includes(query)
 
-      const matchesCity = appliedCity === cityOptions[0] || session.city === appliedCity
+      const matchesProvince =
+        appliedProvince === provinceOptions[0] || session.province === appliedProvince
       const matchesCategory =
         appliedCategory === categoryOptions[0] || session.category === appliedCategory
       const matchesModality =
@@ -269,7 +324,7 @@ export function RegistrationPage() {
 
       return (
         matchesSearch &&
-        matchesCity &&
+        matchesProvince &&
         matchesCategory &&
         matchesModality &&
         matchesMonth &&
@@ -288,12 +343,11 @@ export function RegistrationPage() {
     })
   }, [
     appliedCategory,
-    appliedCity,
+    appliedProvince,
     appliedModality,
     appliedMonth,
     categoryOptions,
     certificationFilters,
-    cityOptions,
     durationFilters,
     modalityOptions,
     monthOptions,
@@ -317,7 +371,7 @@ export function RegistrationPage() {
   }
 
   const applyFilters = () => {
-    setAppliedCity(selectedCity)
+    setAppliedProvince(selectedProvince)
     setAppliedCategory(selectedCategory)
     setAppliedModality(selectedModality)
     setAppliedMonth(selectedMonth)
@@ -327,8 +381,8 @@ export function RegistrationPage() {
 
   const resetFilters = () => {
     setSearch('')
-    setSelectedCity(cityOptions[0] ?? 'Todas las ciudades')
-    setAppliedCity(cityOptions[0] ?? 'Todas las ciudades')
+    setSelectedProvince(provinceOptions[0])
+    setAppliedProvince(provinceOptions[0])
     setSelectedCategory(categoryOptions[0] ?? 'Todas las categorías')
     setAppliedCategory(categoryOptions[0] ?? 'Todas las categorías')
     setSelectedModality(modalityOptions[0] ?? 'Todas las modalidades')
@@ -429,7 +483,12 @@ export function RegistrationPage() {
           </div>
 
           <div className={`registration-toolbar-fields${filtersOpen ? ' is-open' : ''}`}>
-            <ToolbarSelect label="Ciudad" value={selectedCity} options={cityOptions} onChange={updateCity} />
+            <ToolbarSelect
+              label="Provincia"
+              value={selectedProvince}
+              options={provinceOptions}
+              onChange={updateProvince}
+            />
             <ToolbarSelect
               label="Categoría"
               value={selectedCategory}
@@ -462,16 +521,16 @@ export function RegistrationPage() {
             </div>
 
             <div className="registration-active-chips">
-              {appliedCity !== cityOptions[0] ? (
+              {appliedProvince !== provinceOptions[0] ? (
                 <button
                   type="button"
                   onClick={() => {
-                    setSelectedCity(cityOptions[0])
-                    setAppliedCity(cityOptions[0])
+                    setSelectedProvince(provinceOptions[0])
+                    setAppliedProvince(provinceOptions[0])
                     setPage(1)
                   }}
                 >
-                  {appliedCity} ×
+                  {appliedProvince} ×
                 </button>
               ) : null}
               {appliedMonth !== monthOptions[0] ? (
@@ -736,7 +795,7 @@ export function RegistrationPage() {
               <div className="registration-empty">
                 <Search size={30} />
                 <h3>No hay convocatorias que coincidan</h3>
-                <p>Prueba con otra ciudad, categoría o fecha.</p>
+                <p>Prueba con otra provincia, categoría o fecha.</p>
               </div>
             )}
 

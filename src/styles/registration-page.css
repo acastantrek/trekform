@@ -43,7 +43,7 @@
   margin: 0 auto;
   padding: 20px;
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
   gap: 14px;
   background: linear-gradient(180deg, rgba(34, 34, 34, 0.97), rgba(18, 18, 18, 0.98));
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -112,6 +112,14 @@
 }
 
 .registration-toolbar-actions-wide {
+  grid-column: span 3;
+}
+
+.courses-toolbar {
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+}
+
+.courses-toolbar .registration-toolbar-actions-wide {
   grid-column: span 2;
 }
 
