@@ -78,15 +78,11 @@ function getCourseMeta(course: Course, index: number) {
         ? 'Diploma homologado'
         : 'Certificado PRL'
   const bonificable = index % 3 === 1
-  const nextDates =
-    index % 5 === 0
-      ? ['Inicio inmediato']
-      : index % 2 === 0
-        ? ['02 Jun', '09 Jun', '16 Jun']
-        : ['03 Jun', '10 Jun', '17 Jun']
 
-  return { duration, durationHours, city, modality, certificate, bonificable, dates: nextDates }
+  return { duration, durationHours, city, modality, certificate, bonificable }
 }
+
+const cardDateFormatter = new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short' })
 
 function matchesDurationFilter(filter: string, hours: number) {
   switch (filter) {
@@ -133,6 +129,9 @@ export function CoursesPage() {
   const [nextSessionByCourseSlug, setNextSessionByCourseSlug] = useState<
     Map<string, RegistrationSession>
   >(new Map())
+  const [sessionsByCourseSlug, setSessionsByCourseSlug] = useState<
+    Map<string, RegistrationSession[]>
+  >(new Map())
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
@@ -149,15 +148,23 @@ export function CoursesPage() {
   useEffect(() => {
     getRegistrationSessions()
       .then((sessions) => {
-        const map = new Map<string, RegistrationSession>()
+        const nextOpenMap = new Map<string, RegistrationSession>()
+        const bySlugMap = new Map<string, RegistrationSession[]>()
         sessions.forEach((session) => {
-          if (session.status === 'open' && !map.has(session.courseSlug)) {
-            map.set(session.courseSlug, session)
+          if (session.status === 'open' && !nextOpenMap.has(session.courseSlug)) {
+            nextOpenMap.set(session.courseSlug, session)
           }
+          const list = bySlugMap.get(session.courseSlug) ?? []
+          list.push(session)
+          bySlugMap.set(session.courseSlug, list)
         })
-        setNextSessionByCourseSlug(map)
+        setNextSessionByCourseSlug(nextOpenMap)
+        setSessionsByCourseSlug(bySlugMap)
       })
-      .catch(() => setNextSessionByCourseSlug(new Map()))
+      .catch(() => {
+        setNextSessionByCourseSlug(new Map())
+        setSessionsByCourseSlug(new Map())
+      })
   }, [])
 
   const catalogCategories = useMemo(() => {
@@ -499,6 +506,7 @@ export function CoursesPage() {
                 {visibleCourses.map((course, index) => {
                   const absoluteIndex = (page - 1) * pageSize + index
                   const meta = courseMetaById.get(course.id)!
+                  const upcomingSessions = (sessionsByCourseSlug.get(course.slug) ?? []).slice(0, 3)
 
                   return (
                     <article className="catalog-card" key={course.id}>
@@ -537,9 +545,15 @@ export function CoursesPage() {
                         </div>
                         <div className="course-dates">
                           <small>Próx. fechas:</small>
-                          {meta.dates.map((item) => (
-                            <span key={item}>{item}</span>
-                          ))}
+                          {upcomingSessions.length > 0 ? (
+                            upcomingSessions.map((session) => (
+                              <span key={session.id}>
+                                {cardDateFormatter.format(new Date(session.startsAt))}
+                              </span>
+                            ))
+                          ) : (
+                            <span>Próximamente</span>
+                          )}
                         </div>
                         <div className="catalog-card-actions">
                           <Link to={`/cursos-trekform/${course.slug}`}>Ver detalles</Link>
