@@ -412,7 +412,7 @@
   flex: 1;
 }
 .catalog-card-body h2 {
-  min-height: 52px;
+  min-height: 38px;
   margin: 0 0 8px;
   font-family: 'Inter Tight', sans-serif;
   font-size: 18px;
@@ -420,7 +420,7 @@
   letter-spacing: 0;
 }
 .catalog-card-body > p {
-  min-height: 42px;
+  min-height: 32px;
   margin: 0 0 12px;
   color: #676764;
   font-size: 12px;
@@ -430,7 +430,10 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px 14px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
+}
+.catalog-card-body > p + .course-meta-row {
+  margin-top: auto;
 }
 .course-meta-row span {
   display: inline-flex;
@@ -449,8 +452,6 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: auto;
-  padding: 10px 0 0;
   margin-bottom: 12px;
 }
 .course-dates small {
@@ -470,6 +471,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+  padding-top: 10px;
 }
 .catalog-card-actions a,
 .catalog-card-actions button {

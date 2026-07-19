@@ -7,6 +7,11 @@ interface CourseRow {
   title: string
   featured_image_url: string | null
   duration_minutes: number | null
+  duration_hours: number | null
+  modality: string | null
+  is_official_certification: boolean
+  is_fundae_eligible: boolean
+  accreditation_title: string | null
   excerpt: string | null
   is_featured: boolean
   course_categories: { name: string } | null
@@ -14,7 +19,7 @@ interface CourseRow {
 }
 
 const courseColumns =
-  'id, slug, title, featured_image_url, duration_minutes, excerpt, is_featured, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name))'
+  'id, slug, title, featured_image_url, duration_minutes, duration_hours, modality, is_official_certification, is_fundae_eligible, accreditation_title, excerpt, is_featured, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name))'
 
 const fallbackImage =
   'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=85'
@@ -59,6 +64,11 @@ function mapCourse(row: CourseRow): Course {
     image: row.featured_image_url ?? fallbackImage,
     place: 'Toda España',
     duration: formatDuration(row.duration_minutes),
+    durationHours: row.duration_hours,
+    modality: row.modality === 'online' ? 'online' : 'presential',
+    isOfficialCertification: row.is_official_certification,
+    isFundaeEligible: row.is_fundae_eligible,
+    accreditationTitle: row.accreditation_title,
     color: '#d9ff43',
     description: row.excerpt ?? '',
     featured: row.is_featured,

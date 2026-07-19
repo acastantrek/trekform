@@ -43,7 +43,7 @@
   margin: 0 auto;
   padding: 20px;
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
   gap: 14px;
   background: linear-gradient(180deg, rgba(34, 34, 34, 0.97), rgba(18, 18, 18, 0.98));
   border: 1px solid rgba(255, 255, 255, 0.06);
@@ -112,7 +112,7 @@
 }
 
 .registration-toolbar-actions-wide {
-  grid-column: span 3;
+  grid-column: span 2;
 }
 
 .registration-toolbar-reset {
@@ -163,6 +163,10 @@
 .registration-toolbar-primary,
 .registration-toolbar-fields {
   display: contents;
+}
+
+.registration-toolbar-mobile-filters {
+  display: none;
 }
 
 .registration-filters-toggle {
@@ -956,6 +960,24 @@
 
   .registration-toolbar-actions-wide {
     grid-column: auto;
+  }
+
+  .registration-toolbar-mobile-filters {
+    display: block;
+    padding: 4px 2px 0;
+  }
+
+  .registration-toolbar-mobile-filters .filter-group {
+    padding: 12px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .registration-toolbar-mobile-filters .filter-group h3 {
+    color: #fff;
+  }
+
+  .registration-toolbar-mobile-filters .filter-group label {
+    color: rgba(255, 255, 255, 0.86);
   }
 
   .registration-toolbar-actions {

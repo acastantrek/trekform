@@ -37,9 +37,7 @@ const categoryOrder = [
   'Logística',
   'Hostelería',
 ]
-const cities = ['Todas las ciudades', 'Barcelona', 'Madrid', 'Valencia', 'Sevilla', 'Bilbao']
-const modalities = ['Todas las modalidades', 'Presencial', 'Online', 'Blended', 'In-company']
-const dates = ['Cualquier fecha', 'Junio 2026', 'Julio 2026', 'Agosto 2026']
+const modalities = ['Todas las modalidades', 'Presencial', 'Online']
 const durations = ['Hasta 4 horas', '4 - 8 horas', '8 - 16 horas', '+16 horas']
 const certifications = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
 
@@ -61,25 +59,15 @@ function normalize(value: string) {
     .replace(/[\u0300-\u036f]/g, '')
 }
 
-const fallbackDurationHours = [3, 6, 12, 20]
+function getCourseMeta(course: Course) {
+  const durationHours = course.durationHours ?? 0
+  const duration = Number.isInteger(durationHours) ? `${durationHours} h` : `${durationHours.toFixed(1)} h`
+  const modality = course.modality === 'online' ? 'Online' : 'Presencial'
+  const certificate = course.accreditationTitle
+  const officialCertification = course.isOfficialCertification
+  const bonificable = course.isFundaeEligible
 
-function getCourseMeta(course: Course, index: number) {
-  const durationMatch = course.duration.match(/\d+/)
-  const durationHours = durationMatch
-    ? Number(durationMatch[0])
-    : fallbackDurationHours[index % fallbackDurationHours.length]
-  const duration = `${durationHours} h`
-  const city = ['Barcelona', 'Madrid', 'Valencia', 'Sevilla'][index % 4]
-  const modality = course.category.toLowerCase().includes('online') ? 'Online' : 'Presencial'
-  const certificate =
-    index % 3 === 0
-      ? 'Carnet homologado'
-      : index % 3 === 1
-        ? 'Diploma homologado'
-        : 'Certificado PRL'
-  const bonificable = index % 3 === 1
-
-  return { duration, durationHours, city, modality, certificate, bonificable }
+  return { duration, durationHours, modality, certificate, officialCertification, bonificable }
 }
 
 const cardDateFormatter = new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short' })
@@ -99,14 +87,18 @@ function matchesDurationFilter(filter: string, hours: number) {
   }
 }
 
-function matchesCertificationFilter(filter: string, meta: ReturnType<typeof getCourseMeta>) {
+function matchesCertificationFilter(
+  filter: string,
+  course: Course,
+  meta: ReturnType<typeof getCourseMeta>,
+) {
   switch (filter) {
     case 'Carnet / Diploma homologado':
-      return meta.certificate === 'Carnet homologado' || meta.certificate === 'Diploma homologado'
+      return meta.officialCertification
     case 'Bonificable FUNDAE':
       return meta.bonificable
     case 'PRL':
-      return meta.certificate === 'Certificado PRL'
+      return course.categories.some((item) => normalize(item).includes('prevencion'))
     default:
       return true
   }
@@ -117,13 +109,10 @@ export function CoursesPage() {
   const isMobileFilters = useMediaQuery('(max-width: 680px)')
   const [category, setCategoryDraft] = useState('Todos')
   const [search, setSearch] = useState('')
-  const [city, setCityDraft] = useState(cities[0])
   const [modality, setModalityDraft] = useState(modalities[0])
-  const [date, setDate] = useState(dates[0])
   const [durationFilters, setDurationFilters] = useState<string[]>([])
   const [certificationFilters, setCertificationFilters] = useState<string[]>([])
   const [appliedCategory, setAppliedCategory] = useState('Todos')
-  const [appliedCity, setAppliedCity] = useState(cities[0])
   const [appliedModality, setAppliedModality] = useState(modalities[0])
   const [page, setPage] = useState(1)
   const [nextSessionByCourseSlug, setNextSessionByCourseSlug] = useState<
@@ -134,11 +123,6 @@ export function CoursesPage() {
   >(new Map())
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
-
-  const setCity = (value: string) => {
-    setCityDraft(value)
-    if (!isMobileFilters) setAppliedCity(value)
-  }
 
   const setModality = (value: string) => {
     setModalityDraft(value)
@@ -174,8 +158,8 @@ export function CoursesPage() {
 
   const courseMetaById = useMemo(() => {
     const map = new Map<string, ReturnType<typeof getCourseMeta>>()
-    allCourses.forEach((course, index) => {
-      map.set(course.id, getCourseMeta(course, index))
+    allCourses.forEach((course) => {
+      map.set(course.id, getCourseMeta(course))
     })
     return map
   }, [allCourses])
@@ -194,22 +178,15 @@ export function CoursesPage() {
       const meta = courseMetaById.get(course.id)!
       const matchesCategory =
         appliedCategory === 'Todos' || course.categories.includes(appliedCategory)
-      const matchesCity = appliedCity === cities[0] || meta.city === appliedCity
       const matchesModality = appliedModality === modalities[0] || meta.modality === appliedModality
       const matchesDuration =
         durationFilters.length === 0 ||
         durationFilters.some((filter) => matchesDurationFilter(filter, meta.durationHours))
       const matchesCertification =
         certificationFilters.length === 0 ||
-        certificationFilters.some((filter) => matchesCertificationFilter(filter, meta))
+        certificationFilters.some((filter) => matchesCertificationFilter(filter, course, meta))
 
-      if (
-        !matchesCategory ||
-        !matchesCity ||
-        !matchesModality ||
-        !matchesDuration ||
-        !matchesCertification
-      )
+      if (!matchesCategory || !matchesModality || !matchesDuration || !matchesCertification)
         return false
       if (!query) return true
 
@@ -220,7 +197,6 @@ export function CoursesPage() {
           course.category,
           course.categories.join(' '),
           course.description,
-          meta.city,
           meta.modality,
         ]
           .filter(Boolean)
@@ -233,7 +209,6 @@ export function CoursesPage() {
     allCourses,
     courseMetaById,
     appliedCategory,
-    appliedCity,
     appliedModality,
     durationFilters,
     certificationFilters,
@@ -257,7 +232,6 @@ export function CoursesPage() {
   }
 
   const applyFilters = () => {
-    setAppliedCity(city)
     setAppliedCategory(category)
     setAppliedModality(modality)
     setPage(1)
@@ -268,11 +242,8 @@ export function CoursesPage() {
     setCategoryDraft('Todos')
     setAppliedCategory('Todos')
     setSearch('')
-    setCityDraft(cities[0])
-    setAppliedCity(cities[0])
     setModalityDraft(modalities[0])
     setAppliedModality(modalities[0])
-    setDate(dates[0])
     setDurationFilters([])
     setCertificationFilters([])
     setPage(1)
@@ -356,7 +327,6 @@ export function CoursesPage() {
           </div>
 
           <div className={`registration-toolbar-fields${filtersOpen ? ' is-open' : ''}`}>
-            <CatalogSelect label="Ciudad" value={city} options={cities} onChange={setCity} />
             <CatalogSelect
               label="Categoría"
               value={category}
@@ -369,7 +339,32 @@ export function CoursesPage() {
               options={modalities}
               onChange={setModality}
             />
-            <CatalogSelect label="Fecha / Mes" value={date} options={dates} onChange={setDate} />
+            <div className="registration-toolbar-mobile-filters">
+              <FilterGroup title="Duración">
+                {durations.map((item) => (
+                  <label key={item}>
+                    <input
+                      type="checkbox"
+                      checked={durationFilters.includes(item)}
+                      onChange={() => toggleFilterValue(setDurationFilters, item)}
+                    />
+                    <span>{item}</span>
+                  </label>
+                ))}
+              </FilterGroup>
+              <FilterGroup title="Certificación">
+                {certifications.map((item) => (
+                  <label key={item}>
+                    <input
+                      type="checkbox"
+                      checked={certificationFilters.includes(item)}
+                      onChange={() => toggleFilterValue(setCertificationFilters, item)}
+                    />
+                    <span>{item}</span>
+                  </label>
+                ))}
+              </FilterGroup>
+            </div>
             <div className="registration-toolbar-actions registration-toolbar-actions-wide">
               <button type="button" className="registration-toolbar-reset" onClick={clearFilters}>
                 <RotateCcw size={15} /> Limpiar filtros
@@ -379,19 +374,6 @@ export function CoursesPage() {
               </a>
             </div>
             <div className="registration-active-chips">
-              {appliedCity !== cities[0] ? (
-                <button
-                  onClick={() => {
-                    setCity(cities[0])
-                    setAppliedCity(cities[0])
-                  }}
-                >
-                  {appliedCity} ×
-                </button>
-              ) : null}
-              {date !== dates[0] ? (
-                <button onClick={() => setDate(dates[0])}>{date} ×</button>
-              ) : null}
               {appliedCategory !== 'Todos' ? (
                 <button
                   onClick={() => {
@@ -519,7 +501,7 @@ export function CoursesPage() {
                         />
                         <span>{course.category}</span>
                         {meta.bonificable ? <b>Bonificable</b> : null}
-                        {absoluteIndex === 0 ? <em>Más demandado</em> : null}
+                        {course.featured ? <em>Más demandado</em> : null}
                       </div>
                       <div className="catalog-card-body">
                         <h2>{course.title}</h2>
@@ -533,9 +515,6 @@ export function CoursesPage() {
                           </span>
                           <span>
                             <Clock3 /> {meta.duration}
-                          </span>
-                          <span>
-                            <MapPin /> {meta.city}
                           </span>
                         </div>
                         <div className="course-meta-row">
