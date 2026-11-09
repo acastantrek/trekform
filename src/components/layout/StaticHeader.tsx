@@ -45,7 +45,7 @@ export function StaticHeader() {
         </div>
       </div>
       <header className="nav-wrap" ref={headerRef}>
-        <TrekformLogo />
+        <TrekformLogo light />
         <nav className={`nav${isOpen ? ' open' : ''}`} aria-label="Navegación principal">
           {links.map(({ label, to }) => (
             <NavLink key={label} className="enabled-link" to={to} onClick={() => setIsOpen(false)}>

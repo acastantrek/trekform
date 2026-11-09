@@ -69,7 +69,7 @@ function mapCourse(row: CourseRow): Course {
     isOfficialCertification: row.is_official_certification,
     isFundaeEligible: row.is_fundae_eligible,
     accreditationTitle: row.accreditation_title,
-    color: '#d9ff43',
+    color: '#ffb606',
     description: row.excerpt ?? '',
     featured: row.is_featured,
     order: 0,

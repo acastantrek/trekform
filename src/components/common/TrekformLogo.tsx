@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 export function TrekformLogo({ light = false }: { light?: boolean }) {
   return (
     <Link
-      className={`trekform-logo${light ? ' trekform-logo--light' : ''}`}
+      className="trekform-logo"
       to="/"
       aria-label="Ir al inicio"
     >

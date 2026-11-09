@@ -20,7 +20,7 @@ export function TrekformStatsSection() {
       className="stats-section"
       data-reveal
       style={{
-        backgroundImage: `linear-gradient(135deg, rgba(11,18,32,.94), rgba(15,26,45,.88) 55%, rgba(11,18,32,.94)), url(${statsBg})`,
+        backgroundImage: `linear-gradient(135deg, rgba(46,46,46,.94), rgba(46,46,46,.88) 55%, rgba(46,46,46,.94)), url(${statsBg})`,
       }}
     >
       <div className="stats-dossier">

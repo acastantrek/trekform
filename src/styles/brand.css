@@ -1,24 +1,24 @@
 ﻿:root {
-  --navy: #0b1220;
-  --lime: #eb7615;
-  --orange: #eb7615;
-  --cream: #f4efe7;
+  --navy: #2e2e2e;
+  --lime: #ffb606;
+  --orange: #ffb606;
+  --cream: #ffffff;
 }
 .topline {
-  background: linear-gradient(90deg, #0b1220, #1f2b44 52%, #0f1724);
+  background: linear-gradient(90deg, var(--navy), var(--navy) 52%, var(--navy));
   color: #fff;
 }
 .topline .top-sep {
   color: rgba(255, 255, 255, 0.7);
 }
 .nav-wrap {
-  background: rgba(11, 18, 32, 0.88);
+  background: rgba(46, 46, 46, 0.88);
   color: #fff;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(18px);
 }
 .trekform-logo {
-  width: 245px;
+  width: 165px;
   display: flex;
   align-items: center;
   cursor: default;
@@ -29,65 +29,65 @@
   height: auto;
   object-fit: contain;
 }
-.trekform-logo--light {
-  width: 280px;
+.footer-main .trekform-logo {
+  width: 200px;
 }
 .nav-cta,
 .mobile-cta {
-  background: linear-gradient(135deg, #eb7615, #ffaa17) !important;
-  color: #fff !important;
+  background: linear-gradient(135deg, var(--accent), var(--accent-soft)) !important;
+  color: var(--navy) !important;
   border-radius: 999px;
 }
 .nav-cta:hover {
-  background: linear-gradient(135deg, #ff8f73, #ffc489);
+  background: linear-gradient(135deg, var(--accent-soft), var(--accent-soft));
 }
 .menu {
   color: #fff;
 }
 .primary {
-  background: linear-gradient(135deg, #eb7615, #eb7615);
-  color: #0b1220;
+  background: linear-gradient(135deg, var(--accent), var(--accent));
+  color: var(--navy);
   border-radius: 999px;
 }
 .primary:hover {
-  background: linear-gradient(135deg, #eb7615, #eb7615);
+  background: linear-gradient(135deg, var(--accent), var(--accent));
 }
 .slider-content .eyebrow {
-  color: #ffaa17;
+  color: var(--accent);
 }
 .slider-content .eyebrow i {
-  background: #eb7615;
+  background: var(--accent);
 }
 .slider-dots button.active {
-  background: #eb7615;
+  background: var(--accent);
 }
 .lead-form button {
-  background: linear-gradient(135deg, #eb7615, #eb7615);
-  color: #0b1220;
+  background: linear-gradient(135deg, var(--accent), var(--accent));
+  color: var(--navy);
   border-radius: 999px;
 }
 .course-image > span {
-  background: linear-gradient(135deg, #eb7615, #ffaa17) !important;
-  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-soft)) !important;
+  color: var(--navy);
 }
 .stats-grid strong {
-  color: #eb7615;
+  color: var(--accent);
 }
 .contact {
-  background: linear-gradient(135deg, #eb7615, #ffaa17);
+  background: linear-gradient(135deg, var(--accent), var(--accent-soft));
 }
 .footer-main .trekform-logo {
   margin-bottom: 20px;
 }
 footer {
-  background: linear-gradient(180deg, #08111d, #0b1220);
+  background: linear-gradient(180deg, var(--navy), var(--navy));
 }
 footer h4 {
-  color: #eb7615;
+  color: var(--accent);
 }
 @media (max-width: 1100px) {
   .trekform-logo {
-    width: 205px;
+    width: 150px;
   }
   .nav {
     gap: 20px;
@@ -98,10 +98,10 @@ footer h4 {
 }
 @media (max-width: 620px) {
   .trekform-logo {
-    width: 190px;
+    width: 130px;
   }
-  .trekform-logo--light {
-    width: 230px;
+  .footer-main .trekform-logo {
+    width: 170px;
   }
 }
 .trekform-logo {

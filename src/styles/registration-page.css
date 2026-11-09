@@ -1,6 +1,6 @@
 ﻿.registration-page {
   background: #f6f4ef;
-  color: #181818;
+  color: var(--navy);
 }
 
 .registration-page-hero {
@@ -27,8 +27,8 @@
 
 .registration-toolbar-submit,
 .registration-session-actions a {
-  background: #f5ae1b;
-  color: #181818;
+  background: var(--accent);
+  color: var(--navy);
 }
 
 .registration-toolbar-wrap {
@@ -45,10 +45,10 @@
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
   gap: 14px;
-  background: linear-gradient(180deg, rgba(34, 34, 34, 0.97), rgba(18, 18, 18, 0.98));
+  background: linear-gradient(180deg, rgba(34, 34, 34, 0.97), rgba(46, 46, 46, 0.98));
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 10px;
-  box-shadow: 0 28px 50px rgba(12, 12, 12, 0.22);
+  box-shadow: 0 28px 50px rgba(46, 46, 46, 0.22);
 }
 
 .registration-search-field,
@@ -81,7 +81,7 @@
   border: 1px solid #d8d4cb;
   border-radius: 6px;
   background: #fff;
-  color: #181818;
+  color: var(--navy);
   padding: 0 42px 0 14px;
   font:
     700 14px 'Inter',
@@ -251,14 +251,14 @@
   width: 15px;
   height: 15px;
   margin: 0;
-  accent-color: #f5ae1b;
+  accent-color: var(--accent);
 }
 
 .sidebar-link-button,
 .registration-sidebar-reset {
   border: 0;
   background: transparent;
-  color: #eb7615;
+  color: var(--navy);
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -273,7 +273,7 @@
   justify-content: center;
   border: 1px solid #ebe3d7;
   border-radius: 6px;
-  color: #181818;
+  color: var(--navy);
 }
 
 .registration-results {
@@ -295,7 +295,7 @@
 
 .registration-summary strong {
   margin-right: 6px;
-  color: #181818;
+  color: var(--navy);
   font-size: 30px;
   line-height: 1;
 }
@@ -337,7 +337,7 @@
 }
 
 .availability-toggle button.active {
-  background: #f5ae1b;
+  background: var(--accent);
 }
 
 .availability-toggle button.active i {
@@ -380,9 +380,9 @@
 }
 
 .registration-view-switch .active {
-  background: #fff5df;
-  color: #181818;
-  border-color: #f0c46f;
+  background: rgba(244, 194, 127, 0.2);
+  color: var(--navy);
+  border-color: var(--accent-soft);
 }
 
 .registration-results-headers {
@@ -422,7 +422,7 @@
   overflow: hidden;
   height: 118px;
   border-radius: 8px;
-  background: #111;
+  background: var(--navy);
 }
 
 .registration-session-image img {
@@ -439,8 +439,8 @@
   min-height: 24px;
   padding: 0 8px;
   border-radius: 4px;
-  background: rgba(12, 12, 12, 0.82);
-  color: #f5ae1b;
+  background: rgba(46, 46, 46, 0.82);
+  color: var(--accent);
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -491,7 +491,7 @@
 }
 
 .registration-session-details strong {
-  color: #181818;
+  color: var(--navy);
   font-size: 15px;
   font-weight: 800;
 }
@@ -526,8 +526,8 @@
 }
 
 .badge-last {
-  background: #fff2df;
-  color: #dc7a0a;
+  background: rgba(244, 194, 127, 0.3);
+  color: var(--navy);
 }
 
 .badge-full {
@@ -551,7 +551,7 @@
 }
 
 .badge-featured {
-  background: #fff5df;
+  background: rgba(244, 194, 127, 0.2);
   color: #b5790c;
 }
 
@@ -563,13 +563,13 @@
 .registration-session-actions a:first-child {
   border: 1px solid #ddd3c2;
   background: #fff;
-  color: #181818;
+  color: var(--navy);
 }
 
 .registration-session-actions button:not(:disabled) {
   border: 0;
-  background: #f5ae1b;
-  color: #181818;
+  background: var(--accent);
+  color: var(--navy);
 }
 
 .registration-session-actions button:disabled {
@@ -611,8 +611,8 @@
 }
 
 .registration-pagination button.active {
-  background: #181818;
-  border-color: #181818;
+  background: var(--navy);
+  border-color: var(--navy);
   color: #fff;
 }
 
@@ -628,7 +628,7 @@
 }
 
 .registration-empty svg {
-  color: #eb7615;
+  color: var(--accent);
 }
 
 .registration-empty h3 {
@@ -754,7 +754,7 @@
   align-items: center;
   gap: 8px;
   margin-top: 14px;
-  color: #eb7615;
+  color: var(--navy);
   font-weight: 800;
 }
 
@@ -763,12 +763,12 @@
   align-items: center;
   gap: 6px;
   margin-bottom: 10px;
-  color: #f5ae1b;
+  color: var(--accent);
 }
 
 .rating-stars strong {
   margin-left: 4px;
-  color: #181818;
+  color: var(--navy);
   font-size: 28px;
   line-height: 1;
 }
@@ -878,7 +878,7 @@
     padding: 14px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 8px;
-    background: linear-gradient(135deg, rgba(18, 18, 18, 0.97), rgba(35, 35, 34, 0.96));
+    background: linear-gradient(135deg, rgba(46, 46, 46, 0.97), rgba(35, 35, 34, 0.96));
     box-shadow: 0 18px 44px rgba(0, 0, 0, 0.26);
   }
 
@@ -907,7 +907,7 @@
     height: 42px;
     border-color: #d7d7d4;
     border-radius: 4px;
-    color: #343434;
+    color: var(--navy);
     padding: 0 42px 0 13px;
     font: 400 13px 'Inter', sans-serif;
   }
@@ -958,7 +958,7 @@
     right: -10px;
     z-index: 40;
     padding: 14px;
-    background: linear-gradient(135deg, rgba(18, 18, 18, 0.98), rgba(35, 35, 34, 0.98));
+    background: linear-gradient(135deg, rgba(46, 46, 46, 0.98), rgba(35, 35, 34, 0.98));
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 8px;
     box-shadow: 0 20px 44px rgba(0, 0, 0, 0.35);
@@ -1017,8 +1017,8 @@
 
   .registration-toolbar-submit {
     flex: none;
-    background: linear-gradient(135deg, #ffaa17, #eb7615);
-    color: #111;
+    background: linear-gradient(135deg, var(--accent-soft), var(--accent));
+    color: var(--navy);
   }
 
   .registration-active-chips button {
@@ -1038,7 +1038,7 @@
   .registration-empty {
     border-radius: 8px;
     border-color: #dededb;
-    box-shadow: 0 2px 8px rgba(20, 20, 20, 0.05);
+    box-shadow: 0 2px 8px rgba(46, 46, 46, 0.05);
   }
 
   .registration-summary {
@@ -1053,7 +1053,7 @@
   }
 
   .registration-summary p {
-    color: #242424;
+    color: var(--navy);
   }
 
   .registration-summary-controls {
@@ -1186,8 +1186,8 @@
   }
 
   .registration-session-actions button:not(:disabled) {
-    background: linear-gradient(135deg, #ffaa17, #eb7615);
-    color: #111;
+    background: linear-gradient(135deg, var(--accent-soft), var(--accent));
+    color: var(--navy);
   }
 
   .registration-pagination {
@@ -1196,9 +1196,9 @@
   }
 
   .registration-pagination button.active {
-    background: #ffaa17;
-    border-color: #ffaa17;
-    color: #111;
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--navy);
   }
 
   .registration-view-switch {

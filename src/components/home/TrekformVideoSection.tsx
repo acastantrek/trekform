@@ -15,7 +15,7 @@ export function TrekformVideoSection() {
         className="video-section"
         data-reveal
         style={{
-          backgroundImage: `linear-gradient(135deg, rgba(11,18,32,.9), rgba(15,26,45,.82) 55%, rgba(11,18,32,.9)), url(${videoBg})`,
+          backgroundImage: `linear-gradient(135deg, rgba(46,46,46,.9), rgba(46,46,46,.82) 55%, rgba(46,46,46,.9)), url(${videoBg})`,
         }}
       >
         <button type="button" className="video-section__play" onClick={() => setIsOpen(true)}>

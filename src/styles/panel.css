@@ -7,7 +7,7 @@
 
 .panel-app {
   --panel-navy-light: #16233d;
-  --panel-orange-light: #ffaa17;
+  --panel-orange-light: var(--accent);
   --panel-border: #e2e0da;
   --panel-text: #1c2230;
   --panel-text-muted: #6b7280;
@@ -37,7 +37,7 @@
 }
 
 .panel-app a {
-  color: var(--orange);
+  color: var(--navy);
 }
 
 .panel-app h1,
@@ -118,7 +118,7 @@
 
 .panel-app .sidebar-nav a.active {
   background: var(--orange);
-  color: #fff;
+  color: var(--navy);
 }
 
 .panel-app .sidebar-footer {
@@ -182,7 +182,7 @@
 
 .panel-app .btn-primary {
   background: linear-gradient(135deg, var(--orange), var(--panel-orange-light));
-  color: #fff;
+  color: var(--navy);
 }
 
 .panel-app .btn-primary:hover:not(:disabled) {
@@ -287,7 +287,7 @@
 }
 
 .panel-app .data-table tbody tr:hover {
-  background: rgba(235, 118, 21, 0.04);
+  background: rgba(255, 182, 6, 0.04);
 }
 
 .panel-app .row-actions {
@@ -470,7 +470,7 @@
 }
 
 .panel-app .markdown-preview code {
-  background: #f1eee7;
+  background: #fff;
   padding: 1px 5px;
   border-radius: 4px;
   font-size: 0.9em;
@@ -504,7 +504,7 @@
 .panel-app .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(11, 18, 32, 0.55);
+  background: rgba(46, 46, 46, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;

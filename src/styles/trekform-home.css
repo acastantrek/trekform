@@ -10,9 +10,9 @@
   background:
     linear-gradient(
       90deg,
-      rgba(11, 18, 32, 0.9) 0%,
-      rgba(11, 18, 32, 0.72) 42%,
-      rgba(11, 18, 32, 0.22) 100%
+      rgba(46, 46, 46, 0.9) 0%,
+      rgba(46, 46, 46, 0.72) 42%,
+      rgba(46, 46, 46, 0.22) 100%
     ),
     url('https://trekform.com/trekform/uploads/assets/images/backgrounds/home_espacios_confinados_trekform.jpg')
       58% center/cover;
@@ -24,7 +24,7 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at top left, rgba(235, 118, 21, 0.28), transparent 28%),
+    radial-gradient(circle at top left, rgba(255, 182, 6, 0.28), transparent 28%),
     radial-gradient(circle at 92% 18%, rgba(255, 255, 255, 0.12), transparent 24%);
   pointer-events: none;
 }
@@ -44,7 +44,7 @@
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: #ffaa17;
+  color: var(--accent);
   font-family: 'Inter Tight', sans-serif;
   font-size: 14px;
   font-weight: 900;
@@ -55,7 +55,7 @@
 .slider-content .eyebrow i {
   width: 30px;
   height: 3px;
-  background: #ffaa17;
+  background: var(--accent);
 }
 .slider-content h1 {
   max-width: 640px;
@@ -69,7 +69,7 @@
   text-transform: uppercase;
 }
 .slider-content h1 span {
-  color: #ffaa17;
+  color: var(--accent);
 }
 .slider-content p {
   max-width: 590px;
@@ -100,18 +100,18 @@
   font-weight: 900;
 }
 .home-slider .primary {
-  background: #eb7615;
-  color: #fff;
-  box-shadow: 0 14px 28px rgba(235, 118, 21, 0.22);
+  background: var(--accent);
+  color: var(--navy);
+  box-shadow: 0 14px 28px rgba(255, 182, 6, 0.22);
 }
 .home-slider .primary:hover {
-  background: #d96910;
+  background: var(--accent-soft);
   transform: translateY(-2px);
 }
 .hero-secondary {
   border: 1px solid rgba(255, 255, 255, 0.5);
   color: #fff;
-  background: rgba(11, 18, 32, 0.28);
+  background: rgba(46, 46, 46, 0.28);
   backdrop-filter: blur(12px);
 }
 .hero-proof-row {
@@ -128,14 +128,14 @@
   padding: 10px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 8px;
-  background: rgba(11, 18, 32, 0.22);
+  background: rgba(46, 46, 46, 0.22);
   backdrop-filter: blur(10px);
 }
 .hero-proof-row svg {
   grid-row: 1 / 3;
   width: 24px;
   height: 24px;
-  color: #ffaa17;
+  color: var(--accent);
   stroke-width: 1.8;
 }
 .hero-proof-row strong {
@@ -165,7 +165,7 @@
   border-radius: 8px;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06)),
-    rgba(11, 18, 32, 0.5);
+    rgba(46, 46, 46, 0.5);
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.26);
   backdrop-filter: blur(16px);
 }
@@ -177,8 +177,8 @@
   letter-spacing: 0;
   white-space: nowrap;
   overflow-wrap: normal;
-  color: #ffaa17;
-  text-shadow: 0 3px 22px rgba(235, 118, 21, 0.5);
+  color: var(--accent);
+  text-shadow: 0 3px 22px rgba(255, 182, 6, 0.5);
 }
 .hero-stats-row span {
   color: rgba(255, 255, 255, 0.9);
@@ -198,14 +198,14 @@
   gap: 8px;
   padding: 16px 18px 15px;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.32);
-  color: #181818;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--navy);
   border: 0;
   box-shadow: 0 24px 54px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(22px);
 }
 .home-hero-form-kicker {
-  color: #eb7615;
+  color: var(--navy);
   font-family: 'Inter Tight', sans-serif;
   font-size: 11px;
   font-weight: 900;
@@ -218,7 +218,7 @@
   font-size: 21px;
   line-height: 1.02;
   letter-spacing: -0.035em;
-  color: #181818;
+  color: var(--navy);
   text-transform: uppercase;
 }
 .home-hero-form p {
@@ -233,7 +233,7 @@
   gap: 3px;
 }
 .home-hero-form label span {
-  color: #181818;
+  color: var(--navy);
   font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.04em;
@@ -247,7 +247,7 @@
   border-radius: 6px;
   padding: 8px 10px;
   background: rgba(255, 255, 255, 0.75);
-  color: #181818;
+  color: var(--navy);
   outline: none;
   font: inherit;
 }
@@ -258,8 +258,8 @@
 .home-hero-form input:focus,
 .home-hero-form select:focus,
 .home-hero-form textarea:focus {
-  border-color: #eb7615;
-  box-shadow: 0 0 0 3px rgba(235, 118, 21, 0.16);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(255, 182, 6, 0.16);
 }
 .home-hero-form-grid {
   display: grid;
@@ -278,15 +278,15 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  background: #eb7615;
-  color: #fff;
+  background: var(--accent);
+  color: var(--navy);
   font-family: 'Inter Tight', sans-serif;
   font-size: 14px;
   font-weight: 900;
-  box-shadow: 0 14px 28px rgba(235, 118, 21, 0.24);
+  box-shadow: 0 14px 28px rgba(255, 182, 6, 0.24);
 }
 .home-hero-submit:hover:not(:disabled) {
-  background: #d96910;
+  background: var(--accent-soft);
   transform: translateY(-2px);
 }
 .home-hero-submit:disabled {
@@ -302,7 +302,7 @@
   margin: 0;
   padding: 10px 12px;
   border-radius: 6px;
-  background: #fff0eb;
+  background: rgba(244, 194, 127, 0.2);
   color: #a53c22;
   font-size: 12px;
 }
@@ -317,7 +317,7 @@
   text-align: center;
 }
 .home-hero-success svg {
-  color: #eb7615;
+  color: var(--accent);
 }
 .home-hero-success p {
   max-width: 380px;
@@ -331,7 +331,7 @@
 .home-hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(11, 18, 32, 0.18), rgba(11, 18, 32, 0.08));
+  background: linear-gradient(180deg, rgba(46, 46, 46, 0.18), rgba(46, 46, 46, 0.08));
   pointer-events: none;
 }
 .home-hero-badge {
@@ -344,14 +344,14 @@
   gap: 10px;
   padding: 10px 14px;
   border-radius: 999px;
-  background: rgba(11, 18, 32, 0.56);
+  background: rgba(46, 46, 46, 0.56);
   color: #fff;
   backdrop-filter: blur(12px);
   font-size: 13px;
   font-weight: 700;
 }
 .home-hero-badge svg {
-  color: #ffaa17;
+  color: var(--accent);
 }
 @media (max-width: 980px) {
   .home-slider {
