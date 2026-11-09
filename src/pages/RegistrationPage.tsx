@@ -714,7 +714,10 @@ export function RegistrationPage() {
                                 </span>
                               ) : null}
                               <span className="registration-field-city">
-                                <MapPin size={14} /> {session.city}
+                                <MapPin size={14} />{' '}
+                                {session.city === 'Online'
+                                  ? session.city
+                                  : `${session.city}, ${session.province}`}
                               </span>
                             </div>
                             <div className="registration-session-certificate">

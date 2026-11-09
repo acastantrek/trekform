@@ -115,6 +115,7 @@ function toRegistrationSession(course: CourseDetail, session: CourseSession): Re
     province: session.province,
     venue: session.venue,
     address: session.address,
+    postalCode: session.postalCode,
     startsAt: session.startsAt,
     endsAt: session.endsAt,
     modality: getModalityLabel(course.modality),

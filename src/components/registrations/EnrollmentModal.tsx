@@ -420,6 +420,13 @@ export function EnrollmentModal({
                   <p>
                     <MapPin size={14} /> {session.address || session.city}
                   </p>
+                  {session.city !== 'Online' ? (
+                    <p>
+                      {[session.postalCode, session.city, session.province]
+                        .filter(Boolean)
+                        .join(', ')}
+                    </p>
+                  ) : null}
                 </div>
                 <Link
                   to={`/inscripciones?curso=${encodeURIComponent(session.courseTitle)}#registration-results`}

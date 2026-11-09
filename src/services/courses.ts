@@ -109,6 +109,7 @@ export interface CourseSession {
   status: 'open' | 'full' | 'completed'
   venue: string
   address: string
+  postalCode: string | null
   city: string
   province: string
 }
@@ -172,6 +173,7 @@ interface CourseDetailRow {
     venues: {
       name: string
       address: string
+      postal_code: string | null
       locations: { city: string; province: string } | null
     } | null
   }>
@@ -190,6 +192,7 @@ function mapSessions(sessions: CourseDetailRow['course_sessions']) {
       status: session.status,
       venue: session.venues?.name ?? 'Formación online',
       address: session.venues?.address ?? '',
+      postalCode: session.venues?.postal_code ?? null,
       city: session.venues?.locations?.city ?? 'Online',
       province: session.venues?.locations?.province ?? '',
     }))
@@ -233,7 +236,7 @@ export async function getCourseDetail(slug: string): Promise<CourseDetail | null
   const result = await client
     .from('courses')
     .select(
-      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, duration_minutes, brochure_url, video_url, is_official_certification, is_fundae_eligible, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, locations(city, province)))',
+      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, duration_minutes, brochure_url, video_url, is_official_certification, is_fundae_eligible, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, postal_code, locations(city, province)))',
     )
     .eq('slug', slug)
     .eq('status', 'published')

@@ -19,6 +19,7 @@ export interface RegistrationSession {
   province: string
   venue: string
   address: string
+  postalCode: string | null
   startsAt: string
   endsAt: string
   modality: string
@@ -65,6 +66,7 @@ interface VenueRow {
   id: string
   name: string
   address: string | null
+  postal_code: string | null
   locations: {
     city: string
     province: string
@@ -113,7 +115,7 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
       .eq('status', 'published')
       .order('title', { ascending: true }),
     client.from('course_categories').select('id, name').order('name', { ascending: true }),
-    client.from('venues').select('id, name, address, locations(city, province)'),
+    client.from('venues').select('id, name, address, postal_code, locations(city, province)'),
   ])
 
   if (sessionsResult.error) {
@@ -165,6 +167,7 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
         province,
         venue: venue?.name ?? 'Campus Trekform Online',
         address: venue?.address ?? 'Acceso online',
+        postalCode: venue?.postal_code ?? null,
         startsAt: session.starts_at,
         endsAt: session.ends_at,
         modality: formatModality(course.modality),
