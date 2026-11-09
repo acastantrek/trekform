@@ -84,3 +84,42 @@ Sustituirlo por la descripción de la ficha de producción (su `meta description
   elegir este curso?".
 - `curso-de-operario-almacen-carnet-carretillas`: producción explica que es semipresencial de 40 horas y
   nosotros mostramos las tarjetas estándar de tipología.
+
+## Sustituir el pago simulado
+
+**Bloquea el lanzamiento.** Hoy no se cobra nada, pero la web le dice al alumno que ha pagado.
+
+- `src/components/registrations/EnrollmentModal.tsx` muestra "Realizar pago", "Pago 100% seguro con
+  STRIPE" y "¡Pago realizado!". El proyecto no tiene ninguna integración real con Stripe.
+- `submitSimulatedPayment` en `src/services/enrollments.ts` guarda la inscripción con
+  `payment_status: 'paid'`, `paid_at` y una referencia `SIMULADO-…`.
+- Las inscripciones se crean desde el navegador sin login (políticas `students_public_insert` y
+  `enrollments_public_insert`), así que el estado "pagado" no debe poder escribirse desde ahí.
+
+Pasos:
+
+1. Solución provisional, si se publica antes de tener Stripe: cambiar el paso a "Solicitar plaza", sin
+   mensajes de pago y guardando la inscripción como pendiente para que el equipo contacte con el alumno.
+2. Integrar Stripe Checkout con una Edge Function de Supabase que confirme el pago por webhook, y quitar
+   del acceso público la posibilidad de escribir los campos de pago.
+
+Hace falta: cuenta de Stripe y decidir cómo se gestionan las facturas.
+
+## Redirecciones SEO antes de sustituir trekform.com
+
+**Bloquea el lanzamiento.** Las URLs de producción no coinciden con las nuestras, y hoy una ruta desconocida
+muestra la portada sin avisar (`path="*"` en `src/App.tsx`). Datos del sitemap del 2026-11-09.
+
+- **Cursos (52):** producción usa `/cursos-trekform/{categoria}/{curso}` y nosotros
+  `/cursos-trekform/{curso}`. Solo 15 de los 52 nombres de URL son iguales, así que la correspondencia debe
+  hacerse por título del curso, no por URL. Ojo con `/cursos-trekform/prevencion/181`, que es
+  `curso-de-prevencion-riesgos-electricos`.
+- **Categorías:** existen páginas como `/cursos-trekform/maquinaria-industrial`, que también necesitan destino.
+- **Landings por ciudad (unas 37):** por ejemplo `/curso-puente-grua-madrid`. Decidir si se recrean o se
+  redirigen a la ficha del curso.
+- **Blog (unas 1.050 URLs):** 927 en `/blog/…` y 126 en `/es/blog/…`. Sin comparar todavía con nuestros
+  artículos.
+- **Otras URLs:** el sitemap tiene 1.163 en total. Revisar las que no entren en los grupos anteriores.
+
+Las redirecciones 301 se pueden definir en `vercel.json`, antes de la regla general que envía todo a la
+aplicación. Comprobar que `/cursos-trekform/{categoria}/{curso}` no quede atrapada por esa regla.
