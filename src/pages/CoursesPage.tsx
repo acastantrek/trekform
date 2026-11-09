@@ -20,6 +20,7 @@ import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
+import { NoSessionsModal } from '../components/registrations/NoSessionsModal'
 import { useCourses } from '../hooks/useCourses'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { getRegistrationSessions, type RegistrationSession } from '../services/registrations'
@@ -122,6 +123,8 @@ export function CoursesPage() {
     Map<string, RegistrationSession[]>
   >(new Map())
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
+  const [sessionsLoaded, setSessionsLoaded] = useState(false)
+  const [noSessionsCourseTitle, setNoSessionsCourseTitle] = useState<string | null>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const setModality = (value: string) => {
@@ -144,6 +147,7 @@ export function CoursesPage() {
         })
         setNextSessionByCourseSlug(nextOpenMap)
         setSessionsByCourseSlug(bySlugMap)
+        setSessionsLoaded(true)
       })
       .catch(() => {
         setNextSessionByCourseSlug(new Map())
@@ -543,6 +547,13 @@ export function CoursesPage() {
                             >
                               Inscribirme
                             </button>
+                          ) : sessionsLoaded ? (
+                            <button
+                              type="button"
+                              onClick={() => setNoSessionsCourseTitle(course.title)}
+                            >
+                              Inscribirme
+                            </button>
                           ) : (
                             <Link to={`/cursos-trekform/${course.slug}#convocatorias`}>
                               Inscribirme
@@ -651,6 +662,12 @@ export function CoursesPage() {
 
       {activeSession && (
         <EnrollmentModal session={activeSession} onClose={() => setActiveSession(null)} />
+      )}
+      {noSessionsCourseTitle && (
+        <NoSessionsModal
+          courseTitle={noSessionsCourseTitle}
+          onClose={() => setNoSessionsCourseTitle(null)}
+        />
       )}
     </>
   )

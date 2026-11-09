@@ -11,9 +11,10 @@ import {
   User,
   X,
 } from 'lucide-react'
-import { useEffect, useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useMediaQuery } from '../../hooks/useMediaQuery'
+import { useModalDismiss } from '../../hooks/useModalDismiss'
 import { submitContactRequest } from '../../services/contact'
 import { submitSimulatedPayment } from '../../services/enrollments'
 import type { RegistrationSession } from '../../services/registrations'
@@ -78,20 +79,7 @@ export function EnrollmentModal({
   const [error, setError] = useState('')
   const isMobile = useMediaQuery('(max-width: 720px)')
 
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose()
-    }
-    window.addEventListener('keydown', handleKeyDown)
-
-    return () => {
-      document.body.style.overflow = previousOverflow
-      window.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [onClose])
+  useModalDismiss(onClose)
 
   const accreditationPoints = getAccreditationPoints(session)
   const accreditationTitle = session.accreditationTitle?.trim() || 'Acreditación y titulación incluida'
