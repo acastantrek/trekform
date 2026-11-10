@@ -38,7 +38,8 @@ const categoryOrder = [
   'Logística',
   'Hostelería',
 ]
-const modalities = ['Todas las modalidades', 'Presencial', 'Online']
+const modalities = ['Todas las modalidades', 'Presencial', 'Online', 'Semipresencial']
+const modalityLabels = { presential: 'Presencial', online: 'Online', hybrid: 'Semipresencial' }
 const durations = ['Hasta 4 horas', '4 - 8 horas', '8 - 16 horas', '+16 horas']
 const certifications = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
 
@@ -65,7 +66,7 @@ function getCourseMeta(course: Course) {
   const duration = Number.isInteger(durationHours)
     ? `${durationHours} h`
     : `${durationHours.toFixed(1)} h`
-  const modality = course.modality === 'online' ? 'Online' : 'Presencial'
+  const modality = modalityLabels[course.modality]
   const certificate = course.accreditationTitle
   const officialCertification = course.isOfficialCertification
   const bonificable = course.isFundaeEligible

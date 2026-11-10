@@ -67,7 +67,7 @@ function mapCourse(row: CourseRow): Course {
     place: 'Toda España',
     duration: formatDuration(row.duration_minutes),
     durationHours: row.duration_hours,
-    modality: row.modality === 'online' ? 'online' : 'presential',
+    modality: row.modality === 'online' || row.modality === 'hybrid' ? row.modality : 'presential',
     isOfficialCertification: row.is_official_certification,
     isFundaeEligible: row.is_fundae_eligible,
     accreditationTitle: row.accreditation_title,
@@ -115,6 +115,17 @@ export interface CourseSession {
   province: string
 }
 
+export interface CourseTypology {
+  cards: Array<{ title: string | null; lines: string[] }>
+  note: string[]
+}
+
+export interface CourseExtraSection {
+  title: string
+  items?: string[]
+  paragraphs?: string[]
+}
+
 export interface CourseDetail {
   id: string
   slug: string
@@ -134,6 +145,12 @@ export interface CourseDetail {
   durationMinutes: number | null
   brochureUrl: string
   videoUrl: string | null
+  methodology: string | null
+  modalityLabel: string | null
+  durationLabel: string | null
+  audienceLabel: string | null
+  typology: CourseTypology | null
+  extraSections: CourseExtraSection[]
   isOfficialCertification: boolean
   isFundaeEligible: boolean
   categories: string[]
@@ -159,6 +176,12 @@ interface CourseDetailRow {
   duration_minutes: number | null
   brochure_url: string | null
   video_url: string | null
+  methodology: string | null
+  modality_label: string | null
+  duration_label: string | null
+  audience_label: string | null
+  typology: CourseTypology | null
+  extra_sections: CourseExtraSection[] | null
   is_official_certification: boolean
   is_fundae_eligible: boolean
   course_categories: { name: string } | null
@@ -224,6 +247,12 @@ function mapCourseDetail(row: CourseDetailRow): CourseDetail {
     durationMinutes: row.duration_minutes,
     brochureUrl: row.brochure_url ?? '',
     videoUrl: row.video_url,
+    methodology: row.methodology,
+    modalityLabel: row.modality_label,
+    durationLabel: row.duration_label,
+    audienceLabel: row.audience_label,
+    typology: row.typology,
+    extraSections: row.extra_sections ?? [],
     isOfficialCertification: row.is_official_certification,
     isFundaeEligible: row.is_fundae_eligible,
     categories,
@@ -238,7 +267,7 @@ export async function getCourseDetail(slug: string): Promise<CourseDetail | null
   const result = await client
     .from('courses')
     .select(
-      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, duration_minutes, brochure_url, video_url, is_official_certification, is_fundae_eligible, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, postal_code, locations(city, province)))',
+      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, duration_minutes, brochure_url, video_url, methodology, modality_label, duration_label, audience_label, typology, extra_sections, is_official_certification, is_fundae_eligible, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, postal_code, locations(city, province)))',
     )
     .eq('slug', slug)
     .eq('status', 'published')

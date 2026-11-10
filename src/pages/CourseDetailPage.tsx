@@ -19,20 +19,32 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { YoutubeLightbox } from '../components/common/YoutubeLightbox'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
-import { getCourseDetail, type CourseDetail, type CourseSession } from '../services/courses'
+import {
+  getCourseDetail,
+  type CourseDetail,
+  type CourseSession,
+  type CourseTypology,
+} from '../services/courses'
 import type { RegistrationSession } from '../services/registrations'
 import { getTestimonialsByCourse, type Testimonial } from '../services/testimonials'
 
-const TYPOLOGY_CARDS = [
-  {
-    title: 'Curso Abierto',
-    text: 'Dirigido a particulares y empresas. Se imparte en nuestras instalaciones presentes en todo el territorio nacional. Calendario de cursos flexible y actualizado.',
-  },
-  {
-    title: 'Curso In-Company (a medida)',
-    text: 'Personalizado para grupos de trabajadores de una misma empresa. Formación en nuestras instalaciones o directamente en las de tu empresa para mayor comodidad. Adaptable en fechas y horarios según tus necesidades.',
-  },
-]
+const DEFAULT_TYPOLOGY: CourseTypology = {
+  cards: [
+    {
+      title: 'Curso Abierto',
+      lines: [
+        'Dirigido a particulares y empresas. Se imparte en nuestras instalaciones presentes en todo el territorio nacional. Calendario de cursos flexible y actualizado.',
+      ],
+    },
+    {
+      title: 'Curso In-Company (a medida)',
+      lines: [
+        'Personalizado para grupos de trabajadores de una misma empresa. Formación en nuestras instalaciones o directamente en las de tu empresa para mayor comodidad. Adaptable en fechas y horarios según tus necesidades.',
+      ],
+    },
+  ],
+  note: [],
+}
 
 function accentedTitle(text: string) {
   const words = text.split(' ')
@@ -72,7 +84,7 @@ function getYoutubeId(url: string | null) {
 
 function getModalityLabel(modality: string) {
   if (modality === 'online') return 'Online'
-  if (modality === 'hybrid') return 'Híbrida'
+  if (modality === 'hybrid') return 'Semipresencial'
   return 'Presencial'
 }
 
@@ -204,11 +216,11 @@ export function CourseDetailPage() {
   const objectiveParagraphs = splitParagraphs(course.objectives)
   const audienceParagraphs = splitParagraphs(course.audienceDescription)
   const videoId = getYoutubeId(course.videoUrl)
-  const modality = getModalityLabel(course.modality)
-  const durationLabel = formatDuration(course.durationMinutes)
+  const modality = course.modalityLabel ?? getModalityLabel(course.modality)
+  const durationLabel = course.durationLabel ?? formatDuration(course.durationMinutes)
   const certificationLabel = 'Diploma acreditativo Trekform'
   const nextOpenSession = course.sessions.find((session) => session.status === 'open')
-  const showTypology = course.modality !== 'online'
+  const typology = course.typology ?? (course.modality !== 'online' ? DEFAULT_TYPOLOGY : null)
   const trustCards = [
     {
       title: 'Certificación oficial',
@@ -230,13 +242,17 @@ export function CourseDetailPage() {
       value: modality,
       icon: course.modality === 'online' ? <Monitor size={20} /> : <UsersRound size={20} />,
     },
-    { label: 'Metodología', value: 'Teórico-práctica', icon: <BookOpen size={20} /> },
+    {
+      label: 'Metodología',
+      value: course.methodology ?? 'Teórico-práctica',
+      icon: <BookOpen size={20} />,
+    },
     { label: 'Certificación', value: certificationLabel, icon: <Award size={20} /> },
   ]
   const audienceSection = audienceParagraphs.length
     ? {
         kicker: 'A QUIÉN VA DIRIGIDO',
-        title: `Pensado para ${getAudienceLabel(course.audience).toLowerCase()}`,
+        title: `Pensado para ${course.audienceLabel ?? getAudienceLabel(course.audience).toLowerCase()}`,
         paragraphs: audienceParagraphs,
       }
     : null
@@ -360,15 +376,29 @@ export function CourseDetailPage() {
             </article>
           ) : null}
 
-          {showTypology ? (
-            <div className="course-detail-story-grid">
-              {TYPOLOGY_CARDS.map((card) => (
-                <article className="course-detail-story-card" key={card.title}>
-                  <h3>{card.title}</h3>
-                  <p>{card.text}</p>
+          {typology && typology.cards.length > 0 ? (
+            <div
+              className={`course-detail-story-grid${typology.cards.length === 1 ? ' course-detail-story-grid--single' : ''}`}
+            >
+              {typology.cards.map((card, index) => (
+                <article className="course-detail-story-card" key={card.title ?? index}>
+                  {card.title ? <h3>{card.title}</h3> : null}
+                  {card.title ? (
+                    <p>{card.lines.join(' ')}</p>
+                  ) : (
+                    card.lines.map((line) => <p key={line}>{line}</p>)
+                  )}
                 </article>
               ))}
             </div>
+          ) : null}
+
+          {typology && typology.note.length > 0 ? (
+            <article className="course-detail-story-card">
+              {typology.note.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </article>
           ) : null}
 
           {objectivesSection ? (
@@ -385,6 +415,25 @@ export function CourseDetailPage() {
               </ul>
             </article>
           ) : null}
+
+          {course.extraSections.map((section) => (
+            <article className="course-detail-story-card" key={section.title}>
+              <h2>{section.title}</h2>
+              {section.items?.length ? (
+                <ul>
+                  {section.items.map((item) => (
+                    <li key={item}>
+                      <Check size={15} />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              {section.paragraphs?.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </article>
+          ))}
         </div>
 
         <aside className="course-detail-sidebar">

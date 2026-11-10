@@ -82,6 +82,8 @@ function formatModality(value: string | null) {
       return 'Presencial'
     case 'online':
       return 'Online'
+    case 'hybrid':
+      return 'Semipresencial'
     case 'blended':
       return 'Blended'
     case 'in_company':

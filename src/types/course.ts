@@ -7,7 +7,7 @@ export interface Course {
   place: string
   duration: string
   durationHours: number | null
-  modality: 'presential' | 'online'
+  modality: 'presential' | 'online' | 'hybrid'
   isOfficialCertification: boolean
   isFundaeEligible: boolean
   accreditationTitle: string | null

@@ -928,6 +928,9 @@
 .course-detail-story-grid {
   gap: 18px;
 }
+.course-detail-story-grid--single {
+  grid-template-columns: 1fr;
+}
 .course-detail-story-card h3 {
   font-family: 'Inter Tight', sans-serif;
   font-size: 28px;
