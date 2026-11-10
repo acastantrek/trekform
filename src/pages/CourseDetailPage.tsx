@@ -136,12 +136,17 @@ export function CourseDetailPage() {
   const [error, setError] = useState('')
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [isVideoOpen, setIsVideoOpen] = useState(false)
+  const [previousSlug, setPreviousSlug] = useState(slug)
 
-  useEffect(() => {
-    let active = true
+  if (slug !== previousSlug) {
+    setPreviousSlug(slug)
     setLoading(true)
     setError('')
     setCourse(null)
+  }
+
+  useEffect(() => {
+    let active = true
     getCourseDetail(slug)
       .then((data) => {
         if (active) setCourse(data)

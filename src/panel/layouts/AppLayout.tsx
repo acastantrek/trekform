@@ -18,10 +18,12 @@ export function AppLayout() {
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef<HTMLElement>(null)
   const location = useLocation()
+  const [previousPathname, setPreviousPathname] = useState(location.pathname)
 
-  useEffect(() => {
+  if (location.pathname !== previousPathname) {
+    setPreviousPathname(location.pathname)
     setIsOpen(false)
-  }, [location.pathname])
+  }
 
   useEffect(() => {
     if (!isOpen) return

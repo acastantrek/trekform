@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase'
+import { untypedSupabase } from '../lib/supabase'
 
 export type RegistrationSessionStatus = 'open' | 'full' | 'completed'
 
@@ -92,13 +92,13 @@ function formatModality(value: string | null) {
 }
 
 export async function getRegistrationSessions(): Promise<RegistrationSession[]> {
-  if (!supabase) {
+  if (!untypedSupabase) {
     throw new Error('Falta configurar la conexión con Supabase.')
   }
 
   const nowIso = new Date().toISOString()
 
-  const client = supabase as any
+  const client = untypedSupabase
 
   const [sessionsResult, coursesResult, categoriesResult, venuesResult] = await Promise.all([
     client
@@ -141,7 +141,7 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
     ]),
   )
   const venueById = new Map<string, VenueRow>(
-    ((venuesResult.data as VenueRow[]) ?? []).map((venue) => [venue.id, venue]),
+    ((venuesResult.data as unknown as VenueRow[]) ?? []).map((venue) => [venue.id, venue]),
   )
 
   return ((sessionsResult.data as SessionRow[]) ?? [])

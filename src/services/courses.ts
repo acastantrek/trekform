@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase'
+import { untypedSupabase } from '../lib/supabase'
 import type { Course } from '../types/course'
 
 interface CourseRow {
@@ -77,11 +77,11 @@ function mapCourse(row: CourseRow): Course {
 }
 
 export async function getCourses(options: { featured?: boolean } = {}): Promise<Course[]> {
-  if (!supabase) {
+  if (!untypedSupabase) {
     throw new Error('Falta configurar la conexión con Supabase.')
   }
 
-  const client = supabase as any
+  const client = untypedSupabase
   let query = client
     .from('courses')
     .select(courseColumns)
@@ -96,7 +96,7 @@ export async function getCourses(options: { featured?: boolean } = {}): Promise<
     throw new Error(`No se pudieron cargar los cursos: ${result.error.message}`)
   }
 
-  return (result.data as CourseRow[]).map(mapCourse)
+  return (result.data as unknown as CourseRow[]).map(mapCourse)
 }
 
 export interface CourseSession {
@@ -231,9 +231,9 @@ function mapCourseDetail(row: CourseDetailRow): CourseDetail {
 }
 
 export async function getCourseDetail(slug: string): Promise<CourseDetail | null> {
-  if (!supabase) throw new Error('Falta configurar la conexión con Supabase.')
+  if (!untypedSupabase) throw new Error('Falta configurar la conexión con Supabase.')
 
-  const client = supabase as any
+  const client = untypedSupabase
   const result = await client
     .from('courses')
     .select(
@@ -248,5 +248,5 @@ export async function getCourseDetail(slug: string): Promise<CourseDetail | null
   }
   if (!result.data) return null
 
-  return mapCourseDetail(result.data as CourseDetailRow)
+  return mapCourseDetail(result.data as unknown as CourseDetailRow)
 }

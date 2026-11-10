@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase'
+import { untypedSupabase } from '../lib/supabase'
 
 export interface CategoryOverview {
   id: string
@@ -18,9 +18,9 @@ interface CourseCategoryRow {
 }
 
 export async function getCategoriesOverview(): Promise<CategoryOverview[]> {
-  if (!supabase) return []
+  if (!untypedSupabase) return []
 
-  const client = supabase as any
+  const client = untypedSupabase
   const [categoriesResult, coursesResult] = await Promise.all([
     client
       .from('course_categories')

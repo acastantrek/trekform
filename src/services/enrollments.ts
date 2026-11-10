@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase'
+import { untypedSupabase } from '../lib/supabase'
 
 export interface SimulatedPaymentInput {
   courseSessionId: string
@@ -11,9 +11,9 @@ export interface SimulatedPaymentInput {
 }
 
 export async function submitSimulatedPayment(input: SimulatedPaymentInput) {
-  if (!supabase) throw new Error('La conexión con Supabase no está configurada.')
+  if (!untypedSupabase) throw new Error('La conexión con Supabase no está configurada.')
 
-  const client = supabase as any
+  const client = untypedSupabase
   const studentId = crypto.randomUUID()
   const paidAt = new Date().toISOString()
 
