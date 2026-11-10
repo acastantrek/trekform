@@ -6,6 +6,7 @@
   Check,
   ChevronRight,
   Clock3,
+  Download,
   FileText,
   MapPin,
   MessageCircle,
@@ -494,16 +495,6 @@ export function CourseDetailPage() {
             <ShieldCheck size={14} /> Sin compromiso · Respuesta en menos de 24h
           </p>
           <div className="course-detail-sidebar-links">
-            {course.brochureUrl ? (
-              <a
-                href={course.brochureUrl}
-                className="course-detail-text-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <FileText size={14} /> Descargar ficha
-              </a>
-            ) : null}
             <Link to="/contacto" className="course-detail-contact">
               <MessageCircle size={16} /> Habla con nuestro equipo
             </Link>
@@ -557,6 +548,21 @@ export function CourseDetailPage() {
               </article>
             ))}
           </div>
+        </section>
+      ) : null}
+
+      {course.brochureUrl ? (
+        <section className="course-detail-brochure-cta">
+          <div className="course-detail-brochure-icon" aria-hidden="true">
+            <FileText size={34} />
+          </div>
+          <div>
+            <h2>Toda la información del curso en un PDF</h2>
+            <p>Consúltala con calma o compártela con tu equipo.</p>
+          </div>
+          <a href={course.brochureUrl} target="_blank" rel="noreferrer">
+            <Download size={20} /> Ficha del curso
+          </a>
         </section>
       ) : null}
 
