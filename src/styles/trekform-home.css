@@ -14,8 +14,7 @@
       rgba(46, 46, 46, 0.72) 42%,
       rgba(46, 46, 46, 0.22) 100%
     ),
-    url('https://trekform.com/trekform/uploads/assets/images/backgrounds/home_espacios_confinados_trekform.jpg')
-      58% center/cover;
+    url('/imagenes/home_espacios_confinados_trekform.jpg') 58% center/cover;
   color: #fff;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }

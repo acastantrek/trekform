@@ -8,8 +8,7 @@ const stats = [
   { value: '+18.000', label: 'Cursos impartidos' },
 ]
 
-const statsBg =
-  'https://trekform.com/trekform/uploads/assets/images/Sobre_nosotros/carretilla-trekform-2.jpg'
+const statsBg = '/imagenes/carretilla-trekform-2.jpg'
 
 const dossierUrl =
   'https://wteagitvzdlujwgqgwog.supabase.co/storage/v1/object/public/cms-media/dossier/dossier-trekform-2024.pdf'

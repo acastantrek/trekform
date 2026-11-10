@@ -75,8 +75,7 @@ export function BlogPage() {
           className="blog-hero-bg"
           aria-hidden="true"
           style={{
-            backgroundImage:
-              "url('https://trekform.com/trekform/uploads/assets/images/backgrounds/headerblog2.jpg')",
+            backgroundImage: "url('/imagenes/headerblog2.jpg')",
           }}
         />
         <div className="blog-hero-inner" data-reveal>

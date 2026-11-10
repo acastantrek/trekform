@@ -34,8 +34,7 @@ export const fallbackBlogPosts: BlogPost[] = [
     title: 'Seguridad laboral industrial: el activo humano',
     excerpt: 'La seguridad industrial empieza por la formación y la prevención diaria.',
     content: defaultContent,
-    image:
-      'https://cloudflare.shopincdn.ovh/trekform/cache/images/img_blogs/1170x636_q91_cr0_fix1/seguridad_laboral_indusrial_trekform.jpg',
+    image: '/imagenes/seguridad_laboral_indusrial_trekform.jpg',
     category: 'Prevención',
     publishedAt: '2026-07-03T08:00:00+02:00',
   },
@@ -45,8 +44,7 @@ export const fallbackBlogPosts: BlogPost[] = [
     title: 'Curso de carretillero en Baleares: formación en un solo día',
     excerpt: 'Una jornada intensiva con seguridad, técnica y prácticas reales.',
     content: defaultContent,
-    image:
-      'https://cloudflare.shopincdn.ovh/trekform/cache/images/img_blogs/1170x636_q91_cr0_fix1/carretillero_trekform_en_baleares.jpg',
+    image: '/imagenes/carretillero_trekform_en_baleares.jpg',
     category: 'Maquinaria',
     publishedAt: '2026-07-01T08:00:00+02:00',
   },
@@ -56,8 +54,7 @@ export const fallbackBlogPosts: BlogPost[] = [
     title: '¿Qué son los trabajos en altura?',
     excerpt: 'Cuándo existe riesgo de caída y qué formación ayuda a controlarlo.',
     content: defaultContent,
-    image:
-      'https://cloudflare.shopincdn.ovh/trekform/cache/images/img_blogs/1170x636_q91_cr0_fix1/conoce_un_poco_mejor_los_trabajos_en_altura_trekform.jpg',
+    image: '/imagenes/conoce_un_poco_mejor_los_trabajos_en_altura_trekform.jpg',
     category: 'Trabajos en altura',
     publishedAt: '2026-06-26T08:00:00+02:00',
   },
@@ -89,7 +86,7 @@ export const fallbackBlogPosts: BlogPost[] = [
     title: '¿Qué es una grúa puente?',
     excerpt: 'Funcionamiento, usos habituales y pautas de seguridad esenciales.',
     content: defaultContent,
-    image: 'https://trekform.com/trekform/uploads/assets/images/services/services-1-3a.png',
+    image: '/imagenes/services-1-3a.png',
     category: 'Maquinaria',
     publishedAt: '2026-06-19T08:00:00+02:00',
   },

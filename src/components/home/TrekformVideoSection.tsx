@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { YoutubeLightbox } from '../common/YoutubeLightbox'
 
 const VIDEO_ID = '03iV9FR58xY'
-const videoBg = 'https://trekform.com/trekform/uploads/assets/images/backgrounds/trusted-one-bg.jpg'
+const videoBg = '/imagenes/trusted-one-bg.jpg'
 
 export function TrekformVideoSection() {
   const [isOpen, setIsOpen] = useState(false)

@@ -119,10 +119,7 @@ export function AboutPage() {
 
       <section className="who-section" data-reveal>
         <div className="who-image" data-reveal data-reveal-delay="0.06">
-          <img
-            src="https://trekform.com/trekform/uploads/assets/images/resources/about-one-img-2.jpg"
-            alt="Equipo profesional de Trekform"
-          />
+          <img src="/imagenes/about-one-img-2.jpg" alt="Equipo profesional de Trekform" />
           <span>
             <strong>+20</strong> años de experiencia
           </span>

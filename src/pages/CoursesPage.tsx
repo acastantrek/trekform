@@ -44,14 +44,14 @@ const durations = ['Hasta 4 horas', '4 - 8 horas', '8 - 16 horas', '+16 horas']
 const certifications = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
 
 const fallbackImages = [
-  'https://trekform.com/trekform/uploads/assets/images/services/services-1-1a.jpg',
-  'https://trekform.com/trekform/uploads/assets/images/services/services-1-2a.jpg',
-  'https://trekform.com/trekform/uploads/assets/images/services/services-1-3a.png',
-  'https://trekform.com/trekform/uploads/assets/images/services/services-1-4a.jpg',
-  'https://trekform.com/trekform/uploads/assets/images/services/services-1-5a.jpg',
-  'https://trekform.com/trekform/uploads/assets/images/services/services-1-6a.jpg',
-  'https://trekform.com/trekform/uploads/assets/images/services/services-1-10a.jpg',
-  'https://cloudflare.shopincdn.ovh/trekform/cache/images/img_blogs/1170x636_q91_cr0_fix1/carretillero_trekform_en_baleares.jpg',
+  '/imagenes/services-1-1a.jpg',
+  '/imagenes/services-1-2a.jpg',
+  '/imagenes/services-1-3a.png',
+  '/imagenes/services-1-4a.jpg',
+  '/imagenes/services-1-5a.jpg',
+  '/imagenes/services-1-6a.jpg',
+  '/imagenes/services-1-10a.jpg',
+  '/imagenes/carretillero_trekform_en_baleares.jpg',
 ]
 
 function normalize(value: string) {
