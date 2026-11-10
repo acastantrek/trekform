@@ -24,6 +24,8 @@ const courseColumns =
 const fallbackImage =
   'https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=85'
 
+const HOME_FEATURED_COURSES = 4
+
 function formatDuration(minutes: number | null) {
   if (!minutes) return 'Consultar'
   if (minutes % 60 === 0) return `${minutes / 60} horas`
@@ -85,11 +87,10 @@ export async function getCourses(options: { featured?: boolean } = {}): Promise<
   let query = client
     .from('courses')
     .select(courseColumns)
-    .order('is_featured', { ascending: false })
     .order('sort_order', { ascending: true })
     .order('title', { ascending: true })
 
-  if (options.featured) query = query.eq('is_featured', true)
+  if (options.featured) query = query.eq('is_featured', true).limit(HOME_FEATURED_COURSES)
 
   const result = await query
   if (result.error) {
