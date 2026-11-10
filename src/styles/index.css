@@ -27,7 +27,7 @@
   color: inherit;
 }
 
-:where(.logo, .not-found > span, .contact-page > div > a) {
+:where(.logo, .contact-page > div > a) {
   font-family: 'Inter Tight', sans-serif !important;
 }
 
