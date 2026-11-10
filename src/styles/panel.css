@@ -17,8 +17,7 @@
   --panel-radius: 8px;
 
   min-height: 100vh;
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter Tight', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter Tight', sans-serif;
   background: var(--cream);
   color: var(--panel-text);
 }

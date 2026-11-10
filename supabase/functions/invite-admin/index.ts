@@ -40,7 +40,12 @@ Deno.serve(async (req) => {
     .eq('id', callerData.user.id)
     .maybeSingle()
 
-  if (callerProfileError || !callerProfile || callerProfile.role !== 'admin' || !callerProfile.is_active) {
+  if (
+    callerProfileError ||
+    !callerProfile ||
+    callerProfile.role !== 'admin' ||
+    !callerProfile.is_active
+  ) {
     return json({ error: 'Solo un administrador puede invitar usuarios.' }, 403)
   }
 
@@ -64,9 +69,13 @@ Deno.serve(async (req) => {
 
   if (inviteError) return json({ error: inviteError.message }, 400)
 
-  const { error: profileError } = await admin
-    .from('profiles')
-    .upsert({ id: invited.user.id, role: 'admin', is_active: true, first_name: firstName, last_name: lastName })
+  const { error: profileError } = await admin.from('profiles').upsert({
+    id: invited.user.id,
+    role: 'admin',
+    is_active: true,
+    first_name: firstName,
+    last_name: lastName,
+  })
 
   if (profileError) return json({ error: profileError.message }, 400)
 

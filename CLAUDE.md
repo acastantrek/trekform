@@ -16,6 +16,7 @@ Package manager is **bun** (see `bun.lock`, `packageManager` in package.json).
 No test runner is configured in this repo.
 
 Content scripts (Supabase course content):
+
 - `bun run export:original-courses` — `scripts/export-original-course-content.mjs`, dumps original course content to `docs/original-course-content.json`
 - `bun run import:course-content` — `scripts/import-course-content-to-supabase.mjs`, pushes that content into Supabase
 
@@ -26,6 +27,7 @@ Single Vite + React 19 + TypeScript SPA (no SSR/meta-framework), deployed to Ver
 ### Two apps in one bundle
 
 `src/App.tsx` mounts two independent route trees under one `<Routes>`:
+
 - **Public marketing site** (`/`, `/cursos-trekform`, `/inscripciones`, `/blog`, `/contacto`, etc.) wrapped in a shared `PublicLayout` (`StaticHeader`/`StaticFooter`). Pages live in `src/pages/`, data access in `src/services/`.
 - **Admin panel** at `/panel/*`, entirely delegated to `src/panel/PanelApp.tsx`, which owns its own nested `<Routes>`, layout (`src/panel/layouts`), auth (`src/panel/contexts/AuthContext.tsx`), and CRUD pages per resource (`src/panel/pages/{courses,sessions,blog,enrollments,users}`). The panel was merged into the main site under `/panel` in a single deploy — it is not a separate app/build.
 

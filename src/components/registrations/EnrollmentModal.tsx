@@ -82,7 +82,8 @@ export function EnrollmentModal({
   useModalDismiss(onClose)
 
   const accreditationPoints = getAccreditationPoints(session)
-  const accreditationTitle = session.accreditationTitle?.trim() || 'Acreditación y titulación incluida'
+  const accreditationTitle =
+    session.accreditationTitle?.trim() || 'Acreditación y titulación incluida'
   const benefitsPoints = splitLines(session.benefitsItems)
   const price = formatPrice(session.priceCents)
   const sessionDate = dateFormatter.format(new Date(session.startsAt))
@@ -161,8 +162,8 @@ export function EnrollmentModal({
                 <CheckCircle2 size={34} />
                 <h3>¡Solicitud enviada!</h3>
                 <p>
-                  Hemos recibido tu solicitud para "{session.courseTitle}". Nuestro equipo se
-                  pondrá en contacto contigo en breve.
+                  Hemos recibido tu solicitud para "{session.courseTitle}". Nuestro equipo se pondrá
+                  en contacto contigo en breve.
                 </p>
               </section>
             ) : (
@@ -228,7 +229,9 @@ export function EnrollmentModal({
         onClick={(event) => event.stopPropagation()}
       >
         <div className="enrollment-modal-topbar">
-          <span id="enrollment-modal-title">¡Estás a un solo paso de avanzar en tu futuro profesional!</span>
+          <span id="enrollment-modal-title">
+            ¡Estás a un solo paso de avanzar en tu futuro profesional!
+          </span>
           <button type="button" onClick={onClose} aria-label="Cerrar">
             <X size={20} />
           </button>
@@ -341,7 +344,12 @@ export function EnrollmentModal({
                     <div className="enrollment-modal-form-grid">
                       <label>
                         <span>Nombre</span>
-                        <input name="name" placeholder="Nombre" autoComplete="given-name" required />
+                        <input
+                          name="name"
+                          placeholder="Nombre"
+                          autoComplete="given-name"
+                          required
+                        />
                       </label>
                       <label>
                         <span>Apellidos</span>
@@ -371,7 +379,11 @@ export function EnrollmentModal({
                       <input type="checkbox" required />
                       <span>
                         He leído y acepto la{' '}
-                        <Link to="/politica-de-privacidad" target="_blank" rel="noopener noreferrer">
+                        <Link
+                          to="/politica-de-privacidad"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           política de privacidad
                         </Link>
                         .
@@ -442,7 +454,10 @@ export function EnrollmentModal({
                   <p className="enrollment-modal-trust-label">Aceptamos</p>
                   <div className="enrollment-modal-payment-icons">
                     <span className="payment-badge payment-badge--visa">VISA</span>
-                    <span className="payment-badge payment-badge--mastercard" aria-label="Mastercard">
+                    <span
+                      className="payment-badge payment-badge--mastercard"
+                      aria-label="Mastercard"
+                    >
                       <i /> <i />
                     </span>
                     <span className="payment-badge payment-badge--card" aria-hidden="true">

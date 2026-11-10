@@ -15,7 +15,12 @@ interface EnrollmentRow {
   student_id: string
   course_session_id: string
   company_id: string | null
-  students: { first_name: string; last_name: string; email: string | null; phone: string | null } | null
+  students: {
+    first_name: string
+    last_name: string
+    email: string | null
+    phone: string | null
+  } | null
   course_sessions: {
     code: string
     starts_at: string

@@ -38,7 +38,11 @@ export function TestimonialsCarousel() {
     <div className="home-testimonial-slide" key={current.id}>
       <div className="home-stars">
         {Array.from({ length: 5 }, (_, position) => (
-          <Star key={position} size={17} fill={position < current.rating ? 'currentColor' : 'none'} />
+          <Star
+            key={position}
+            size={17}
+            fill={position < current.rating ? 'currentColor' : 'none'}
+          />
         ))}
       </div>
       <blockquote>&ldquo;{current.content}&rdquo;</blockquote>

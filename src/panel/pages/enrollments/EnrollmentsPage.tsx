@@ -31,7 +31,9 @@ export function EnrollmentsPage() {
         setEnrollments(data)
         setError(null)
       })
-      .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar las inscripciones.'))
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : 'Error al cargar las inscripciones.'),
+      )
       .finally(() => setLoading(false))
   }, [])
 
@@ -61,7 +63,9 @@ export function EnrollmentsPage() {
     setUpdatingId(enrollment.id)
     try {
       await updateEnrollmentStatus(enrollment.id, status)
-      setEnrollments((prev) => prev.map((row) => (row.id === enrollment.id ? { ...row, status } : row)))
+      setEnrollments((prev) =>
+        prev.map((row) => (row.id === enrollment.id ? { ...row, status } : row)),
+      )
     } catch (cause) {
       alert(cause instanceof Error ? cause.message : 'No se pudo actualizar el estado.')
     } finally {
@@ -125,7 +129,9 @@ export function EnrollmentsPage() {
                 <select
                   value={row.status}
                   disabled={updatingId === row.id}
-                  onChange={(event) => handleStatusChange(row, event.target.value as EnrollmentStatus)}
+                  onChange={(event) =>
+                    handleStatusChange(row, event.target.value as EnrollmentStatus)
+                  }
                 >
                   {statusOptions.map((status) => (
                     <option key={status} value={status}>

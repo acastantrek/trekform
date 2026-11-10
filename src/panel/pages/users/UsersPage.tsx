@@ -48,7 +48,9 @@ export function UsersPage() {
         setUsers(data)
         setError(null)
       })
-      .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar los usuarios.'))
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : 'Error al cargar los usuarios.'),
+      )
       .finally(() => setLoading(false))
   }, [])
 
@@ -124,14 +126,18 @@ export function UsersPage() {
             <input
               id="invite-first-name"
               value={inviteForm.firstName}
-              onChange={(event) => setInviteForm((prev) => ({ ...prev, firstName: event.target.value }))}
+              onChange={(event) =>
+                setInviteForm((prev) => ({ ...prev, firstName: event.target.value }))
+              }
             />
           </FormField>
           <FormField label="Apellidos" htmlFor="invite-last-name">
             <input
               id="invite-last-name"
               value={inviteForm.lastName}
-              onChange={(event) => setInviteForm((prev) => ({ ...prev, lastName: event.target.value }))}
+              onChange={(event) =>
+                setInviteForm((prev) => ({ ...prev, lastName: event.target.value }))
+              }
             />
           </FormField>
           <FormField label="Email" htmlFor="invite-email">
@@ -140,7 +146,9 @@ export function UsersPage() {
               type="email"
               required
               value={inviteForm.email}
-              onChange={(event) => setInviteForm((prev) => ({ ...prev, email: event.target.value }))}
+              onChange={(event) =>
+                setInviteForm((prev) => ({ ...prev, email: event.target.value }))
+              }
             />
           </FormField>
         </div>

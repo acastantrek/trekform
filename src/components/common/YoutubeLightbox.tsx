@@ -24,8 +24,19 @@ export function YoutubeLightbox({ videoId, title, onClose }: YoutubeLightboxProp
   }, [onClose])
 
   return (
-    <div className="video-lightbox" role="dialog" aria-modal="true" aria-label={title} onClick={onClose}>
-      <button type="button" className="video-lightbox__close" onClick={onClose} aria-label="Cerrar vídeo">
+    <div
+      className="video-lightbox"
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+      onClick={onClose}
+    >
+      <button
+        type="button"
+        className="video-lightbox__close"
+        onClick={onClose}
+        aria-label="Cerrar vídeo"
+      >
         <X size={22} />
       </button>
       <div className="video-lightbox__frame" onClick={(event) => event.stopPropagation()}>

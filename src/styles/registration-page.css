@@ -5,7 +5,12 @@
 
 .registration-page-hero {
   background:
-    linear-gradient(90deg, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.72) 42%, rgba(0, 0, 0, 0.15) 100%),
+    linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.94) 0%,
+      rgba(0, 0, 0, 0.72) 42%,
+      rgba(0, 0, 0, 0.15) 100%
+    ),
     url('/brand/courses-hero-original.jpg') 68% 22% / cover;
 }
 
@@ -909,7 +914,9 @@
     border-radius: 4px;
     color: var(--navy);
     padding: 0 42px 0 13px;
-    font: 400 13px 'Inter', sans-serif;
+    font:
+      400 13px 'Inter',
+      sans-serif;
   }
 
   .registration-search-field svg,
@@ -1098,7 +1105,12 @@
     z-index: 1;
     padding: 18px 10px 7px;
     border-radius: 0 0 6px 6px;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.55) 45%, rgba(0, 0, 0, 0.82) 100%);
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0.55) 45%,
+      rgba(0, 0, 0, 0.82) 100%
+    );
   }
 
   .registration-session-title h3 {

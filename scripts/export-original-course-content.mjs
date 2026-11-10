@@ -84,12 +84,12 @@ function stripHtml(html) {
 }
 
 function extractSidebarSections(sidebarHtml) {
-  const sections = [...sidebarHtml.matchAll(/<h4[^>]*>([\s\S]*?)<\/h4>\s*<p[^>]*>([\s\S]*?)<\/p>/gi)].map(
-    (match) => ({
-      title: stripHtml(match[1]),
-      text: stripHtml(match[2]),
-    }),
-  )
+  const sections = [
+    ...sidebarHtml.matchAll(/<h4[^>]*>([\s\S]*?)<\/h4>\s*<p[^>]*>([\s\S]*?)<\/p>/gi),
+  ].map((match) => ({
+    title: stripHtml(match[1]),
+    text: stripHtml(match[2]),
+  }))
 
   return {
     certification: sections[0] ?? null,
@@ -114,8 +114,7 @@ async function readLocalCourseMap() {
     throw new Error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_PUBLISHABLE_KEY in .env.local')
   }
 
-  const coursesUrl =
-    `${url}/rest/v1/courses?select=slug,title,status,published_at&status=eq.published&order=title.asc`
+  const coursesUrl = `${url}/rest/v1/courses?select=slug,title,status,published_at&status=eq.published&order=title.asc`
   const response = await fetch(coursesUrl, {
     headers: {
       apikey: key,
@@ -166,7 +165,9 @@ async function main() {
   const localCourses = await readLocalCourseMap()
   const localByTitle = new Map(localCourses.map((course) => [course.normalized, course]))
 
-  const urls = [...sitemap.matchAll(/<loc>(https:\/\/trekform\.com\/cursos-trekform\/[^<]+)<\/loc>/g)]
+  const urls = [
+    ...sitemap.matchAll(/<loc>(https:\/\/trekform\.com\/cursos-trekform\/[^<]+)<\/loc>/g),
+  ]
     .map((match) => match[1])
     .filter((url) => url.split('/').length >= 6)
     .filter((url) => !/\/page:\d+$/i.test(url))
@@ -176,7 +177,9 @@ async function main() {
 
   for (const url of uniqueUrls) {
     const html = await fetchText(url)
-    const title = cleanText(extract(html, /<title>([^<]+)<\/title>/i).replace(/\s*-\s*Trekform.*$/i, ''))
+    const title = cleanText(
+      extract(html, /<title>([^<]+)<\/title>/i).replace(/\s*-\s*Trekform.*$/i, ''),
+    )
     const sourceSlug = url.split('/').at(-1) ?? ''
     const matched = matchLocalCourse(title, sourceSlug, localCourses, localByTitle)
     const description = cleanText(extract(html, /<meta name="description" content="([^"]*)"/i))

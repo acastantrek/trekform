@@ -67,7 +67,9 @@ export function CourseFormPage() {
   useEffect(() => {
     listCategories()
       .then(setCategories)
-      .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar categorías.'))
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : 'Error al cargar categorías.'),
+      )
   }, [])
 
   async function loadModules(courseId: string) {
@@ -103,7 +105,9 @@ export function CourseFormPage() {
         })
         return loadModules(id)
       })
-      .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar el curso.'))
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : 'Error al cargar el curso.'),
+      )
       .finally(() => setLoading(false))
   }, [id])
 
@@ -153,7 +157,8 @@ export function CourseFormPage() {
       courseId: id,
       title: moduleForm.title,
       content: moduleForm.content || null,
-      durationMinutes: moduleForm.durationMinutes === '' ? null : Number(moduleForm.durationMinutes),
+      durationMinutes:
+        moduleForm.durationMinutes === '' ? null : Number(moduleForm.durationMinutes),
       position: moduleForm.position,
     }
 
@@ -172,7 +177,10 @@ export function CourseFormPage() {
 
   async function handleDeleteModule(module: CourseModule) {
     if (!id) return
-    if (!(await confirm(`¿Eliminar el módulo "${module.title}"? Esta acción no se puede deshacer.`))) return
+    if (
+      !(await confirm(`¿Eliminar el módulo "${module.title}"? Esta acción no se puede deshacer.`))
+    )
+      return
     try {
       await deleteModule(module.id)
       await loadModules(id)
@@ -187,7 +195,7 @@ export function CourseFormPage() {
     <div>
       <div className="page-header">
         <div>
-          <h1>{isEditing ? course?.title ?? 'Editar curso' : 'Nuevo curso'}</h1>
+          <h1>{isEditing ? (course?.title ?? 'Editar curso') : 'Nuevo curso'}</h1>
           <p>Completa la información que se mostrará en el sitio público.</p>
         </div>
       </div>
@@ -257,7 +265,11 @@ export function CourseFormPage() {
           </FormField>
         </div>
 
-        <FormField label="Extracto" htmlFor="course-excerpt" hint="Resumen corto para las tarjetas de curso.">
+        <FormField
+          label="Extracto"
+          htmlFor="course-excerpt"
+          hint="Resumen corto para las tarjetas de curso."
+        >
           <textarea
             id="course-excerpt"
             value={form.excerpt ?? ''}
@@ -330,7 +342,9 @@ export function CourseFormPage() {
               id="course-featured"
               type="checkbox"
               checked={form.isFeatured}
-              onChange={(event) => setForm((prev) => ({ ...prev, isFeatured: event.target.checked }))}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, isFeatured: event.target.checked }))
+              }
             />
             <span>Mostrar en la portada</span>
           </div>
@@ -355,7 +369,9 @@ export function CourseFormPage() {
                   id="module-title"
                   required
                   value={moduleForm.title}
-                  onChange={(event) => setModuleForm((prev) => ({ ...prev, title: event.target.value }))}
+                  onChange={(event) =>
+                    setModuleForm((prev) => ({ ...prev, title: event.target.value }))
+                  }
                 />
               </FormField>
               <FormField label="Duración (min)" htmlFor="module-duration">
@@ -377,10 +393,16 @@ export function CourseFormPage() {
               <textarea
                 id="module-content"
                 value={moduleForm.content}
-                onChange={(event) => setModuleForm((prev) => ({ ...prev, content: event.target.value }))}
+                onChange={(event) =>
+                  setModuleForm((prev) => ({ ...prev, content: event.target.value }))
+                }
               />
             </FormField>
-            <FormField label="Posición" htmlFor="module-position" hint="Orden dentro del temario, empezando en 0.">
+            <FormField
+              label="Posición"
+              htmlFor="module-position"
+              hint="Orden dentro del temario, empezando en 0."
+            >
               <input
                 id="module-position"
                 type="number"
@@ -396,7 +418,11 @@ export function CourseFormPage() {
                 <Plus size={14} /> {editingModuleId ? 'Guardar módulo' : 'Añadir módulo'}
               </button>
               {editingModuleId && (
-                <button type="button" className="btn btn-secondary btn-sm" onClick={resetModuleForm}>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={resetModuleForm}
+                >
                   Cancelar
                 </button>
               )}
@@ -410,16 +436,27 @@ export function CourseFormPage() {
             columns={[
               { header: 'Posición', render: (row) => row.position },
               { header: 'Título', render: (row) => row.title },
-              { header: 'Duración', render: (row) => (row.durationMinutes ? `${row.durationMinutes} min` : '—') },
+              {
+                header: 'Duración',
+                render: (row) => (row.durationMinutes ? `${row.durationMinutes} min` : '—'),
+              },
               {
                 header: 'Acciones',
                 className: 'col-actions',
                 render: (row) => (
                   <div className="row-actions">
-                    <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEditModule(row)}>
+                    <button
+                      type="button"
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => startEditModule(row)}
+                    >
                       <Pencil size={14} /> Editar
                     </button>
-                    <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDeleteModule(row)}>
+                    <button
+                      type="button"
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDeleteModule(row)}
+                    >
                       <Trash2 size={14} /> Eliminar
                     </button>
                   </div>

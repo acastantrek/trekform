@@ -65,7 +65,12 @@ export function TrekformHeroSection() {
             Ver cursos <UserCheck size={18} />
           </Link>
         </div>
-        <div className="hero-stats-row" aria-label="Cifras destacadas de Trekform" data-reveal data-reveal-delay="0.26">
+        <div
+          className="hero-stats-row"
+          aria-label="Cifras destacadas de Trekform"
+          data-reveal
+          data-reveal-delay="0.26"
+        >
           <div data-reveal data-reveal-delay="0.04">
             <strong>+20</strong>
             <span>Años de experiencia</span>

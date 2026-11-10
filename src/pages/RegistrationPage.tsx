@@ -157,12 +157,7 @@ const otherSpanishProvinces = [
   'Zaragoza',
 ].sort((a, b) => a.localeCompare(b, 'es'))
 
-const provinceOptions = [
-  'Todas las provincias',
-  'Madrid',
-  'Barcelona',
-  ...otherSpanishProvinces,
-]
+const provinceOptions = ['Todas las provincias', 'Madrid', 'Barcelona', ...otherSpanishProvinces]
 
 function getSessionMeta(session: RegistrationSession, index: number) {
   const isOnline = session.modality === 'Online'
@@ -198,7 +193,10 @@ function matchesCertificationFilter(
 ) {
   switch (filter) {
     case 'Carnet / Diploma homologado':
-      return meta.certificateLabel === 'Carnet homologado' || meta.certificateLabel === 'Diploma homologado'
+      return (
+        meta.certificateLabel === 'Carnet homologado' ||
+        meta.certificateLabel === 'Diploma homologado'
+      )
     case 'Bonificable FUNDAE':
       return meta.bonificable
     case 'PRL':
@@ -275,7 +273,10 @@ export function RegistrationPage() {
     [sessions],
   )
   const monthOptions = useMemo(
-    () => ['Cualquier fecha', ...new Set(sessions.map((session) => getMonthLabel(session.startsAt)))],
+    () => [
+      'Cualquier fecha',
+      ...new Set(sessions.map((session) => getMonthLabel(session.startsAt))),
+    ],
     [sessions],
   )
   const durationOptions = ['Hasta 4 horas', '4 - 8 horas', '8 - 16 horas', '+16 horas', 'Consultar']
@@ -573,7 +574,9 @@ export function RegistrationPage() {
                   key={item}
                   label={item}
                   checked={selectedCategory === item}
-                  onChange={() => updateCategory(selectedCategory === item ? categoryOptions[0] : item)}
+                  onChange={() =>
+                    updateCategory(selectedCategory === item ? categoryOptions[0] : item)
+                  }
                 />
               ))}
               <button
@@ -591,7 +594,9 @@ export function RegistrationPage() {
                   key={item}
                   label={item}
                   checked={selectedModality === item}
-                  onChange={() => updateModality(selectedModality === item ? modalityOptions[0] : item)}
+                  onChange={() =>
+                    updateModality(selectedModality === item ? modalityOptions[0] : item)
+                  }
                 />
               ))}
             </SidebarGroup>
@@ -613,7 +618,9 @@ export function RegistrationPage() {
                   key={item}
                   label={item}
                   checked={certificationFilters.includes(item)}
-                  onChange={() => toggleCheckboxFilter(item, certificationFilters, setCertificationFilters)}
+                  onChange={() =>
+                    toggleCheckboxFilter(item, certificationFilters, setCertificationFilters)
+                  }
                 />
               ))}
             </SidebarGroup>
@@ -771,7 +778,8 @@ export function RegistrationPage() {
                 <div className="registration-pagination">
                   <span>
                     {filteredSessions.length === 0 ? 0 : (page - 1) * pageSize + 1} a{' '}
-                    {Math.min(page * pageSize, filteredSessions.length)} de {filteredSessions.length}
+                    {Math.min(page * pageSize, filteredSessions.length)} de{' '}
+                    {filteredSessions.length}
                   </span>
                   <div>
                     {Array.from({ length: totalPages }, (_, index) => index + 1).map((item) => (
@@ -837,8 +845,8 @@ export function RegistrationPage() {
               </article>
               <article>
                 <p>
-                  “Formación muy práctica y profesores excelentes. Las instalaciones y la
-                  maquinaria en perfecto estado.”
+                  “Formación muy práctica y profesores excelentes. Las instalaciones y la maquinaria
+                  en perfecto estado.”
                 </p>
                 <span>— Marta C.</span>
               </article>

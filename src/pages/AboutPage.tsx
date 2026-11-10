@@ -65,7 +65,9 @@ export function AboutPage() {
     <>
       <section className="about-page-hero" data-reveal>
         <div className="about-hero-copy" data-reveal data-reveal-delay="0.04">
-          <span data-reveal data-reveal-delay="0.06">Más de 20 años formando a profesionales</span>
+          <span data-reveal data-reveal-delay="0.06">
+            Más de 20 años formando a profesionales
+          </span>
           <h1 data-reveal data-reveal-delay="0.1">
             Tu partner en formación <span>y seguridad laboral</span>
           </h1>
@@ -88,10 +90,7 @@ export function AboutPage() {
           </div>
         </div>
         <div className="about-hero-media" data-reveal data-reveal-delay="0.12">
-          <img
-            src="/brand/about-hero-forklift-cropped.png"
-            alt="Formación Trekform"
-          />
+          <img src="/brand/about-hero-forklift-cropped.png" alt="Formación Trekform" />
         </div>
       </section>
 
@@ -129,7 +128,9 @@ export function AboutPage() {
           </span>
         </div>
         <div className="who-copy" data-reveal data-reveal-delay="0.12">
-          <span className="kicker" data-reveal data-reveal-delay="0.14">CONOCE TREKFORM</span>
+          <span className="kicker" data-reveal data-reveal-delay="0.14">
+            CONOCE TREKFORM
+          </span>
           <h2 data-reveal data-reveal-delay="0.18">
             Formación práctica <span>para trabajar con seguridad</span>
           </h2>
@@ -165,7 +166,11 @@ export function AboutPage() {
         </div>
         <div className="strength-grid">
           {strengths.map(({ icon: Icon, title, text }, index) => (
-            <article key={title} data-reveal style={{ '--reveal-delay': `${0.06 + index * 0.05}s` } as CSSProperties}>
+            <article
+              key={title}
+              data-reveal
+              style={{ '--reveal-delay': `${0.06 + index * 0.05}s` } as CSSProperties}
+            >
               <Icon />
               <h3>{title}</h3>
               <p>{text}</p>
@@ -176,7 +181,9 @@ export function AboutPage() {
 
       <section className="team-section" data-reveal>
         <div data-reveal data-reveal-delay="0.06">
-          <span className="kicker" data-reveal data-reveal-delay="0.08">DEPARTAMENTO DE FORMACIÓN</span>
+          <span className="kicker" data-reveal data-reveal-delay="0.08">
+            DEPARTAMENTO DE FORMACIÓN
+          </span>
           <h2 data-reveal data-reveal-delay="0.12">
             Un equipo técnico preparado <span>para formar en entornos reales</span>
           </h2>
@@ -231,7 +238,9 @@ export function AboutPage() {
       ) : null}
 
       <section className="about-cta" data-reveal>
-        <span data-reveal data-reveal-delay="0.04">¡POR TU SEGURIDAD, ESCOGE TREKFORM!</span>
+        <span data-reveal data-reveal-delay="0.04">
+          ¡POR TU SEGURIDAD, ESCOGE TREKFORM!
+        </span>
         <h2 data-reveal data-reveal-delay="0.08">
           Formación para avanzar <span>con seguridad.</span>
         </h2>

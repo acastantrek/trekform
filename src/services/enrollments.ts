@@ -39,5 +39,6 @@ export async function submitSimulatedPayment(input: SimulatedPaymentInput) {
     payment_reference: `SIMULADO-${studentId.slice(0, 8).toUpperCase()}`,
   })
 
-  if (enrollmentError) throw new Error(`No se pudo registrar la inscripción: ${enrollmentError.message}`)
+  if (enrollmentError)
+    throw new Error(`No se pudo registrar la inscripción: ${enrollmentError.message}`)
 }

@@ -50,7 +50,9 @@ export function CategoriesPage() {
         setCategories(data)
         setError(null)
       })
-      .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar categorías.'))
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : 'Error al cargar categorías.'),
+      )
       .finally(() => setLoading(false))
   }, [])
 
@@ -104,7 +106,12 @@ export function CategoriesPage() {
   }
 
   async function handleDelete(category: CourseCategory) {
-    if (!(await confirm(`¿Eliminar la categoría "${category.name}"? Esta acción no se puede deshacer.`))) return
+    if (
+      !(await confirm(
+        `¿Eliminar la categoría "${category.name}"? Esta acción no se puede deshacer.`,
+      ))
+    )
+      return
     try {
       await deleteCategory(category.id)
       await reload()
@@ -143,10 +150,18 @@ export function CategoriesPage() {
               className: 'col-actions',
               render: (row) => (
                 <div className="row-actions">
-                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(row)}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => startEdit(row)}
+                  >
                     <Pencil size={14} /> Editar
                   </button>
-                  <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(row)}>
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(row)}
+                  >
                     <Trash2 size={14} /> Eliminar
                   </button>
                 </div>
@@ -166,7 +181,9 @@ export function CategoriesPage() {
             onClick={(event) => event.stopPropagation()}
           >
             <form className="form" onSubmit={handleSubmit}>
-              <h2 id="category-modal-title">{editingId ? 'Editar categoría' : 'Nueva categoría'}</h2>
+              <h2 id="category-modal-title">
+                {editingId ? 'Editar categoría' : 'Nueva categoría'}
+              </h2>
               {formError && <div className="alert alert-error">{formError}</div>}
 
               <div className="form-grid">
@@ -203,7 +220,9 @@ export function CategoriesPage() {
                 <textarea
                   id="cat-description"
                   value={form.description ?? ''}
-                  onChange={(event) => setForm((prev) => ({ ...prev, description: event.target.value }))}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, description: event.target.value }))
+                  }
                 />
               </FormField>
 
@@ -224,7 +243,9 @@ export function CategoriesPage() {
                       id="cat-active"
                       type="checkbox"
                       checked={form.isActive}
-                      onChange={(event) => setForm((prev) => ({ ...prev, isActive: event.target.checked }))}
+                      onChange={(event) =>
+                        setForm((prev) => ({ ...prev, isActive: event.target.checked }))
+                      }
                     />
                     <span>Visible en el sitio público</span>
                   </div>

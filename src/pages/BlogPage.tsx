@@ -62,7 +62,9 @@ export function BlogPage() {
   const goToPage = (value: number) => {
     setPage(value)
     requestAnimationFrame(() => {
-      document.getElementById('blog-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      document
+        .getElementById('blog-results')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
   }
 
@@ -84,8 +86,8 @@ export function BlogPage() {
             </h1>
           </a>
           <p data-reveal data-reveal-delay="0.1">
-            Consejos prácticos, actualidad del sector y buenas prácticas de prevención y
-            maquinaria industrial.
+            Consejos prácticos, actualidad del sector y buenas prácticas de prevención y maquinaria
+            industrial.
           </p>
         </div>
       </section>
@@ -154,7 +156,11 @@ export function BlogPage() {
                     {item}
                   </button>
                 ))}
-                <button type="button" disabled={page >= totalPages} onClick={() => goToPage(page + 1)}>
+                <button
+                  type="button"
+                  disabled={page >= totalPages}
+                  onClick={() => goToPage(page + 1)}
+                >
                   Siguiente <ArrowRight size={14} />
                 </button>
               </div>

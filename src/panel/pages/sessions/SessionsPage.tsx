@@ -119,7 +119,9 @@ export function SessionsPage() {
         setVenues(venueData)
         setError(null)
       })
-      .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar las convocatorias.'))
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : 'Error al cargar las convocatorias.'),
+      )
       .finally(() => setLoading(false))
   }, [])
 
@@ -211,7 +213,12 @@ export function SessionsPage() {
   }
 
   async function handleDelete(session: CourseSession) {
-    if (!(await confirm(`¿Eliminar la convocatoria "${session.code}"? Esta acción no se puede deshacer.`))) return
+    if (
+      !(await confirm(
+        `¿Eliminar la convocatoria "${session.code}"? Esta acción no se puede deshacer.`,
+      ))
+    )
+      return
     try {
       await deleteSession(session.id)
       await reload()
@@ -297,10 +304,18 @@ export function SessionsPage() {
               className: 'col-actions',
               render: (row) => (
                 <div className="row-actions">
-                  <button type="button" className="btn btn-secondary btn-sm" onClick={() => startEdit(row)}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => startEdit(row)}
+                  >
                     <Pencil size={14} /> Editar
                   </button>
-                  <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(row)}>
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(row)}
+                  >
                     <Trash2 size={14} /> Eliminar
                   </button>
                 </div>
@@ -321,7 +336,9 @@ export function SessionsPage() {
             onClick={(event) => event.stopPropagation()}
           >
             <form className="form" onSubmit={handleSubmit}>
-              <h2 id="session-modal-title">{editingId ? 'Editar convocatoria' : 'Nueva convocatoria'}</h2>
+              <h2 id="session-modal-title">
+                {editingId ? 'Editar convocatoria' : 'Nueva convocatoria'}
+              </h2>
               {formError && <div className="alert alert-error">{formError}</div>}
 
               <div className="form-grid">
@@ -331,7 +348,9 @@ export function SessionsPage() {
                     required
                     autoFocus
                     value={form.courseId}
-                    onChange={(event) => setForm((prev) => ({ ...prev, courseId: event.target.value }))}
+                    onChange={(event) =>
+                      setForm((prev) => ({ ...prev, courseId: event.target.value }))
+                    }
                   >
                     <option value="" disabled>
                       Selecciona un curso
@@ -343,11 +362,17 @@ export function SessionsPage() {
                     ))}
                   </select>
                 </FormField>
-                <FormField label="Sede" htmlFor="session-venue" hint="Déjalo vacío para convocatorias online.">
+                <FormField
+                  label="Sede"
+                  htmlFor="session-venue"
+                  hint="Déjalo vacío para convocatorias online."
+                >
                   <select
                     id="session-venue"
                     value={form.venueId}
-                    onChange={(event) => setForm((prev) => ({ ...prev, venueId: event.target.value }))}
+                    onChange={(event) =>
+                      setForm((prev) => ({ ...prev, venueId: event.target.value }))
+                    }
                   >
                     <option value="">Online / sin sede</option>
                     {venues.map((venue) => (
@@ -360,7 +385,11 @@ export function SessionsPage() {
               </div>
 
               <div className="form-grid">
-                <FormField label="Código" htmlFor="session-code" hint="Identificador único, p. ej. MAD-2026-08">
+                <FormField
+                  label="Código"
+                  htmlFor="session-code"
+                  hint="Identificador único, p. ej. MAD-2026-08"
+                >
                   <input
                     id="session-code"
                     required
@@ -385,7 +414,9 @@ export function SessionsPage() {
                     type="datetime-local"
                     required
                     value={form.startsAt}
-                    onChange={(event) => setForm((prev) => ({ ...prev, startsAt: event.target.value }))}
+                    onChange={(event) =>
+                      setForm((prev) => ({ ...prev, startsAt: event.target.value }))
+                    }
                   />
                 </FormField>
                 <FormField label="Fin" htmlFor="session-ends">
@@ -394,7 +425,9 @@ export function SessionsPage() {
                     type="datetime-local"
                     required
                     value={form.endsAt}
-                    onChange={(event) => setForm((prev) => ({ ...prev, endsAt: event.target.value }))}
+                    onChange={(event) =>
+                      setForm((prev) => ({ ...prev, endsAt: event.target.value }))
+                    }
                   />
                 </FormField>
               </div>
@@ -407,7 +440,9 @@ export function SessionsPage() {
                     min="1"
                     required
                     value={form.capacity}
-                    onChange={(event) => setForm((prev) => ({ ...prev, capacity: Number(event.target.value) }))}
+                    onChange={(event) =>
+                      setForm((prev) => ({ ...prev, capacity: Number(event.target.value) }))
+                    }
                   />
                 </FormField>
                 <FormField label="Precio (€)" htmlFor="session-price">
@@ -417,7 +452,9 @@ export function SessionsPage() {
                     min="0"
                     step="0.01"
                     value={form.priceEuros}
-                    onChange={(event) => setForm((prev) => ({ ...prev, priceEuros: event.target.value }))}
+                    onChange={(event) =>
+                      setForm((prev) => ({ ...prev, priceEuros: event.target.value }))
+                    }
                   />
                 </FormField>
               </div>
@@ -426,7 +463,9 @@ export function SessionsPage() {
                 <select
                   id="session-status"
                   value={form.status}
-                  onChange={(event) => setForm((prev) => ({ ...prev, status: event.target.value as SessionStatus }))}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, status: event.target.value as SessionStatus }))
+                  }
                 >
                   <option value="draft">Borrador</option>
                   <option value="open">Abierta</option>

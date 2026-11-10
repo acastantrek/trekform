@@ -21,10 +21,10 @@ export function LegalNoticePage() {
           <section>
             <h2>Identificación del responsable del Sitio Web</h2>
             <p>
-              En cumplimiento con lo dispuesto en el artículo 10 de la Ley 34/2002, de 11 de julio, de
-              Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se informa
-              que la entidad responsable del sitio web www.trekform.com (en adelante, el «Sitio Web»)
-              es:
+              En cumplimiento con lo dispuesto en el artículo 10 de la Ley 34/2002, de 11 de julio,
+              de Servicios de la Sociedad de la Información y de Comercio Electrónico (LSSI-CE), se
+              informa que la entidad responsable del sitio web www.trekform.com (en adelante, el
+              «Sitio Web») es:
             </p>
             <dl>
               <div>
@@ -57,10 +57,10 @@ export function LegalNoticePage() {
           <section>
             <h2>Condiciones de uso del Sitio Web</h2>
             <p>
-              El acceso al Sitio Web atribuye la condición de usuario e implica la aceptación plena y sin
-              reservas de las disposiciones incluidas en este Aviso Legal, vigentes en el momento de
-              acceso. Si el usuario no está de acuerdo con las condiciones, debe abstenerse de utilizar
-              el Sitio Web.
+              El acceso al Sitio Web atribuye la condición de usuario e implica la aceptación plena
+              y sin reservas de las disposiciones incluidas en este Aviso Legal, vigentes en el
+              momento de acceso. Si el usuario no está de acuerdo con las condiciones, debe
+              abstenerse de utilizar el Sitio Web.
             </p>
             <p>
               El usuario se compromete a hacer un uso adecuado de los contenidos y servicios que
@@ -72,30 +72,30 @@ export function LegalNoticePage() {
           <section>
             <h2>Propiedad intelectual e industrial</h2>
             <p>
-              Todos los contenidos del Sitio Web (incluyendo, entre otros, textos, imágenes, gráficos,
-              logotipos, iconos, software, diseño y estructura) son propiedad exclusiva de
-              www.trekform.com o de terceros que han autorizado su uso. Queda prohibida su reproducción,
-              distribución, modificación, comunicación pública o cualquier otro uso, salvo autorización
-              expresa por escrito del titular.
+              Todos los contenidos del Sitio Web (incluyendo, entre otros, textos, imágenes,
+              gráficos, logotipos, iconos, software, diseño y estructura) son propiedad exclusiva de
+              www.trekform.com o de terceros que han autorizado su uso. Queda prohibida su
+              reproducción, distribución, modificación, comunicación pública o cualquier otro uso,
+              salvo autorización expresa por escrito del titular.
             </p>
           </section>
 
           <section>
             <h2>Responsabilidad</h2>
             <p>
-              Www.trekform.com no se responsabiliza de los daños o perjuicios derivados del uso del Sitio
-              Web. Esto incluye posibles errores en los contenidos, interrupciones del servicio o
-              presencia de virus informáticos, aunque se tomen todas las medidas técnicas necesarias para
-              prevenirlos.
+              Www.trekform.com no se responsabiliza de los daños o perjuicios derivados del uso del
+              Sitio Web. Esto incluye posibles errores en los contenidos, interrupciones del
+              servicio o presencia de virus informáticos, aunque se tomen todas las medidas técnicas
+              necesarias para prevenirlos.
             </p>
           </section>
 
           <section>
             <h2>Protección de datos personales</h2>
             <p>
-              De conformidad con el Reglamento General de Protección de Datos (RGPD) y la Ley Orgánica
-              3/2018 de Protección de Datos Personales y Garantía de los Derechos Digitales (LOPDGDD),
-              www.trekform.com informa:
+              De conformidad con el Reglamento General de Protección de Datos (RGPD) y la Ley
+              Orgánica 3/2018 de Protección de Datos Personales y Garantía de los Derechos Digitales
+              (LOPDGDD), www.trekform.com informa:
             </p>
             <dl>
               <div>
@@ -116,8 +116,8 @@ export function LegalNoticePage() {
               <div>
                 <dt>Destinatarios</dt>
                 <dd>
-                  Los datos no se cederán a terceros, salvo obligación legal o consentimiento expreso del
-                  usuario.
+                  Los datos no se cederán a terceros, salvo obligación legal o consentimiento
+                  expreso del usuario.
                 </dd>
               </div>
               <div>
@@ -130,7 +130,8 @@ export function LegalNoticePage() {
               </div>
             </dl>
             <p>
-              Para más información, consulte nuestra <Link to="/politica-de-privacidad">Política de Privacidad</Link>.
+              Para más información, consulte nuestra{' '}
+              <Link to="/politica-de-privacidad">Política de Privacidad</Link>.
             </p>
           </section>
 
@@ -146,19 +147,19 @@ export function LegalNoticePage() {
           <section>
             <h2>Enlaces externos</h2>
             <p>
-              El Sitio Web puede contener enlaces a sitios web de terceros. www.trekform.com no se hace
-              responsable de los contenidos, políticas de privacidad o prácticas de dichos sitios
-              externos.
+              El Sitio Web puede contener enlaces a sitios web de terceros. www.trekform.com no se
+              hace responsable de los contenidos, políticas de privacidad o prácticas de dichos
+              sitios externos.
             </p>
           </section>
 
           <section>
             <h2>Legislación Aplicable y Jurisdicción</h2>
             <p>
-              El presente Aviso Legal se rige íntegramente por la legislación española. Para cualquier
-              controversia que pudiera derivarse del acceso o uso del Sitio Web, las partes se someten a
-              los juzgados y tribunales del domicilio del usuario, siempre que se encuentre en territorio
-              español.
+              El presente Aviso Legal se rige íntegramente por la legislación española. Para
+              cualquier controversia que pudiera derivarse del acceso o uso del Sitio Web, las
+              partes se someten a los juzgados y tribunales del domicilio del usuario, siempre que
+              se encuentre en territorio español.
             </p>
           </section>
         </article>

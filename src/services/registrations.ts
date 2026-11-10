@@ -135,7 +135,10 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
     ((coursesResult.data as CourseRow[]) ?? []).map((course) => [course.id, course]),
   )
   const categoryById = new Map<string, string>(
-    ((categoriesResult.data as CategoryRow[]) ?? []).map((category) => [category.id, category.name]),
+    ((categoriesResult.data as CategoryRow[]) ?? []).map((category) => [
+      category.id,
+      category.name,
+    ]),
   )
   const venueById = new Map<string, VenueRow>(
     ((venuesResult.data as VenueRow[]) ?? []).map((venue) => [venue.id, venue]),

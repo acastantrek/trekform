@@ -67,7 +67,9 @@ export function ContactPage() {
     <div className="contact-v2">
       <section className="contact-v2-hero">
         <div className="contact-v2-hero-copy" data-reveal>
-          <span data-reveal data-reveal-delay="0.04">HABLEMOS</span>
+          <span data-reveal data-reveal-delay="0.04">
+            HABLEMOS
+          </span>
           <h1 data-reveal data-reveal-delay="0.08">
             Contacta con el equipo <span>Trekform</span>
           </h1>
@@ -82,7 +84,12 @@ export function ContactPage() {
             <a href="mailto:comercial@trekform.com">Enviar email</a>
           </div>
         </div>
-        <div className="contact-v2-hero-image" aria-hidden="true" data-reveal data-reveal-delay="0.1">
+        <div
+          className="contact-v2-hero-image"
+          aria-hidden="true"
+          data-reveal
+          data-reveal-delay="0.1"
+        >
           <img
             src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1300&q=88"
             alt=""

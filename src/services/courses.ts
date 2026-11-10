@@ -210,7 +210,8 @@ function mapCourseDetail(row: CourseDetailRow): CourseDetail {
     excerpt: row.excerpt ?? 'Formación profesional para particulares y empresas.',
     heroText: row.hero_text ?? row.excerpt ?? '',
     description:
-      row.description ?? 'Curso orientado a adquirir conocimientos prácticos y trabajar con seguridad.',
+      row.description ??
+      'Curso orientado a adquirir conocimientos prácticos y trabajar con seguridad.',
     objectives: row.objectives ?? '',
     accreditationTitle: row.accreditation_title,
     accreditationItems: row.accreditation_items,

@@ -104,7 +104,10 @@ export interface CourseOption {
 
 export async function listCourseOptions(): Promise<CourseOption[]> {
   const client = requireClient()
-  const { data, error } = await client.from('courses').select('id, title').order('title', { ascending: true })
+  const { data, error } = await client
+    .from('courses')
+    .select('id, title')
+    .order('title', { ascending: true })
   if (error) throw new Error(`No se pudieron cargar los cursos: ${error.message}`)
   return data as CourseOption[]
 }

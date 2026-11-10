@@ -16,7 +16,7 @@
       rgba(0, 0, 0, 0.15) 100%
     ),
     url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2200&q=90')
-      center 42%/cover;
+      center 42% / cover;
 }
 .courses-hero-enter {
   opacity: 0;

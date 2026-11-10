@@ -3,3 +3,4 @@ dist
 package-lock.json
 public
 *.tsbuildinfo
+.playwright-mcp

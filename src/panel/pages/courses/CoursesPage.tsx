@@ -50,12 +50,15 @@ export function CoursesPage() {
         setCourses(data)
         setError(null)
       })
-      .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar los cursos.'))
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : 'Error al cargar los cursos.'),
+      )
       .finally(() => setLoading(false))
   }, [])
 
   async function handleDelete(course: Course) {
-    if (!(await confirm(`¿Eliminar el curso "${course.title}"? Esta acción no se puede deshacer.`))) return
+    if (!(await confirm(`¿Eliminar el curso "${course.title}"? Esta acción no se puede deshacer.`)))
+      return
     try {
       await deleteCourse(course.id)
       await reload()
@@ -81,7 +84,10 @@ export function CoursesPage() {
 
   const totalPages = Math.max(1, Math.ceil(filteredCourses.length / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
-  const paginatedCourses = filteredCourses.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  const paginatedCourses = filteredCourses.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE,
+  )
 
   return (
     <div>
@@ -139,7 +145,11 @@ export function CoursesPage() {
           columns={[
             { header: 'Título', className: 'col-wide', render: (row) => row.title },
             { header: 'Categoría', className: 'col-medium', render: (row) => row.categoryName },
-            { header: 'Modalidad', className: 'col-narrow', render: (row) => modalityLabel[row.modality] },
+            {
+              header: 'Modalidad',
+              className: 'col-narrow',
+              render: (row) => modalityLabel[row.modality],
+            },
             {
               header: 'Destacado',
               className: 'col-narrow',
@@ -158,7 +168,11 @@ export function CoursesPage() {
                   <Link to={`/panel/cursos/${row.id}`} className="btn btn-secondary btn-sm">
                     <Pencil size={14} /> Editar
                   </Link>
-                  <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(row)}>
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(row)}
+                  >
                     <Trash2 size={14} /> Eliminar
                   </button>
                 </div>

@@ -4,7 +4,13 @@ import { Markdown } from '../../../components/common/Markdown'
 import { FormField } from '../../components/FormField'
 import { useAuth } from '../../contexts/useAuth'
 import { slugify } from '../../lib/slugify'
-import { createPost, getPost, listBlogCategories, updatePost, type BlogPostInput } from '../../services/blog'
+import {
+  createPost,
+  getPost,
+  listBlogCategories,
+  updatePost,
+  type BlogPostInput,
+} from '../../services/blog'
 import type { BlogCategory, BlogPost } from '../../types'
 
 function toDatetimeLocal(value: string | null): string {
@@ -55,7 +61,9 @@ export function BlogPostFormPage() {
   useEffect(() => {
     listBlogCategories()
       .then(setCategories)
-      .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar categorías.'))
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : 'Error al cargar categorías.'),
+      )
   }, [])
 
   useEffect(() => {
@@ -68,7 +76,9 @@ export function BlogPostFormPage() {
         }
         setForm(toInput(data))
       })
-      .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar el artículo.'))
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : 'Error al cargar el artículo.'),
+      )
       .finally(() => setLoading(false))
   }, [id])
 
@@ -142,7 +152,11 @@ export function BlogPostFormPage() {
           </FormField>
         </div>
 
-        <FormField label="Extracto" htmlFor="post-excerpt" hint="Resumen corto para las tarjetas del blog.">
+        <FormField
+          label="Extracto"
+          htmlFor="post-excerpt"
+          hint="Resumen corto para las tarjetas del blog."
+        >
           <textarea
             id="post-excerpt"
             value={form.excerpt ?? ''}
@@ -161,7 +175,10 @@ export function BlogPostFormPage() {
               value={form.content ?? ''}
               onChange={(event) => setForm((prev) => ({ ...prev, content: event.target.value }))}
             />
-            <Markdown content={form.content || '*Nada que mostrar todavía.*'} className="markdown-preview" />
+            <Markdown
+              content={form.content || '*Nada que mostrar todavía.*'}
+              className="markdown-preview"
+            />
           </div>
         </FormField>
 

@@ -62,7 +62,9 @@ function normalize(value: string) {
 
 function getCourseMeta(course: Course) {
   const durationHours = course.durationHours ?? 0
-  const duration = Number.isInteger(durationHours) ? `${durationHours} h` : `${durationHours.toFixed(1)} h`
+  const duration = Number.isInteger(durationHours)
+    ? `${durationHours} h`
+    : `${durationHours.toFixed(1)} h`
   const modality = course.modality === 'online' ? 'Online' : 'Presencial'
   const certificate = course.accreditationTitle
   const officialCertification = course.isOfficialCertification
@@ -225,7 +227,9 @@ export function CoursesPage() {
   const goToPage = (value: number) => {
     setPage(value)
     requestAnimationFrame(() => {
-      document.getElementById('catalog-results')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      document
+        .getElementById('catalog-results')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
   }
 
@@ -373,7 +377,11 @@ export function CoursesPage() {
               <button type="button" className="registration-toolbar-reset" onClick={clearFilters}>
                 <RotateCcw size={15} /> Limpiar filtros
               </button>
-              <a href="#catalog-results" className="registration-toolbar-submit" onClick={applyFilters}>
+              <a
+                href="#catalog-results"
+                className="registration-toolbar-submit"
+                onClick={applyFilters}
+              >
                 Buscar cursos
               </a>
             </div>
@@ -543,7 +551,9 @@ export function CoursesPage() {
                           {nextSessionByCourseSlug.has(course.slug) ? (
                             <button
                               type="button"
-                              onClick={() => setActiveSession(nextSessionByCourseSlug.get(course.slug)!)}
+                              onClick={() =>
+                                setActiveSession(nextSessionByCourseSlug.get(course.slug)!)
+                              }
                             >
                               Inscribirme
                             </button>
@@ -589,7 +599,11 @@ export function CoursesPage() {
                     {item}
                   </button>
                 ))}
-                <button type="button" disabled={page >= totalPages} onClick={() => goToPage(page + 1)}>
+                <button
+                  type="button"
+                  disabled={page >= totalPages}
+                  onClick={() => goToPage(page + 1)}
+                >
                   Siguiente
                 </button>
               </div>
@@ -655,7 +669,6 @@ export function CoursesPage() {
                 </Link>
               </article>
             </div>
-
           </div>
         </div>
       </section>

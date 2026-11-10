@@ -44,12 +44,17 @@ export function BlogPostsPage() {
         setPosts(data)
         setError(null)
       })
-      .catch((cause) => setError(cause instanceof Error ? cause.message : 'Error al cargar los artículos.'))
+      .catch((cause) =>
+        setError(cause instanceof Error ? cause.message : 'Error al cargar los artículos.'),
+      )
       .finally(() => setLoading(false))
   }, [])
 
   async function handleDelete(post: BlogPost) {
-    if (!(await confirm(`¿Eliminar el artículo "${post.title}"? Esta acción no se puede deshacer.`))) return
+    if (
+      !(await confirm(`¿Eliminar el artículo "${post.title}"? Esta acción no se puede deshacer.`))
+    )
+      return
     try {
       await deletePost(post.id)
       await reload()
@@ -136,7 +141,8 @@ export function BlogPostsPage() {
             { header: 'Estado', render: (row) => <StatusBadge status={row.status} /> },
             {
               header: 'Publicado',
-              render: (row) => (row.publishedAt ? new Date(row.publishedAt).toLocaleDateString('es-ES') : '—'),
+              render: (row) =>
+                row.publishedAt ? new Date(row.publishedAt).toLocaleDateString('es-ES') : '—',
             },
             {
               header: 'Acciones',
@@ -146,7 +152,11 @@ export function BlogPostsPage() {
                   <Link to={`/panel/blog/${row.id}`} className="btn btn-secondary btn-sm">
                     <Pencil size={14} /> Editar
                   </Link>
-                  <button type="button" className="btn btn-danger btn-sm" onClick={() => handleDelete(row)}>
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={() => handleDelete(row)}
+                  >
                     <Trash2 size={14} /> Eliminar
                   </button>
                 </div>

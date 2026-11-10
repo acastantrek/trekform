@@ -21,7 +21,9 @@ export function LoginPage() {
       await signIn(email, password)
     } catch (cause) {
       setError(
-        cause instanceof Error ? 'No se ha podido iniciar sesión. Revisa el email y la contraseña.' : 'Error desconocido.',
+        cause instanceof Error
+          ? 'No se ha podido iniciar sesión. Revisa el email y la contraseña.'
+          : 'Error desconocido.',
       )
     } finally {
       setSubmitting(false)

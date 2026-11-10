@@ -118,7 +118,11 @@ export async function listPosts(): Promise<BlogPost[]> {
 
 export async function getPost(id: string): Promise<BlogPost | null> {
   const client = requireClient()
-  const { data, error } = await client.from('blog_posts').select(postColumns).eq('id', id).maybeSingle()
+  const { data, error } = await client
+    .from('blog_posts')
+    .select(postColumns)
+    .eq('id', id)
+    .maybeSingle()
 
   if (error) throw new Error(`No se pudo cargar el artículo: ${error.message}`)
   return data ? mapPost(data as unknown as BlogPostRow) : null

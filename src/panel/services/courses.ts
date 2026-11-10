@@ -129,7 +129,11 @@ export async function listCourses(): Promise<Course[]> {
 
 export async function getCourse(id: string): Promise<Course | null> {
   const client = requireClient()
-  const { data, error } = await client.from('courses').select(courseColumns).eq('id', id).maybeSingle()
+  const { data, error } = await client
+    .from('courses')
+    .select(courseColumns)
+    .eq('id', id)
+    .maybeSingle()
 
   if (error) throw new Error(`No se pudo cargar el curso: ${error.message}`)
   return data ? mapCourse(data as unknown as CourseRow) : null

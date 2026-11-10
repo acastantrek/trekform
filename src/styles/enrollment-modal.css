@@ -64,7 +64,12 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0.88) 0%, rgba(0, 0, 0, 0.5) 55%, rgba(0, 0, 0, 0.2) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.88) 0%,
+    rgba(0, 0, 0, 0.5) 55%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
 }
 .enrollment-modal-logo {
   position: absolute;

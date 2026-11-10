@@ -1,7 +1,13 @@
 ﻿import { Mail, MapPin, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { TrekformLogo } from '../common/TrekformLogo'
-import { FacebookIcon, InstagramIcon, LinkedinIcon, XIcon, YoutubeIcon } from '../common/SocialIcons'
+import {
+  FacebookIcon,
+  InstagramIcon,
+  LinkedinIcon,
+  XIcon,
+  YoutubeIcon,
+} from '../common/SocialIcons'
 
 const socialLinks = [
   { label: 'X (Twitter)', href: 'https://twitter.com/Trekform2', Icon: XIcon },

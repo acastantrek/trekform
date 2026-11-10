@@ -64,7 +64,9 @@ function formatDuration(minutes: number | null) {
 
 function getYoutubeId(url: string | null) {
   if (!url) return null
-  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/)
+  const match = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/,
+  )
   return match ? match[1] : null
 }
 
@@ -286,7 +288,9 @@ export function CourseDetailPage() {
           </div>
 
           <aside className="course-detail-hero-card">
-            <span>{course.isOfficialCertification ? 'Certificación oficial' : 'Formación acreditativa'}</span>
+            <span>
+              {course.isOfficialCertification ? 'Certificación oficial' : 'Formación acreditativa'}
+            </span>
             <strong>
               {course.isFundaeEligible
                 ? 'Bonificable por FUNDAE para empresas'
@@ -390,7 +394,9 @@ export function CourseDetailPage() {
               Inscríbete ahora <ArrowRight size={18} />
             </button>
           ) : (
-            <Link to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}>
+            <Link
+              to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}
+            >
               Inscríbete ahora <ArrowRight size={18} />
             </Link>
           )}
@@ -401,7 +407,9 @@ export function CourseDetailPage() {
                 {nextOpenSession ? (
                   sessionDateFormatter.format(new Date(nextOpenSession.startsAt))
                 ) : (
-                  <Link to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}>
+                  <Link
+                    to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}
+                  >
                     Consultar fechas
                   </Link>
                 )}
@@ -410,7 +418,9 @@ export function CourseDetailPage() {
             <div>
               <dt>Calendario</dt>
               <dd>
-                <Link to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}>
+                <Link
+                  to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}
+                >
                   Ver todas las convocatorias
                 </Link>
               </dd>
@@ -431,7 +441,12 @@ export function CourseDetailPage() {
           </p>
           <div className="course-detail-sidebar-links">
             {course.brochureUrl ? (
-              <a href={course.brochureUrl} className="course-detail-text-link" target="_blank" rel="noreferrer">
+              <a
+                href={course.brochureUrl}
+                className="course-detail-text-link"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <FileText size={14} /> Descargar ficha
               </a>
             ) : null}
@@ -449,7 +464,9 @@ export function CourseDetailPage() {
               <span className="course-detail-kicker">PRÓXIMAS CONVOCATORIAS</span>
               <h2>Elige la fecha que mejor te encaje</h2>
             </div>
-            <p>Todas las convocatorias incluyen materiales, certificado y seguimiento personalizado.</p>
+            <p>
+              Todas las convocatorias incluyen materiales, certificado y seguimiento personalizado.
+            </p>
           </div>
 
           <div className="course-detail-sessions-list">
@@ -504,7 +521,11 @@ export function CourseDetailPage() {
               <article className="course-detail-review-card" key={testimonial.id}>
                 <div className="course-detail-review-stars">
                   {Array.from({ length: 5 }, (_, position) => (
-                    <Star key={position} size={15} fill={position < testimonial.rating ? 'currentColor' : 'none'} />
+                    <Star
+                      key={position}
+                      size={15}
+                      fill={position < testimonial.rating ? 'currentColor' : 'none'}
+                    />
                   ))}
                 </div>
                 <blockquote>&ldquo;{testimonial.content}&rdquo;</blockquote>
@@ -533,7 +554,8 @@ export function CourseDetailPage() {
           </h2>
         </div>
         <p>
-          Cuéntanos el perfil del alumno o las necesidades de tu empresa y te proponemos la mejor opción.
+          Cuéntanos el perfil del alumno o las necesidades de tu empresa y te proponemos la mejor
+          opción.
         </p>
         <Link to="/contacto">
           Contactar <ArrowRight size={18} />
