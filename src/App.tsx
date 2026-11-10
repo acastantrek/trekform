@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react'
 import { Outlet, Route, Routes } from 'react-router-dom'
 import { RouteScrollToTop } from './components/common/RouteScrollToTop'
 import { StaticFooter } from './components/layout/StaticFooter'
@@ -10,9 +11,13 @@ import { CourseDetailPage } from './pages/CourseDetailPage'
 import { CookiesPolicyPage } from './pages/CookiesPolicyPage'
 import { HomePage } from './pages/HomePage'
 import { LegalNoticePage } from './pages/LegalNoticePage'
+import { NotFoundPage } from './pages/NotFoundPage'
 import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage'
 import { RegistrationPage } from './pages/RegistrationPage'
-import { PanelApp } from './panel/PanelApp'
+
+const PanelApp = lazy(() =>
+  import('./panel/PanelApp').then((module) => ({ default: module.PanelApp })),
+)
 
 function PublicLayout() {
   return (
@@ -43,10 +48,24 @@ export default function App() {
           <Route path="/politica-de-privacidad" element={<PrivacyPolicyPage />} />
           <Route path="/aviso-legal" element={<LegalNoticePage />} />
           <Route path="/politica-de-cookies" element={<CookiesPolicyPage />} />
-          <Route path="*" element={<HomePage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
 
-        <Route path="/panel/*" element={<PanelApp />} />
+        <Route
+          path="/panel/*"
+          element={
+            <Suspense
+              fallback={
+                <div className="course-detail-loading" role="status">
+                  <span />
+                  <p>Cargando panel…</p>
+                </div>
+              }
+            >
+              <PanelApp />
+            </Suspense>
+          }
+        />
       </Routes>
     </>
   )
