@@ -301,7 +301,7 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-top: 16px;
+  margin: 0 0 16px;
 }
 
 .panel-app .pagination-status {
@@ -490,6 +490,55 @@
 
 .panel-app .checkbox-field input {
   width: auto;
+}
+
+.panel-app .checkbox-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px 16px;
+}
+
+.panel-app .checkbox-list .checkbox-field {
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.panel-app .form-section {
+  margin: 0 0 24px;
+  padding: 0 0 8px;
+  border: 0;
+  border-bottom: 1px solid var(--panel-border);
+  min-width: 0;
+}
+
+.panel-app .form-section legend {
+  padding: 0;
+  margin-bottom: 14px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--panel-text);
+}
+
+.panel-app .form-section-description {
+  margin: -6px 0 14px;
+  font-size: 13px;
+  color: var(--panel-text-muted);
+}
+
+.panel-app .form-repeater-item {
+  padding: 14px 16px 0;
+  margin-bottom: 12px;
+  border: 1px solid var(--panel-border);
+  border-radius: 6px;
+  background: #fafaf8;
+}
+
+.panel-app .form-repeater-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
 .panel-app .form-actions {

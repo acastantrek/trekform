@@ -31,18 +31,53 @@ export interface CourseCategory {
   isActive: boolean
 }
 
+export type CourseAudience = 'individuals' | 'companies' | 'both'
+
+export interface CourseTypology {
+  cards: Array<{ title: string | null; lines: string[] }>
+  note: string[]
+}
+
+export interface CourseExtraSection {
+  title: string
+  items?: string[]
+  paragraphs?: string[]
+}
+
 export interface Course {
   id: string
   categoryId: string
   categoryName: string
+  /** Secondary categories (course_category_assignments), excluding the primary one. */
+  extraCategoryIds: string[]
   title: string
+  shortTitle: string | null
   slug: string
   excerpt: string | null
+  heroText: string | null
+  seoDescription: string | null
   description: string | null
+  objectives: string | null
+  audience: CourseAudience
+  audienceLabel: string | null
+  audienceDescription: string | null
+  methodology: string | null
   modality: CourseModality
+  modalityLabel: string | null
   durationHours: number | null
+  durationLabel: string | null
   imageUrl: string | null
+  brochureUrl: string | null
+  videoUrl: string | null
+  isOfficialCertification: boolean
+  isFundaeEligible: boolean
+  accreditationTitle: string | null
+  accreditationItems: string | null
+  benefitsItems: string | null
+  typology: CourseTypology | null
+  extraSections: CourseExtraSection[]
   isFeatured: boolean
+  sortOrder: number
   status: RecordStatus
   publishedAt: string | null
 }

@@ -1,6 +1,13 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { supabase } from '../../lib/supabase'
-import type { Course, CourseCategory, CourseModule } from '../types'
+import type {
+  Course,
+  CourseAudience,
+  CourseCategory,
+  CourseExtraSection,
+  CourseModule,
+  CourseTypology,
+} from '../types'
 
 function requireClient() {
   if (!supabase) throw new Error('Falta configurar la conexión con Supabase.')
@@ -79,42 +86,89 @@ export async function deleteCategory(id: string): Promise<void> {
   if (error) throw new Error(`No se pudo eliminar la categoría: ${error.message}`)
 }
 
-interface CourseRow {
+export interface CourseRow {
   id: string
   category_id: string
   title: string
+  short_title: string | null
   slug: string
   excerpt: string | null
+  hero_text: string | null
+  seo_description: string | null
   description: string | null
+  objectives: string | null
+  audience: CourseAudience | null
+  audience_label: string | null
+  audience_description: string | null
+  methodology: string | null
   modality: Course['modality']
-  duration_hours: number | null
+  modality_label: string | null
+  duration_hours: number | string | null
+  duration_label: string | null
   image_url: string | null
+  featured_image_url: string | null
+  brochure_url: string | null
+  video_url: string | null
+  is_official_certification: boolean
+  is_fundae_eligible: boolean
+  accreditation_title: string | null
+  accreditation_items: string | null
+  benefits_items: string | null
+  typology: CourseTypology | null
+  extra_sections: CourseExtraSection[] | null
   is_featured: boolean
+  sort_order: number
   status: Course['status']
   published_at: string | null
   course_categories: { name: string } | null
+  course_category_assignments: Array<{ category_id: string }>
 }
 
-function mapCourse(row: CourseRow): Course {
+export function mapCourse(row: CourseRow): Course {
   return {
     id: row.id,
     categoryId: row.category_id,
     categoryName: row.course_categories?.name ?? 'Sin categoría',
+    extraCategoryIds: row.course_category_assignments
+      .map((assignment) => assignment.category_id)
+      .filter((categoryId) => categoryId !== row.category_id),
     title: row.title,
+    shortTitle: row.short_title,
     slug: row.slug,
     excerpt: row.excerpt,
+    heroText: row.hero_text,
+    seoDescription: row.seo_description,
     description: row.description,
+    objectives: row.objectives,
+    audience: row.audience ?? 'both',
+    audienceLabel: row.audience_label,
+    audienceDescription: row.audience_description,
+    methodology: row.methodology,
     modality: row.modality,
-    durationHours: row.duration_hours,
-    imageUrl: row.image_url,
+    modalityLabel: row.modality_label,
+    durationHours: row.duration_hours === null ? null : Number(row.duration_hours),
+    durationLabel: row.duration_label,
+    // The public site reads featured_image_url (catalog, course page) and image_url
+    // (registrations); the panel keeps both columns in sync.
+    imageUrl: row.featured_image_url ?? row.image_url,
+    brochureUrl: row.brochure_url,
+    videoUrl: row.video_url,
+    isOfficialCertification: row.is_official_certification,
+    isFundaeEligible: row.is_fundae_eligible,
+    accreditationTitle: row.accreditation_title,
+    accreditationItems: row.accreditation_items,
+    benefitsItems: row.benefits_items,
+    typology: row.typology,
+    extraSections: row.extra_sections ?? [],
     isFeatured: row.is_featured,
+    sortOrder: row.sort_order,
     status: row.status,
     publishedAt: row.published_at,
   }
 }
 
 const courseColumns =
-  'id, category_id, title, slug, excerpt, description, modality, duration_hours, image_url, is_featured, status, published_at, course_categories!courses_category_id_fkey(name)'
+  'id, category_id, title, short_title, slug, excerpt, hero_text, seo_description, description, objectives, audience, audience_label, audience_description, methodology, modality, modality_label, duration_hours, duration_label, image_url, featured_image_url, brochure_url, video_url, is_official_certification, is_fundae_eligible, accreditation_title, accreditation_items, benefits_items, typology, extra_sections, is_featured, sort_order, status, published_at, course_categories!courses_category_id_fkey(name), course_category_assignments(category_id)'
 
 export async function listCourses(): Promise<Course[]> {
   const client = requireClient()
@@ -139,33 +193,86 @@ export async function getCourse(id: string): Promise<Course | null> {
   return data ? mapCourse(data as unknown as CourseRow) : null
 }
 
-export interface CourseInput {
-  categoryId: string
-  title: string
-  slug: string
-  excerpt: string | null
-  description: string | null
-  modality: Course['modality']
-  durationHours: number | null
-  imageUrl: string | null
-  isFeatured: boolean
-  status: Course['status']
-  publishedAt: string | null
+export type CourseInput = Omit<Course, 'id' | 'categoryName'>
+
+function emptyToNull(value: string | null) {
+  const trimmed = value?.trim()
+  return trimmed ? trimmed : null
 }
 
-function toCourseRecord(input: CourseInput) {
+export function toCourseRecord(input: CourseInput) {
+  const imageUrl = emptyToNull(input.imageUrl)
+
   return {
     category_id: input.categoryId,
-    title: input.title,
-    slug: input.slug,
-    excerpt: input.excerpt,
-    description: input.description,
+    title: input.title.trim(),
+    short_title: emptyToNull(input.shortTitle),
+    slug: input.slug.trim(),
+    excerpt: emptyToNull(input.excerpt),
+    hero_text: emptyToNull(input.heroText),
+    seo_description: emptyToNull(input.seoDescription),
+    description: emptyToNull(input.description),
+    objectives: emptyToNull(input.objectives),
+    audience: input.audience,
+    audience_label: emptyToNull(input.audienceLabel),
+    audience_description: emptyToNull(input.audienceDescription),
+    methodology: emptyToNull(input.methodology),
     modality: input.modality,
+    modality_label: emptyToNull(input.modalityLabel),
+    // The catalog and registrations read duration_hours; the course page reads duration_minutes.
     duration_hours: input.durationHours,
-    image_url: input.imageUrl,
+    duration_minutes: input.durationHours === null ? null : Math.round(input.durationHours * 60),
+    duration_label: emptyToNull(input.durationLabel),
+    image_url: imageUrl,
+    featured_image_url: imageUrl,
+    brochure_url: emptyToNull(input.brochureUrl),
+    video_url: emptyToNull(input.videoUrl),
+    is_official_certification: input.isOfficialCertification,
+    is_fundae_eligible: input.isFundaeEligible,
+    accreditation_title: emptyToNull(input.accreditationTitle),
+    accreditation_items: emptyToNull(input.accreditationItems),
+    benefits_items: emptyToNull(input.benefitsItems),
+    typology: input.typology,
+    extra_sections: input.extraSections.length ? input.extraSections : null,
     is_featured: input.isFeatured,
+    sort_order: input.sortOrder,
     status: input.status,
     published_at: input.publishedAt,
+  }
+}
+
+// Existing data also lists the primary category in course_category_assignments, so it is kept
+// there. Only rows that actually change are deleted or inserted.
+async function saveCategoryAssignments(courseId: string, input: CourseInput) {
+  const client = requireClient()
+  const wanted = new Set([input.categoryId, ...input.extraCategoryIds])
+  const failure = (message: string) =>
+    new Error(`No se pudieron guardar las categorías adicionales: ${message}`)
+
+  const { data, error: readError } = await client
+    .from('course_category_assignments')
+    .select('category_id')
+    .eq('course_id', courseId)
+  if (readError) throw failure(readError.message)
+
+  const current = new Set((data as Array<{ category_id: string }>).map((row) => row.category_id))
+  const toRemove = [...current].filter((categoryId) => !wanted.has(categoryId))
+  const toAdd = [...wanted].filter((categoryId) => !current.has(categoryId))
+
+  if (toRemove.length) {
+    const { error } = await client
+      .from('course_category_assignments')
+      .delete()
+      .eq('course_id', courseId)
+      .in('category_id', toRemove)
+    if (error) throw failure(error.message)
+  }
+
+  if (toAdd.length) {
+    const { error } = await client
+      .from('course_category_assignments')
+      .insert(toAdd.map((categoryId) => ({ course_id: courseId, category_id: categoryId })))
+    if (error) throw failure(error.message)
   }
 }
 
@@ -177,13 +284,17 @@ export async function createCourse(input: CourseInput): Promise<string> {
     .select('id')
     .single()
   if (error) throw new Error(`No se pudo crear el curso: ${error.message}`)
-  return (data as { id: string }).id
+
+  const id = (data as { id: string }).id
+  await saveCategoryAssignments(id, input)
+  return id
 }
 
 export async function updateCourse(id: string, input: CourseInput): Promise<void> {
   const client = requireClient()
   const { error } = await client.from('courses').update(toCourseRecord(input)).eq('id', id)
   if (error) throw new Error(`No se pudo actualizar el curso: ${error.message}`)
+  await saveCategoryAssignments(id, input)
 }
 
 export async function deleteCourse(id: string): Promise<void> {
@@ -245,8 +356,10 @@ export async function createModule(input: ModuleInput): Promise<void> {
     course_id: input.courseId,
     title: input.title,
     content: input.content,
+    description: input.content,
     duration_minutes: input.durationMinutes,
     position: input.position,
+    sort_order: input.position,
   })
   if (error) throw new Error(`No se pudo crear el módulo: ${error.message}`)
 }
@@ -258,8 +371,10 @@ export async function updateModule(id: string, input: ModuleInput): Promise<void
     .update({
       title: input.title,
       content: input.content,
+      description: input.content,
       duration_minutes: input.durationMinutes,
       position: input.position,
+      sort_order: input.position,
     })
     .eq('id', id)
   if (error) throw new Error(`No se pudo actualizar el módulo: ${error.message}`)
