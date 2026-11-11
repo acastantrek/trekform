@@ -124,6 +124,7 @@ export function BlogPostsPage() {
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
+      {!loading && <Pagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />}
       {loading ? (
         <p>Cargando…</p>
       ) : (
@@ -165,7 +166,6 @@ export function BlogPostsPage() {
           ]}
         />
       )}
-      <Pagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />
       {dialog}
     </div>
   )

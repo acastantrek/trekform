@@ -131,6 +131,7 @@ export function CoursesPage() {
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
+      {!loading && <Pagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />}
       {loading ? (
         <p>Cargando…</p>
       ) : (
@@ -181,7 +182,6 @@ export function CoursesPage() {
           ]}
         />
       )}
-      <Pagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />
       {dialog}
     </div>
   )
