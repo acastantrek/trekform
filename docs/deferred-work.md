@@ -85,6 +85,12 @@ Sustituirlo por la descripción de la ficha de producción (su `meta description
 - `curso-de-operario-almacen-carnet-carretillas`: producción explica que es semipresencial de 40 horas y
   nosotros mostramos las tarjetas estándar de tipología.
 
+### 6. Certificación cortada
+
+- `curso-de-carretillas-elevadoras`: su `accreditation_title` es "Carnet y diploma homologado para", que
+  parece cortado. Desde el 2026-11-11 la ficha de curso muestra este campo, así que hay que completarlo
+  desde el panel.
+
 ## Sustituir el pago simulado
 
 **Bloquea el lanzamiento.** Hoy no se cobra nada, pero la web le dice al alumno que ha pagado.
