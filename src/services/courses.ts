@@ -153,6 +153,7 @@ export interface CourseDetail {
   extraSections: CourseExtraSection[]
   isOfficialCertification: boolean
   isFundaeEligible: boolean
+  isFeatured: boolean
   categories: string[]
   sessions: CourseSession[]
 }
@@ -184,6 +185,7 @@ interface CourseDetailRow {
   extra_sections: CourseExtraSection[] | null
   is_official_certification: boolean
   is_fundae_eligible: boolean
+  is_featured: boolean
   course_categories: { name: string } | null
   course_category_assignments: Array<{ course_categories: { name: string } | null }>
   course_sessions: Array<{
@@ -255,6 +257,7 @@ function mapCourseDetail(row: CourseDetailRow): CourseDetail {
     extraSections: row.extra_sections ?? [],
     isOfficialCertification: row.is_official_certification,
     isFundaeEligible: row.is_fundae_eligible,
+    isFeatured: row.is_featured,
     categories,
     sessions: mapSessions(row.course_sessions),
   }
@@ -267,7 +270,7 @@ export async function getCourseDetail(slug: string): Promise<CourseDetail | null
   const result = await client
     .from('courses')
     .select(
-      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, duration_minutes, brochure_url, video_url, methodology, modality_label, duration_label, audience_label, typology, extra_sections, is_official_certification, is_fundae_eligible, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, postal_code, locations(city, province)))',
+      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, duration_minutes, brochure_url, video_url, methodology, modality_label, duration_label, audience_label, typology, extra_sections, is_official_certification, is_fundae_eligible, is_featured, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, postal_code, locations(city, province)))',
     )
     .eq('slug', slug)
     .eq('status', 'published')

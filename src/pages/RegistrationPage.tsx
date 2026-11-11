@@ -98,10 +98,8 @@ function formatSchedule(start: string, end: string) {
 
 const dayMonthFormatter = new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short' })
 
-function formatUpcomingDate(dateString: string, offsetDays: number) {
-  const date = new Date(dateString)
-  date.setDate(date.getDate() + offsetDays)
-  return dayMonthFormatter.format(date).replace('.', '')
+function formatUpcomingDate(dateString: string) {
+  return dayMonthFormatter.format(new Date(dateString)).replace('.', '')
 }
 
 const certificationOptions = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
@@ -159,31 +157,13 @@ const otherSpanishProvinces = [
 
 const provinceOptions = ['Todas las provincias', 'Madrid', 'Barcelona', ...otherSpanishProvinces]
 
-function getSessionMeta(session: RegistrationSession, index: number) {
-  const isOnline = session.modality === 'Online'
-  const bonificable = !isOnline && index % 2 === 0
-  const certificateLabel =
-    index % 3 === 0 ? 'Carnet homologado' : index % 3 === 1 ? 'Diploma homologado' : 'Certificado'
-
-  const secondaryBadge =
-    index === 0
-      ? { label: 'Más demandado', tone: 'featured' as const }
-      : isOnline
-        ? { label: 'Certificado oficial', tone: 'certified' as const }
-        : bonificable
-          ? { label: 'Bonificable FUNDAE', tone: 'info' as const }
-          : index % 4 === 1
-            ? { label: 'Grupos reducidos', tone: 'accent' as const }
-            : index % 4 === 3
-              ? { label: 'Inicio inmediato', tone: 'accent' as const }
-              : { label: 'Certificado oficial', tone: 'certified' as const }
-
-  const nextDates = [
-    formatUpcomingDate(session.startsAt, index % 2 === 0 ? 21 : 23),
-    formatUpcomingDate(session.startsAt, index % 2 === 0 ? 35 : 37),
-  ]
-
-  return { bonificable, certificateLabel, secondaryBadge, nextDates }
+function getSessionMeta(session: RegistrationSession, laterSessions: RegistrationSession[]) {
+  return {
+    bonificable: session.isFundaeEligible,
+    certificateLabel: session.accreditationTitle,
+    featured: session.isFeatured,
+    nextDates: laterSessions.slice(0, 2).map((item) => formatUpcomingDate(item.startsAt)),
+  }
 }
 
 function matchesCertificationFilter(
@@ -193,10 +173,7 @@ function matchesCertificationFilter(
 ) {
   switch (filter) {
     case 'Carnet / Diploma homologado':
-      return (
-        meta.certificateLabel === 'Carnet homologado' ||
-        meta.certificateLabel === 'Diploma homologado'
-      )
+      return session.isOfficialCertification
     case 'Bonificable FUNDAE':
       return meta.bonificable
     case 'PRL':
@@ -283,8 +260,14 @@ export function RegistrationPage() {
 
   const sessionMetaById = useMemo(() => {
     const map = new Map<string, ReturnType<typeof getSessionMeta>>()
-    sessions.forEach((session, index) => {
-      map.set(session.id, getSessionMeta(session, index))
+    sessions.forEach((session) => {
+      const laterSessions = sessions.filter(
+        (item) =>
+          item.id !== session.id &&
+          item.courseSlug === session.courseSlug &&
+          item.startsAt > session.startsAt,
+      )
+      map.set(session.id, getSessionMeta(session, laterSessions))
     })
     return map
   }, [sessions])
@@ -698,7 +681,7 @@ export function RegistrationPage() {
                       <article className="registration-session-card" key={session.id}>
                         <div className="registration-session-image">
                           <img src={session.image} alt={session.courseTitle} />
-                          {meta.secondaryBadge.tone === 'featured' ? (
+                          {meta.featured ? (
                             <span>
                               <Star size={11} fill="currentColor" /> Más demandado
                             </span>
@@ -727,9 +710,11 @@ export function RegistrationPage() {
                                   : `${session.city}, ${session.province}`}
                               </span>
                             </div>
-                            <div className="registration-session-certificate">
-                              <FileCheck2 size={14} /> {meta.certificateLabel}
-                            </div>
+                            {meta.certificateLabel ? (
+                              <div className="registration-session-certificate">
+                                <FileCheck2 size={14} /> {meta.certificateLabel}
+                              </div>
+                            ) : null}
                           </div>
                         </div>
 
@@ -743,9 +728,11 @@ export function RegistrationPage() {
                           <span className="registration-field-venue">
                             <MapPin size={14} /> {session.venue}
                           </span>
-                          <small className="registration-field-nextdates">
-                            Próximas fechas: {meta.nextDates[0]} · {meta.nextDates[1]}
-                          </small>
+                          {meta.nextDates.length ? (
+                            <small className="registration-field-nextdates">
+                              Próximas fechas: {meta.nextDates.join(' · ')}
+                            </small>
+                          ) : null}
                         </div>
 
                         <div className="registration-session-badges">

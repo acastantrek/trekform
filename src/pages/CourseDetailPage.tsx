@@ -125,6 +125,8 @@ function toRegistrationSession(course: CourseDetail, session: CourseSession): Re
     accreditationItems: course.accreditationItems,
     benefitsItems: course.benefitsItems,
     isOfficialCertification: course.isOfficialCertification,
+    isFundaeEligible: course.isFundaeEligible,
+    isFeatured: course.isFeatured,
     image: course.image,
     city: session.city,
     province: session.province,
@@ -219,7 +221,7 @@ export function CourseDetailPage() {
   const videoId = getYoutubeId(course.videoUrl)
   const modality = course.modalityLabel ?? getModalityLabel(course.modality)
   const durationLabel = course.durationLabel ?? formatDuration(course.durationMinutes)
-  const certificationLabel = 'Diploma acreditativo Trekform'
+  const certificationLabel = course.accreditationTitle ?? 'Diploma acreditativo Trekform'
   const nextOpenSession = course.sessions.find((session) => session.status === 'open')
   const typology = course.typology ?? (course.modality !== 'online' ? DEFAULT_TYPOLOGY : null)
   const trustCards = [

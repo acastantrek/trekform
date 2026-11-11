@@ -14,6 +14,8 @@ export interface RegistrationSession {
   accreditationItems: string | null
   benefitsItems: string | null
   isOfficialCertification: boolean
+  isFundaeEligible: boolean
+  isFeatured: boolean
   image: string
   city: string
   province: string
@@ -51,6 +53,8 @@ interface CourseRow {
   accreditation_items: string | null
   benefits_items: string | null
   is_official_certification: boolean | null
+  is_fundae_eligible: boolean | null
+  is_featured: boolean | null
   modality: string | null
   duration_hours: number | null
   image_url: string | null
@@ -112,7 +116,7 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
     client
       .from('courses')
       .select(
-        'id, slug, title, excerpt, objectives, accreditation_title, accreditation_items, benefits_items, is_official_certification, modality, duration_hours, image_url, category_id',
+        'id, slug, title, excerpt, objectives, accreditation_title, accreditation_items, benefits_items, is_official_certification, is_fundae_eligible, is_featured, modality, duration_hours, image_url, category_id',
       )
       .eq('status', 'published')
       .order('title', { ascending: true }),
@@ -167,6 +171,8 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
         accreditationItems: course.accreditation_items,
         benefitsItems: course.benefits_items,
         isOfficialCertification: course.is_official_certification ?? false,
+        isFundaeEligible: course.is_fundae_eligible ?? false,
+        isFeatured: course.is_featured ?? false,
         image: course.image_url ?? fallbackImage,
         city,
         province,
