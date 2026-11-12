@@ -14,6 +14,7 @@ import { BlogPostFormPage } from './pages/blog/BlogPostFormPage'
 import { BlogCategoriesPage } from './pages/blog/BlogCategoriesPage'
 import { EnrollmentsPage } from './pages/enrollments/EnrollmentsPage'
 import { UsersPage } from './pages/users/UsersPage'
+import { DashboardPage } from './pages/dashboard/DashboardPage'
 
 export function PanelApp() {
   return (
@@ -25,7 +26,7 @@ export function PanelApp() {
 
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
-              <Route index element={<Navigate to="/panel/cursos" replace />} />
+              <Route index element={<DashboardPage />} />
               <Route path="cursos" element={<CoursesPage />} />
               <Route path="cursos/nuevo" element={<CourseFormPage />} />
               <Route path="cursos/:id" element={<CourseFormPage />} />
@@ -40,7 +41,7 @@ export function PanelApp() {
             </Route>
           </Route>
 
-          <Route path="*" element={<Navigate to="/panel/cursos" replace />} />
+          <Route path="*" element={<Navigate to="/panel" replace />} />
         </Routes>
       </AuthProvider>
     </div>

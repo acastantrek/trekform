@@ -10,7 +10,7 @@ export function LoginPage() {
   const [error, setError] = useState<string | null>(null)
 
   if (!loading && session && isAdmin) {
-    return <Navigate to="/panel/cursos" replace />
+    return <Navigate to="/panel" replace />
   }
 
   async function handleSubmit(event: FormEvent) {

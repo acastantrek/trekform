@@ -4,6 +4,7 @@ import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/useAuth'
 
 const links = [
+  { label: 'Inicio', to: '/panel', end: true },
   { label: 'Cursos', to: '/panel/cursos' },
   { label: 'Categorías', to: '/panel/categorias' },
   { label: 'Convocatorias', to: '/panel/convocatorias' },
@@ -63,7 +64,7 @@ export function AppLayout() {
         </div>
         <nav className="sidebar-nav">
           {links.map((link) => (
-            <NavLink key={link.to} to={link.to}>
+            <NavLink key={link.to} to={link.to} end={'end' in link ? link.end : undefined}>
               {link.label}
             </NavLink>
           ))}

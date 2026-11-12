@@ -12,7 +12,7 @@ export function SetPasswordPage() {
   const [done, setDone] = useState(false)
 
   if (done) {
-    return <Navigate to="/panel/cursos" replace />
+    return <Navigate to="/panel" replace />
   }
 
   if (!loading && !session) {
