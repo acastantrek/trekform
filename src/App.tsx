@@ -3,28 +3,62 @@ import { Outlet, Route, Routes } from 'react-router-dom'
 import { RouteScrollToTop } from './components/common/RouteScrollToTop'
 import { StaticFooter } from './components/layout/StaticFooter'
 import { StaticHeader } from './components/layout/StaticHeader'
-import { AboutPage } from './pages/AboutPage'
-import { BlogPage, BlogPostPage } from './pages/BlogPage'
-import { CoursesPage } from './pages/CoursesPage'
-import { ContactPage } from './pages/ContactPage'
-import { CourseDetailPage } from './pages/CourseDetailPage'
-import { CookiesPolicyPage } from './pages/CookiesPolicyPage'
 import { HomePage } from './pages/HomePage'
-import { LegalNoticePage } from './pages/LegalNoticePage'
 import { NotFoundPage } from './pages/NotFoundPage'
-import { PrivacyPolicyPage } from './pages/PrivacyPolicyPage'
-import { RegistrationPage } from './pages/RegistrationPage'
 
+// Home and 404 stay in the main bundle; every other page is split into its own
+// chunk so the first load only ships what the landing page needs.
+const AboutPage = lazy(() =>
+  import('./pages/AboutPage').then((m) => ({ default: m.AboutPage })),
+)
+const BlogPage = lazy(() =>
+  import('./pages/BlogPage').then((m) => ({ default: m.BlogPage })),
+)
+const BlogPostPage = lazy(() =>
+  import('./pages/BlogPage').then((m) => ({ default: m.BlogPostPage })),
+)
+const CoursesPage = lazy(() =>
+  import('./pages/CoursesPage').then((m) => ({ default: m.CoursesPage })),
+)
+const ContactPage = lazy(() =>
+  import('./pages/ContactPage').then((m) => ({ default: m.ContactPage })),
+)
+const CourseDetailPage = lazy(() =>
+  import('./pages/CourseDetailPage').then((m) => ({ default: m.CourseDetailPage })),
+)
+const CookiesPolicyPage = lazy(() =>
+  import('./pages/CookiesPolicyPage').then((m) => ({ default: m.CookiesPolicyPage })),
+)
+const LegalNoticePage = lazy(() =>
+  import('./pages/LegalNoticePage').then((m) => ({ default: m.LegalNoticePage })),
+)
+const PrivacyPolicyPage = lazy(() =>
+  import('./pages/PrivacyPolicyPage').then((m) => ({ default: m.PrivacyPolicyPage })),
+)
+const RegistrationPage = lazy(() =>
+  import('./pages/RegistrationPage').then((m) => ({ default: m.RegistrationPage })),
+)
 const PanelApp = lazy(() =>
   import('./panel/PanelApp').then((module) => ({ default: module.PanelApp })),
 )
+
+function PageLoading({ label }: { label: string }) {
+  return (
+    <div className="course-detail-loading" role="status">
+      <span />
+      <p>{label}</p>
+    </div>
+  )
+}
 
 function PublicLayout() {
   return (
     <>
       <StaticHeader />
       <main>
-        <Outlet />
+        <Suspense fallback={<PageLoading label="Cargando…" />}>
+          <Outlet />
+        </Suspense>
       </main>
       <StaticFooter />
     </>
@@ -54,14 +88,7 @@ export default function App() {
         <Route
           path="/panel/*"
           element={
-            <Suspense
-              fallback={
-                <div className="course-detail-loading" role="status">
-                  <span />
-                  <p>Cargando panel…</p>
-                </div>
-              }
-            >
+            <Suspense fallback={<PageLoading label="Cargando panel…" />}>
               <PanelApp />
             </Suspense>
           }
