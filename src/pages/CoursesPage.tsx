@@ -63,11 +63,14 @@ function normalize(value: string) {
 
 function getCourseMeta(course: Course) {
   const durationHours = course.durationHours ?? 0
-  const duration = Number.isInteger(durationHours)
-    ? `${durationHours} h`
-    : `${durationHours.toFixed(1)} h`
+  // Hidden on the card when the course has no duration, rather than showing "0 h".
+  const duration = !durationHours
+    ? null
+    : Number.isInteger(durationHours)
+      ? `${durationHours} h`
+      : `${durationHours.toFixed(1)} h`
   const modality = modalityLabels[course.modality]
-  const certificate = course.accreditationTitle
+  const certificate = course.accreditationTitle?.trim() || null
   const officialCertification = course.isOfficialCertification
   const bonificable = course.isFundaeEligible
 
@@ -526,15 +529,19 @@ export function CoursesPage() {
                           <span>
                             <User /> {meta.modality}
                           </span>
-                          <span>
-                            <Clock3 /> {meta.duration}
-                          </span>
+                          {meta.duration ? (
+                            <span>
+                              <Clock3 /> {meta.duration}
+                            </span>
+                          ) : null}
                         </div>
-                        <div className="course-meta-row">
-                          <span>
-                            <Award /> {meta.certificate}
-                          </span>
-                        </div>
+                        {meta.certificate ? (
+                          <div className="course-meta-row">
+                            <span>
+                              <Award /> {meta.certificate}
+                            </span>
+                          </div>
+                        ) : null}
                         <div className="course-dates">
                           <small>Próx. fechas:</small>
                           {upcomingSessions.length > 0 ? (
