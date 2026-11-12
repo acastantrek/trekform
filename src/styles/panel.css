@@ -15,6 +15,7 @@
   --panel-positive: #1b8a5a;
   --panel-warning: #b8790b;
   --panel-radius: 8px;
+  --panel-topbar-height: 56px;
 
   min-height: 100vh;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter Tight', sans-serif;
@@ -141,6 +142,7 @@
 }
 
 .panel-app .main-content {
+  container: panel-main / inline-size;
   flex: 1;
   min-width: 0;
   padding: 32px 40px;
@@ -691,32 +693,59 @@
   margin-top: 8px;
 }
 
+@media (max-width: 1100px) {
+  .panel-app .sidebar {
+    width: 210px;
+  }
+
+  .panel-app .main-content {
+    padding: 28px 24px;
+  }
+}
+
 @media (max-width: 860px) {
   .panel-app .app-shell {
     flex-direction: column;
   }
 
   .panel-app .sidebar-toggle {
+    position: sticky;
+    top: 0;
+    z-index: 60;
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    padding: 14px 18px;
+    height: var(--panel-topbar-height);
+    padding: 0 18px;
     background: var(--navy);
     color: #fff;
     border: none;
     cursor: pointer;
   }
 
+  .panel-app .sidebar-toggle .sidebar-title {
+    padding: 0;
+  }
+
   .panel-app .sidebar-toggle svg {
     color: rgba(255, 255, 255, 0.85);
   }
 
+  /* The menu opens as a dropdown over the page instead of pushing it down. */
   .panel-app .sidebar {
+    position: fixed;
+    top: var(--panel-topbar-height);
+    left: 0;
+    right: 0;
+    z-index: 59;
     display: none;
     width: 100%;
+    max-height: calc(100vh - var(--panel-topbar-height));
+    overflow-y: auto;
     flex-direction: column;
     padding: 10px 14px 16px;
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
   }
 
   .panel-app .sidebar.is-open {
@@ -740,8 +769,10 @@
     min-width: 0;
   }
 
+  /* One column: fields already space themselves with margin-bottom. */
   .panel-app .form-grid {
     grid-template-columns: 1fr;
+    row-gap: 0;
   }
 
   .panel-app .markdown-field {
@@ -762,10 +793,183 @@
     align-items: stretch;
   }
 
+  .panel-app .filters-bar select,
   .panel-app .filters-bar .search-input {
     flex: none;
     min-width: 0;
     max-width: none;
     width: 100%;
+  }
+
+  .panel-app .form {
+    padding: 18px;
+  }
+}
+
+/*
+  Tables become one card per row when the content area (not the screen) is
+  under 720px — the table's min-width — so tablets with the sidebar open
+  don't need sideways scrolling either.
+*/
+@container panel-main (max-width: 720px) {
+  .panel-app .filters-bar > *,
+  .panel-app .filters-bar .search-input {
+    flex: 1 1 200px;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .panel-app .table-wrap {
+    overflow: visible;
+    background: none;
+    border: 0;
+  }
+
+  .panel-app .data-table,
+  .panel-app .data-table tbody,
+  .panel-app .data-table tr,
+  .panel-app .data-table td {
+    display: block;
+    width: auto;
+    min-width: 0;
+  }
+
+  .panel-app .data-table thead {
+    display: none;
+  }
+
+  /* Drop the desktop column widths (col-wide, col-actions…). */
+  .panel-app .data-table td[class] {
+    width: auto;
+  }
+
+  .panel-app .data-table tr {
+    margin-bottom: 12px;
+    padding: 6px 0;
+    background: #fff;
+    border: 1px solid var(--panel-border);
+    border-radius: var(--panel-radius);
+  }
+
+  .panel-app .data-table tbody tr:hover {
+    background: #fff;
+  }
+
+  .panel-app .data-table td {
+    display: grid;
+    grid-template-columns: minmax(90px, 35%) minmax(0, 1fr);
+    gap: 12px;
+    align-items: baseline;
+    padding: 8px 14px;
+    border-bottom: 0;
+  }
+
+  .panel-app .data-table td::before {
+    content: attr(data-label);
+    color: var(--panel-text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* First column is the row's title. */
+  .panel-app .data-table td:first-child {
+    display: block;
+    padding-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .panel-app .data-table td:first-child::before {
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .panel-app .data-table td.cell-actions {
+    display: block;
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid var(--panel-border);
+  }
+
+  .panel-app .data-table td.cell-actions::before {
+    display: none;
+  }
+
+  .panel-app .data-table .row-actions {
+    white-space: normal;
+  }
+
+  .panel-app .data-table .row-actions .btn-sm {
+    padding: 7px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .panel-app .main-content {
+    padding: 16px 14px 32px;
+  }
+
+  .panel-app h1 {
+    font-size: 21px;
+  }
+
+  .panel-app .form {
+    padding: 14px;
+  }
+
+  .panel-app .form-repeater-item {
+    padding: 12px 12px 0;
+  }
+
+  .panel-app .form-repeater-header {
+    flex-wrap: wrap;
+  }
+
+  .panel-app .form-actions,
+  .panel-app .modal-actions {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .panel-app .form-actions .btn,
+  .panel-app .modal-actions .btn {
+    justify-content: center;
+  }
+
+  .panel-app .modal-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .panel-app .modal-card,
+  .panel-app .modal-card--form {
+    max-width: none;
+    max-height: 92vh;
+    overflow-y: auto;
+    border-radius: 14px 14px 0 0;
+    padding: 20px 16px;
+  }
+
+  .panel-app .pagination {
+    gap: 10px;
+  }
+
+  .panel-app .checkbox-list {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-app .markdown-field textarea,
+  .panel-app .markdown-preview {
+    min-height: 300px;
+  }
+
+  .panel-app .login-page {
+    padding: 16px;
+  }
+
+  .panel-app .login-card {
+    padding: 28px 20px;
   }
 }

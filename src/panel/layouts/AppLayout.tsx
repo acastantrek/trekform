@@ -17,6 +17,7 @@ export function AppLayout() {
   const { profile, signOut } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
   const sidebarRef = useRef<HTMLElement>(null)
+  const toggleRef = useRef<HTMLButtonElement>(null)
   const location = useLocation()
   const [previousPathname, setPreviousPathname] = useState(location.pathname)
 
@@ -29,7 +30,10 @@ export function AppLayout() {
     if (!isOpen) return
 
     const handlePointerDown = (event: PointerEvent) => {
-      if (!sidebarRef.current?.contains(event.target as Node)) {
+      const target = event.target as Node
+      // The toggle handles its own clicks; treating it as "outside" would close
+      // the menu on pointerdown and reopen it on click.
+      if (!sidebarRef.current?.contains(target) && !toggleRef.current?.contains(target)) {
         setIsOpen(false)
       }
     }
@@ -41,6 +45,7 @@ export function AppLayout() {
   return (
     <div className="app-shell">
       <button
+        ref={toggleRef}
         type="button"
         className="sidebar-toggle"
         onClick={() => setIsOpen((value) => !value)}

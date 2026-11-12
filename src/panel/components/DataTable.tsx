@@ -13,6 +13,13 @@ interface DataTableProps<T> {
   emptyMessage?: string
 }
 
+// On narrow screens each row becomes a card (see panel.css): cells show their
+// header as a label via data-label, and the actions column spans the card.
+function cellClassName(className: string | undefined, header: string) {
+  const classes = [className, header === 'Acciones' ? 'cell-actions' : undefined]
+  return classes.filter(Boolean).join(' ') || undefined
+}
+
 export function DataTable<T>({
   columns,
   rows,
@@ -39,7 +46,11 @@ export function DataTable<T>({
           {rows.map((row) => (
             <tr key={rowKey(row)}>
               {columns.map((column) => (
-                <td key={column.header} className={column.className}>
+                <td
+                  key={column.header}
+                  className={cellClassName(column.className, column.header)}
+                  data-label={column.header}
+                >
                   {column.render(row)}
                 </td>
               ))}
