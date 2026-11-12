@@ -121,7 +121,7 @@ export function CategoriesPage() {
   }
 
   return (
-    <div>
+    <div className="list-page">
       <div className="page-header">
         <div>
           <h1>Categorías de cursos</h1>

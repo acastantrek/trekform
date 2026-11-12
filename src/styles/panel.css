@@ -73,7 +73,13 @@
   min-height: 100vh;
 }
 
+/* Sticky, viewport-tall sidebar: the user name and "Cerrar sesión" stay visible while the page scrolls. */
 .panel-app .sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
   width: 240px;
   flex-shrink: 0;
   background: var(--navy);
@@ -122,19 +128,94 @@
 }
 
 .panel-app .sidebar-footer {
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .panel-app .sidebar-user {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.6);
-  padding: 0 10px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: var(--panel-radius);
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.panel-app .sidebar-footer button {
+.panel-app .sidebar-user__avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--orange);
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.panel-app .sidebar-user__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.panel-app .sidebar-user__name {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.panel-app .sidebar-user__role {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.panel-app .sidebar-user__role svg {
+  color: var(--orange);
+}
+
+.panel-app .sidebar-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--panel-radius);
+  background: transparent;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.panel-app .sidebar-logout:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+}
+
+.panel-app .sidebar-logout:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
 }
 
 .panel-app .sidebar-toggle {
@@ -298,17 +379,113 @@
   flex-wrap: wrap;
 }
 
+/*
+  List pages (.list-page): the header, filters and pagination stay in view and
+  only the table scrolls, with its column headers pinned. The main area is
+  sized to the viewport so the page itself doesn't scroll.
+*/
+.panel-app .main-content:has(> .list-page) {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.panel-app .list-page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.panel-app .list-page > * {
+  flex-shrink: 0;
+}
+
+.panel-app .list-page > .table-wrap {
+  flex: 0 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.panel-app .list-page .data-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #fff;
+  box-shadow: inset 0 -1px 0 var(--panel-border);
+}
+
+.panel-app .invite-hint {
+  margin: -4px 0 12px;
+}
+
 .panel-app .pagination {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin: 0 0 16px;
+  justify-content: flex-end;
+  gap: 2px;
+  margin: 0 0 12px;
+}
+
+/* Inside the filters row (like a mail toolbar): pushed to the right edge. */
+.panel-app .filters-bar .pagination {
+  flex: none;
+  margin: 0 0 0 auto;
 }
 
 .panel-app .pagination-status {
+  margin: 0 10px 0 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f2f1ec;
   font-size: 13px;
   color: var(--panel-text-muted);
+  white-space: nowrap;
+}
+
+.panel-app .pagination-status strong {
+  font-weight: 600;
+  color: var(--panel-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-app .pagination-arrow {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--panel-text);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.panel-app .pagination-arrow:hover:not(:disabled) {
+  background: var(--orange);
+  color: var(--navy);
+}
+
+.panel-app .pagination-arrow:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.panel-app .pagination-arrow:disabled {
+  color: #c9c8c2;
+  cursor: default;
+}
+
+.panel-app .pagination-arrow:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 1px;
 }
 
 .panel-app .empty-state {
@@ -741,6 +918,7 @@
     z-index: 59;
     display: none;
     width: 100%;
+    height: auto;
     max-height: calc(100vh - var(--panel-topbar-height));
     overflow-y: auto;
     flex-direction: column;
@@ -760,13 +938,15 @@
     flex-direction: column;
   }
 
-  .panel-app .sidebar-footer {
-    display: block;
-  }
-
   .panel-app .main-content {
     padding: 20px;
     min-width: 0;
+  }
+
+  /* Column layout: flex: 1 would override the height, so size it explicitly. */
+  .panel-app .main-content:has(> .list-page) {
+    flex: none;
+    height: calc(100dvh - var(--panel-topbar-height));
   }
 
   /* One column: fields already space themselves with margin-bottom. */
@@ -786,11 +966,6 @@
   .panel-app .page-header .btn {
     width: 100%;
     justify-content: center;
-  }
-
-  .panel-app .filters-bar {
-    flex-direction: column;
-    align-items: stretch;
   }
 
   .panel-app .filters-bar select,
@@ -952,10 +1127,6 @@
     padding: 20px 16px;
   }
 
-  .panel-app .pagination {
-    gap: 10px;
-  }
-
   .panel-app .checkbox-list {
     grid-template-columns: 1fr;
   }
@@ -971,5 +1142,20 @@
 
   .panel-app .login-card {
     padding: 28px 20px;
+  }
+}
+
+/* Kept last so it overrides the desktop and mobile list-page heights. */
+/* Too short to split the screen: fall back to normal page scrolling. */
+@media (max-height: 560px) {
+  .panel-app .main-content:has(> .list-page) {
+    flex: 1;
+    height: auto;
+    overflow: visible;
+  }
+
+  .panel-app .list-page > .table-wrap {
+    overflow: visible;
+    overflow-x: auto;
   }
 }

@@ -83,7 +83,7 @@ export function BlogPostsPage() {
   const paginatedPosts = filteredPosts.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   return (
-    <div>
+    <div className="list-page">
       <div className="page-header">
         <div>
           <h1>Blog</h1>
@@ -121,10 +121,18 @@ export function BlogPostsPage() {
             setPage(1)
           }}
         />
+        {!loading && (
+          <Pagination
+            page={currentPage}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            totalItems={filteredPosts.length}
+            pageSize={PAGE_SIZE}
+          />
+        )}
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
-      {!loading && <Pagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />}
       {loading ? (
         <p>Cargando…</p>
       ) : (

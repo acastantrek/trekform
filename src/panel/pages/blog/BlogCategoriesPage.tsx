@@ -114,7 +114,7 @@ export function BlogCategoriesPage() {
   }
 
   return (
-    <div>
+    <div className="list-page">
       <div className="page-header">
         <div>
           <h1>Categorías del blog</h1>

@@ -90,7 +90,7 @@ export function CoursesPage() {
   )
 
   return (
-    <div>
+    <div className="list-page">
       <div className="page-header">
         <div>
           <h1>Cursos</h1>
@@ -128,10 +128,18 @@ export function CoursesPage() {
             setPage(1)
           }}
         />
+        {!loading && (
+          <Pagination
+            page={currentPage}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            totalItems={filteredCourses.length}
+            pageSize={PAGE_SIZE}
+          />
+        )}
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
-      {!loading && <Pagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />}
       {loading ? (
         <p>Cargando…</p>
       ) : (

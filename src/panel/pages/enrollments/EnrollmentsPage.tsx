@@ -74,7 +74,7 @@ export function EnrollmentsPage() {
   }
 
   return (
-    <div>
+    <div className="list-page">
       <div className="page-header">
         <div>
           <h1>Inscripciones</h1>

@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useEffect, useRef, type ReactNode } from 'react'
 
 export interface DataTableColumn<T> {
   header: string
@@ -26,12 +26,22 @@ export function DataTable<T>({
   rowKey,
   emptyMessage = 'No hay elementos todavía.',
 }: DataTableProps<T>) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+
+  // The table scrolls on its own (see .list-page): start at the top when a different
+  // set of rows is shown (new page, filter or search). Keyed on the row ids, not the
+  // array, so editing a row in place (status, role…) doesn't jump back to the top.
+  const rowsSignature = rows.map(rowKey).join('|')
+  useEffect(() => {
+    wrapRef.current?.scrollTo({ top: 0 })
+  }, [rowsSignature])
+
   if (!rows.length) {
     return <p className="empty-state">{emptyMessage}</p>
   }
 
   return (
-    <div className="table-wrap">
+    <div className="table-wrap" ref={wrapRef}>
       <table className="data-table">
         <thead>
           <tr>

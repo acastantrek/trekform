@@ -228,7 +228,7 @@ export function SessionsPage() {
   }
 
   return (
-    <div>
+    <div className="list-page">
       <div className="page-header">
         <div>
           <h1>Convocatorias</h1>
@@ -280,10 +280,18 @@ export function SessionsPage() {
             setPage(1)
           }}
         />
+        {!loading && (
+          <Pagination
+            page={currentPage}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            totalItems={filteredSessions.length}
+            pageSize={PAGE_SIZE}
+          />
+        )}
       </div>
 
       {error && <div className="alert alert-error">{error}</div>}
-      {!loading && <Pagination page={currentPage} totalPages={totalPages} onPageChange={setPage} />}
       {loading ? (
         <p>Cargando…</p>
       ) : (

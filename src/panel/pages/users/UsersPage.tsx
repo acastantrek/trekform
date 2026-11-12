@@ -1,3 +1,4 @@
+import { UserPlus } from 'lucide-react'
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { DataTable } from '../../components/DataTable'
 import { FormField } from '../../components/FormField'
@@ -30,6 +31,18 @@ export function UsersPage() {
   const [inviting, setInviting] = useState(false)
   const [inviteError, setInviteError] = useState<string | null>(null)
   const [inviteSuccess, setInviteSuccess] = useState<string | null>(null)
+  const [isInviteOpen, setIsInviteOpen] = useState(false)
+
+  function openInvite() {
+    setInviteForm(emptyInviteForm)
+    setInviteError(null)
+    setInviteSuccess(null)
+    setIsInviteOpen(true)
+  }
+
+  function closeInvite() {
+    setIsInviteOpen(false)
+  }
 
   async function reload() {
     try {
@@ -63,6 +76,7 @@ export function UsersPage() {
       await inviteAdminUser(inviteForm)
       setInviteSuccess(`Invitación enviada a ${inviteForm.email}.`)
       setInviteForm(emptyInviteForm)
+      setIsInviteOpen(false)
       await reload()
     } catch (cause) {
       setInviteError(cause instanceof Error ? cause.message : 'No se pudo enviar la invitación.')
@@ -105,60 +119,18 @@ export function UsersPage() {
   }
 
   return (
-    <div>
+    <div className="list-page">
       <div className="page-header">
         <div>
           <h1>Usuarios</h1>
           <p>Gestiona quién tiene acceso de administrador al panel.</p>
         </div>
+        <button type="button" className="btn btn-primary" onClick={openInvite}>
+          <UserPlus size={16} /> Invitar administrador
+        </button>
       </div>
 
-      <form className="form" onSubmit={handleInvite} style={{ marginBottom: 24 }}>
-        <h2>Invitar administrador</h2>
-        <p className="form-field-hint" style={{ marginTop: -4, marginBottom: 12 }}>
-          Se enviará un email de invitación para que la persona establezca su propia contraseña.
-        </p>
-        {inviteError && <div className="alert alert-error">{inviteError}</div>}
-        {inviteSuccess && <div className="alert alert-success">{inviteSuccess}</div>}
-
-        <div className="form-grid">
-          <FormField label="Nombre" htmlFor="invite-first-name">
-            <input
-              id="invite-first-name"
-              value={inviteForm.firstName}
-              onChange={(event) =>
-                setInviteForm((prev) => ({ ...prev, firstName: event.target.value }))
-              }
-            />
-          </FormField>
-          <FormField label="Apellidos" htmlFor="invite-last-name">
-            <input
-              id="invite-last-name"
-              value={inviteForm.lastName}
-              onChange={(event) =>
-                setInviteForm((prev) => ({ ...prev, lastName: event.target.value }))
-              }
-            />
-          </FormField>
-          <FormField label="Email" htmlFor="invite-email">
-            <input
-              id="invite-email"
-              type="email"
-              required
-              value={inviteForm.email}
-              onChange={(event) =>
-                setInviteForm((prev) => ({ ...prev, email: event.target.value }))
-              }
-            />
-          </FormField>
-        </div>
-
-        <div className="form-actions">
-          <button type="submit" className="btn btn-primary" disabled={inviting}>
-            {inviting ? 'Enviando…' : 'Enviar invitación'}
-          </button>
-        </div>
-      </form>
+      {inviteSuccess && <div className="alert alert-success">{inviteSuccess}</div>}
 
       <div className="filters-bar">
         <input
@@ -222,6 +194,68 @@ export function UsersPage() {
             },
           ]}
         />
+      )}
+
+      {isInviteOpen && (
+        <div className="modal-overlay" onClick={closeInvite}>
+          <div
+            className="modal-card modal-card--form"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="invite-modal-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <form className="form" onSubmit={handleInvite}>
+              <h2 id="invite-modal-title">Invitar administrador</h2>
+              <p className="form-field-hint invite-hint">
+                Se enviará un email de invitación para que la persona establezca su propia
+                contraseña.
+              </p>
+              {inviteError && <div className="alert alert-error">{inviteError}</div>}
+
+              <div className="form-grid">
+                <FormField label="Nombre" htmlFor="invite-first-name">
+                  <input
+                    id="invite-first-name"
+                    value={inviteForm.firstName}
+                    onChange={(event) =>
+                      setInviteForm((prev) => ({ ...prev, firstName: event.target.value }))
+                    }
+                  />
+                </FormField>
+                <FormField label="Apellidos" htmlFor="invite-last-name">
+                  <input
+                    id="invite-last-name"
+                    value={inviteForm.lastName}
+                    onChange={(event) =>
+                      setInviteForm((prev) => ({ ...prev, lastName: event.target.value }))
+                    }
+                  />
+                </FormField>
+                <FormField label="Email" htmlFor="invite-email">
+                  <input
+                    id="invite-email"
+                    type="email"
+                    required
+                    value={inviteForm.email}
+                    onChange={(event) =>
+                      setInviteForm((prev) => ({ ...prev, email: event.target.value }))
+                    }
+                  />
+                </FormField>
+              </div>
+
+              <div className="form-actions">
+                <button type="submit" className="btn btn-primary" disabled={inviting}>
+                  {inviting ? 'Enviando…' : 'Enviar invitación'}
+                </button>
+                <button type="button" className="btn btn-secondary" onClick={closeInvite}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
       )}
     </div>
   )
