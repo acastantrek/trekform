@@ -1,0 +1,190 @@
+.cookie-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 20px;
+  z-index: 900;
+  width: min(960px, calc(100% - 32px));
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 24px;
+  padding: 22px 24px;
+  border-radius: 18px;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+  animation: cookie-banner-in 0.35s ease-out;
+}
+
+@keyframes cookie-banner-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 16px);
+  }
+}
+
+.cookie-banner__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.cookie-banner h2 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.cookie-banner h2 svg {
+  color: var(--accent);
+}
+
+.cookie-banner p {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.cookie-banner a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.cookie-banner__categories {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cookie-banner__categories label {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+}
+
+.cookie-banner__categories input {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.cookie-banner__categories input:disabled {
+  cursor: not-allowed;
+}
+
+.cookie-banner__categories strong {
+  display: block;
+  margin-bottom: 2px;
+  color: #fff;
+}
+
+.cookie-banner__categories em {
+  font-style: normal;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cookie-banner__actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+/* Accept and reject share the same style on purpose: rejecting must be as easy as accepting. */
+.cookie-banner__btn {
+  padding: 11px 20px;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--navy);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    filter 0.15s,
+    background 0.15s;
+}
+
+.cookie-banner__btn:hover {
+  filter: brightness(1.08);
+}
+
+.cookie-banner__btn--ghost {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: transparent;
+  color: #fff;
+}
+
+.cookie-banner__btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cookie-banner__btn:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.footer-cookie-settings {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition: color 0.22s ease;
+}
+
+/* Same hover as the other footer-bottom links (see .footer-bottom a:hover). */
+.footer-cookie-settings:hover {
+  color: var(--accent);
+}
+
+/* Mobile footer: legal links on one line, cookie links on the next. */
+@media (max-width: 900px) {
+  .footer-legal {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .footer-legal__sep {
+    display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .cookie-banner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    bottom: 16px;
+    padding: 18px;
+  }
+
+  .cookie-banner__actions {
+    flex-wrap: wrap;
+  }
+
+  .cookie-banner__btn {
+    flex: 1 1 0;
+  }
+}

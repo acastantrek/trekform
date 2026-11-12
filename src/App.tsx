@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { Outlet, Route, Routes } from 'react-router-dom'
+import { CookieBanner } from './components/common/CookieBanner'
 import { RouteScrollToTop } from './components/common/RouteScrollToTop'
 import { StaticFooter } from './components/layout/StaticFooter'
 import { StaticHeader } from './components/layout/StaticHeader'
@@ -8,12 +9,8 @@ import { NotFoundPage } from './pages/NotFoundPage'
 
 // Home and 404 stay in the main bundle; every other page is split into its own
 // chunk so the first load only ships what the landing page needs.
-const AboutPage = lazy(() =>
-  import('./pages/AboutPage').then((m) => ({ default: m.AboutPage })),
-)
-const BlogPage = lazy(() =>
-  import('./pages/BlogPage').then((m) => ({ default: m.BlogPage })),
-)
+const AboutPage = lazy(() => import('./pages/AboutPage').then((m) => ({ default: m.AboutPage })))
+const BlogPage = lazy(() => import('./pages/BlogPage').then((m) => ({ default: m.BlogPage })))
 const BlogPostPage = lazy(() =>
   import('./pages/BlogPage').then((m) => ({ default: m.BlogPostPage })),
 )
@@ -61,6 +58,7 @@ function PublicLayout() {
         </Suspense>
       </main>
       <StaticFooter />
+      <CookieBanner />
     </>
   )
 }

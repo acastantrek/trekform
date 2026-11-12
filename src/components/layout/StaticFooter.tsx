@@ -1,5 +1,6 @@
 ﻿import { Mail, MapPin, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { openCookieSettings } from '../../lib/cookieConsent'
 import { TrekformLogo } from '../common/TrekformLogo'
 import {
   FacebookIcon,
@@ -82,10 +83,18 @@ export function StaticFooter() {
         <span>
           © Copyright 2025 by <Link to="/">Trekform.com</Link>
         </span>
-        <span>
-          <Link to="/aviso-legal">Aviso legal</Link> ·{' '}
-          <Link to="/politica-de-privacidad">Política de privacidad</Link> ·{' '}
-          <Link to="/politica-de-cookies">Política de cookies</Link>
+        <span className="footer-legal">
+          <span>
+            <Link to="/aviso-legal">Aviso legal</Link> ·{' '}
+            <Link to="/politica-de-privacidad">Política de privacidad</Link>
+          </span>
+          <span className="footer-legal__sep"> · </span>
+          <span>
+            <Link to="/politica-de-cookies">Política de cookies</Link> ·{' '}
+            <button type="button" className="footer-cookie-settings" onClick={openCookieSettings}>
+              Configurar cookies
+            </button>
+          </span>
         </span>
       </div>
     </footer>

@@ -13,6 +13,7 @@
 @import './course-detail-page.css';
 @import './enrollment-modal.css';
 @import './legal-page.css';
+@import './cookie-banner.css';
 
 :where(body, button, input, select, textarea) {
   font-family: 'Inter Tight', sans-serif;
