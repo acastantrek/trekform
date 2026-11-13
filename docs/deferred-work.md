@@ -113,73 +113,97 @@ Hace falta: cuenta de Stripe y decidir cómo se gestionan las facturas.
 
 ## SEO: no perder posicionamiento al sustituir trekform.com
 
-**Bloquea el lanzamiento.** Si la web nueva se publica tal cual en `trekform.com`, Google encontrará las
-URLs antiguas sin destino y todas las páginas con el mismo título. Revisado el 2026-11-12.
+**Bloquea el lanzamiento.** Plan acordado el 2026-11-13; sustituye a la revisión del 2026-11-12.
 
-Lo que hay que conservar: cada URL indexada debe seguir existiendo o redirigir con un 301 a su equivalente
-(nunca a la portada), y cada página debe mantener el título, la descripción y el contenido que la hacían
-posicionar. Mismo dominio, sin cambiarlo.
+Principio: **conservar las mismas URLs siempre que se pueda** en lugar de redirigir. Una URL que sigue
+igual, con el mismo contenido, no pierde nada; un 301 pierde poco, pero añade riesgo y tarda semanas en
+consolidarse. Mismo dominio, sin cambiarlo. Cada URL que no se conserve redirige con un 301 a su
+equivalente, nunca a la portada.
 
-### 1. Redirecciones 301
+Situación de partida (sitemap del 2026-11-09): 1.163 URLs. Nuestras rutas no coinciden con las de
+producción. Hoy todas las páginas usan el `<title>` y la `description` fijos de `index.html`, la web es una
+SPA sin prerenderizar (el buscador recibe un `<div id="root">` vacío), no hay `robots.txt` ni
+`sitemap.xml`, y una ruta desconocida muestra `NotFoundPage` pero `vercel.json` la sirve con código 200
+(falso 404).
 
-Las URLs de producción no coinciden con las nuestras. Datos del sitemap del 2026-11-09.
+### Fase 0: inventario de la web actual
+
+Todo lo demás depende de esto.
+
+1. Rastrear trekform.com: todas las URLs del sitemap y las enlazadas fuera de él. Para cada una, guardar
+   código HTTP, `title`, `meta description`, H1, `canonical`, texto principal y `alt` de las imágenes.
+2. Exportar de Google Search Console los últimos 16 meses: páginas con clics e impresiones, consultas
+   principales y enlaces externos.
+3. Guardar las posiciones de partida de las 20-30 palabras clave principales (por ejemplo "curso
+   carretillero Madrid", "curso PRL") para comparar tras el lanzamiento.
+
+Resultado: una tabla URL → tráfico → metadatos → decisión.
+
+### Fase 1: decidir el destino de cada URL
 
 - **Cursos (52):** producción usa `/cursos-trekform/{categoria}/{curso}` y nosotros
-  `/cursos-trekform/{curso}`. Solo 15 de los 52 nombres de URL son iguales, así que la correspondencia debe
-  hacerse por título del curso, no por URL. Ojo con `/cursos-trekform/prevencion/181`, que es
-  `curso-de-prevencion-riesgos-electricos`.
-- **Categorías:** existen páginas como `/cursos-trekform/maquinaria-industrial`, que también necesitan destino.
-- **Landings por ciudad (unas 37):** por ejemplo `/curso-puente-grua-madrid`. Decidir si se recrean o se
-  redirigen a la ficha del curso.
-- **Blog (unas 1.050 URLs):** 927 en `/blog/…` y 126 en `/es/blog/…`. Sin comparar todavía con nuestros
-  artículos (en Supabase hay 18 publicados).
-- **Otras URLs:** el sitemap tiene 1.163 en total. Revisar las que no entren en los grupos anteriores.
+  `/cursos-trekform/{curso}`; solo 15 de los 52 nombres coinciden. Adoptar la estructura y los slugs de
+  producción: guardar la ruta antigua de cada curso en Supabase y usarla como URL principal, así no hace
+  falta ninguna redirección. La correspondencia se hace por título del curso, no por URL. Ojo con
+  `/cursos-trekform/prevencion/181`, que es `curso-de-prevencion-riesgos-electricos`.
+- **Categorías:** crear páginas de categoría reales en las mismas rutas (por ejemplo
+  `/cursos-trekform/maquinaria-industrial`), que sirvan a la vez de catálogo filtrado.
+- **Landings por ciudad (unas 37):** por ejemplo `/curso-puente-grua-madrid`. Recrear con la misma URL las
+  que tengan tráfico, con una plantilla curso + ciudad con contenido propio; las demás, 301 a la ficha del
+  curso.
+- **Blog (unas 1.050 URLs):** 927 en `/blog/…` y 126 en `/es/blog/…`; en Supabase hay 18 artículos
+  publicados. Es el mayor riesgo. Migrar con la misma URL los artículos con tráfico o enlaces externos;
+  agrupar el contenido flojo con 301 al artículo o curso más parecido; 410 para lo que no tenga valor
+  (etiquetas, paginaciones, duplicados). Las `/es/blog/…` redirigen a su versión en `/blog/…`.
+- **Resto:** páginas legales, contacto, quiénes somos… misma URL o 301 a su equivalente.
 
-Las redirecciones 301 se pueden definir en `redirects` de `vercel.json`, que Vercel aplica antes de la regla
-general que envía todo a la aplicación. Comprobar que `/cursos-trekform/{categoria}/{curso}` no quede
-atrapada por esa regla. Mantenerlas al menos un año.
+Confirmar también cómo resuelve producción `www`/sin `www`, la barra final y las mayúsculas, y copiarlo
+exactamente.
 
-Mejor fuente para priorizar: exportación de Google Search Console (Rendimiento → Páginas), que dice qué URLs
-tienen clics e impresiones. Las que tienen tráfico o enlaces externos van primero.
+### Fase 2: base técnica
 
-### 2. Falso 404
+1. **Prerenderizado:** generar en el build el HTML de cada ruta pública, incluidas las que salen de
+   Supabase (por ejemplo con `vite-react-ssg` o un script propio que lea los slugs), sin cambiar de
+   framework. Es la pieza más importante de esta fase.
+2. **Metadatos por página:** `<title>`, `<meta name="description">`, `<link rel="canonical">` y Open
+   Graph / Twitter, copiados de producción en las páginas que ya posicionan. React 19 permite ponerlos
+   dentro del componente de cada página, sin librerías. Datos estructurados JSON-LD: `Organization`,
+   `Course` en las fichas, `Article` en el blog y `BreadcrumbList`.
+3. **404 real:** las rutas desconocidas deben devolver código 404.
+4. **Redirecciones 301** en `redirects` de `vercel.json`, que Vercel aplica antes de la regla general.
+   Comprobar que las rutas antiguas no queden atrapadas por esa regla. Vercel limita el número de
+   redirecciones en ese archivo (confirmar el límite actual en su documentación); si el blog lo supera,
+   resolverlas con middleware.
+5. **`public/robots.txt` y `sitemap.xml`** generado en el build con todas las rutas públicas, cursos y
+   artículos publicados, enlazado desde `robots.txt`.
 
-Una ruta desconocida muestra `NotFoundPage` (`path="*"` en `src/App.tsx`), pero la regla general de
-`vercel.json` la sirve con código **200**. Google lo trata como un falso 404. Se resuelve con el
-prerenderizado del punto 4 (página 404 real) o devolviendo 404 desde Vercel para rutas no conocidas.
+### Fase 3: contenido equivalente
 
-### 3. Título y metadatos por página
+En las páginas con tráfico, mantener al menos el mismo H1, el texto de fondo, los enlaces internos y los
+`alt` de las imágenes: si una página que posiciona pierde texto, pierde posiciones. Incluye los pendientes
+de "Alinear el contenido de los cursos con producción" (metodologías, resúmenes de relleno, fichas PDF).
 
-Hoy todas las páginas usan el `<title>` y la `description` fijos de `index.html`. Falta en cada página
-pública (portada, catálogo, ficha de curso, blog, artículo, contacto…):
+### Fase 4: validación antes de publicar
 
-- `<title>` y `<meta name="description">` propios, copiando los de producción que ya posicionan. React 19
-  permite ponerlos directamente dentro del componente de cada página, sin librerías.
-- `<link rel="canonical">` con la URL definitiva.
-- Etiquetas Open Graph / Twitter para compartir en redes y WhatsApp.
-- Datos estructurados JSON-LD: `Organization`, `Course` en las fichas, `Article` en el blog y
-  `BreadcrumbList`.
+- Publicar en un entorno de pruebas de Vercel bloqueado con `noindex`.
+- Script que recorra la lista completa de URLs antiguas: cada una debe devolver 200 o un único 301 a su
+  equivalente, sin cadenas de redirecciones ni 404.
+- Comparar `title` y H1 de las páginas clave con el inventario.
+- Revisar Core Web Vitals con Lighthouse.
 
-Los títulos y descripciones de producción se pueden sacar en el mismo rastreo que las URLs.
+### Fase 5: lanzamiento y seguimiento
 
-### 4. Prerenderizado
+1. Publicar, asegurándose de que la versión publicada no lleva el `noindex` de pruebas. Repetir el script
+   de validación contra producción.
+2. Verificar `trekform.com` en Search Console (si no lo está), enviar el sitemap nuevo e inspeccionar a
+   mano las 20 URLs principales.
+3. Vigilar durante 4-8 semanas el informe de páginas (404, falsos 404, URLs excluidas) y las posiciones de
+   partida, y añadir las redirecciones que falten.
+4. Mantener las redirecciones al menos un año; en la práctica, indefinidamente.
 
-La web es una SPA: el HTML que recibe un buscador está vacío y el contenido se monta con JavaScript. Google
-lo procesa más tarde y peor; Bing y las vistas previas de redes ven una página en blanco. Generar en el
-build el HTML de cada ruta pública (por ejemplo con `vite-react-ssg` o un script de prerenderizado que lea
-los slugs de Supabase), sin cambiar a otro framework.
+### Hace falta
 
-### 5. `robots.txt` y `sitemap.xml`
-
-No existen. Crear `public/robots.txt` y un `sitemap.xml` generado en el build con todas las rutas
-públicas, cursos y artículos publicados (leídos de Supabase), y enlazarlo desde `robots.txt`.
-
-### 6. Al publicar
-
-1. Verificar `trekform.com` en Search Console (si no lo está) y enviar el sitemap nuevo.
-2. Vigilar durante 4-8 semanas el informe de páginas: errores 404, falsos 404 y caídas de posiciones, y
-   añadir las redirecciones que falten.
-3. Mantener el contenido equivalente al de producción (H1, texto de fondo y `alt` de imágenes) en las
-   páginas que más tráfico traen.
-
-Hace falta: acceso a Search Console de `trekform.com`, o permiso para rastrear la web actual y su sitemap.
+- Permiso para rastrear trekform.com (fase 0).
+- Acceso o exportación de Search Console de `trekform.com`.
+- Decidir cuántos artículos del blog se migran (con los datos de tráfico de la fase 0).
+- Decidir si las landings por ciudad se recrean o se redirigen.
