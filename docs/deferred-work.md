@@ -128,7 +128,8 @@ SPA sin prerenderizar (el buscador recibe un `<div id="root">` vacío), no hay `
 
 ### Fase 0: inventario de la web actual
 
-Todo lo demás depende de esto.
+Todo lo demás depende de esto. **Rastreo hecho el 2026-11-13**: resultados y hallazgos en
+`docs/seo/README.md`. Falta la exportación de Search Console (punto 2) y la foto de posiciones (punto 3).
 
 1. Rastrear trekform.com: todas las URLs del sitemap y las enlazadas fuera de él. Para cada una, guardar
    código HTTP, `title`, `meta description`, H1, `canonical`, texto principal y `alt` de las imágenes.
