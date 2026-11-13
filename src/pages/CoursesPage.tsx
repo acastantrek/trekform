@@ -77,8 +77,6 @@ function getCourseMeta(course: Course) {
   return { duration, durationHours, modality, certificate, officialCertification, bonificable }
 }
 
-const cardDateFormatter = new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short' })
-
 function matchesDurationFilter(filter: string, hours: number) {
   switch (filter) {
     case 'Hasta 4 horas':
@@ -125,9 +123,6 @@ export function CoursesPage() {
   const [nextSessionByCourseSlug, setNextSessionByCourseSlug] = useState<
     Map<string, RegistrationSession>
   >(new Map())
-  const [sessionsByCourseSlug, setSessionsByCourseSlug] = useState<
-    Map<string, RegistrationSession[]>
-  >(new Map())
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
   const [sessionsLoaded, setSessionsLoaded] = useState(false)
   const [noSessionsCourseTitle, setNoSessionsCourseTitle] = useState<string | null>(null)
@@ -142,22 +137,16 @@ export function CoursesPage() {
     getRegistrationSessions()
       .then((sessions) => {
         const nextOpenMap = new Map<string, RegistrationSession>()
-        const bySlugMap = new Map<string, RegistrationSession[]>()
         sessions.forEach((session) => {
           if (session.status === 'open' && !nextOpenMap.has(session.courseSlug)) {
             nextOpenMap.set(session.courseSlug, session)
           }
-          const list = bySlugMap.get(session.courseSlug) ?? []
-          list.push(session)
-          bySlugMap.set(session.courseSlug, list)
         })
         setNextSessionByCourseSlug(nextOpenMap)
-        setSessionsByCourseSlug(bySlugMap)
         setSessionsLoaded(true)
       })
       .catch(() => {
         setNextSessionByCourseSlug(new Map())
-        setSessionsByCourseSlug(new Map())
       })
   }, [])
 
@@ -504,7 +493,6 @@ export function CoursesPage() {
                 {visibleCourses.map((course, index) => {
                   const absoluteIndex = (page - 1) * pageSize + index
                   const meta = courseMetaById.get(course.id)!
-                  const upcomingSessions = (sessionsByCourseSlug.get(course.slug) ?? []).slice(0, 3)
 
                   return (
                     <article className="catalog-card" key={course.id}>
@@ -542,18 +530,6 @@ export function CoursesPage() {
                             </span>
                           </div>
                         ) : null}
-                        <div className="course-dates">
-                          <small>Próx. fechas:</small>
-                          {upcomingSessions.length > 0 ? (
-                            upcomingSessions.map((session) => (
-                              <span key={session.id}>
-                                {cardDateFormatter.format(new Date(session.startsAt))}
-                              </span>
-                            ))
-                          ) : (
-                            <span>Próximamente</span>
-                          )}
-                        </div>
                         <div className="catalog-card-actions">
                           <Link to={`/cursos-trekform/${course.slug}`}>Ver detalles</Link>
                           {nextSessionByCourseSlug.has(course.slug) ? (
