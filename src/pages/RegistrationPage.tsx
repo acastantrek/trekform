@@ -74,13 +74,21 @@ function matchesDurationFilter(filter: string, hours: number | null) {
   }
 }
 
+// "Últimas plazas" once free seats drop to this share of the capacity or less.
+const lastSeatsShare = 0.4
+
 function getSessionUrgency(session: RegistrationSession) {
+  // Also covers open sessions with no free seats left (see getRegistrationSessions).
   if (session.status === 'full') return 'full'
 
   const daysUntilStart =
     (new Date(session.startsAt).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+  const fewSeatsLeft =
+    session.capacity !== null &&
+    session.seatsRemaining !== null &&
+    session.seatsRemaining <= session.capacity * lastSeatsShare
 
-  if (daysUntilStart <= 4 || (session.capacity ?? 99) <= 8) return 'last'
+  if (daysUntilStart <= 4 || fewSeatsLeft) return 'last'
 
   return 'open'
 }

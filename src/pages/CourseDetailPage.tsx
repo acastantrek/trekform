@@ -1,4 +1,4 @@
-﻿import {
+import {
   ArrowLeft,
   ArrowRight,
   Award,
@@ -140,6 +140,7 @@ function toRegistrationSession(course: CourseDetail, session: CourseSession): Re
     modality: getModalityLabel(course.modality),
     durationHours: course.durationMinutes ? course.durationMinutes / 60 : null,
     capacity: session.capacity,
+    seatsRemaining: session.seatsRemaining,
     priceCents: session.priceCents,
     status: session.status,
   }
