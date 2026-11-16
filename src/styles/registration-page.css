@@ -1,4 +1,4 @@
-﻿.registration-page {
+.registration-page {
   background: #f6f4ef;
   color: var(--navy);
 }
@@ -16,7 +16,6 @@
 
 .registration-toolbar-submit,
 .registration-company-cta a,
-.registration-session-actions a,
 .registration-session-actions button {
   min-height: 54px;
   padding: 0 24px;
@@ -30,8 +29,7 @@
   text-align: center;
 }
 
-.registration-toolbar-submit,
-.registration-session-actions a {
+.registration-toolbar-submit {
   background: var(--accent);
   color: var(--navy);
 }
@@ -394,18 +392,10 @@
   margin-top: 22px;
   padding: 0 16px;
   display: grid;
-  grid-template-columns: 150px minmax(0, 1fr) 190px 150px 140px;
+  grid-template-columns: minmax(0, 1fr) 190px 150px 140px;
   gap: 16px;
   color: #8a8a85;
   font-size: 13px;
-}
-
-.registration-results-headers span:nth-child(1) {
-  grid-column: 1 / 3;
-}
-
-.registration-results-headers span:nth-child(2) {
-  grid-column: 3;
 }
 
 .registration-session-list {
@@ -417,41 +407,9 @@
 .registration-session-card {
   padding: 16px;
   display: grid;
-  grid-template-columns: 150px minmax(0, 1fr) 190px 150px 140px;
+  grid-template-columns: minmax(0, 1fr) 190px 150px 140px;
   gap: 16px;
   align-items: center;
-}
-
-.registration-session-image {
-  position: relative;
-  overflow: hidden;
-  height: 118px;
-  border-radius: 8px;
-  background: var(--navy);
-}
-
-.registration-session-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.registration-session-image span {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  min-height: 24px;
-  padding: 0 8px;
-  border-radius: 4px;
-  background: rgba(46, 46, 46, 0.82);
-  color: var(--accent);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  font-weight: 900;
-  text-transform: uppercase;
 }
 
 .registration-session-course h3 {
@@ -461,10 +419,20 @@
   line-height: 1.15;
 }
 
-.registration-session-title > p {
-  margin: 4px 0 0;
-  color: #8a8a85;
-  font-size: 13px;
+.registration-session-course h3 a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.registration-session-course h3 a:hover {
+  color: #b5790c;
+}
+
+.registration-session-course h3 a:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .registration-session-meta {
@@ -475,7 +443,6 @@
 }
 
 .registration-session-meta span,
-.registration-session-certificate,
 .registration-session-details span,
 .registration-session-details strong,
 .registration-session-details small {
@@ -484,10 +451,6 @@
   gap: 6px;
   color: #626262;
   font-size: 13px;
-}
-
-.registration-session-certificate {
-  margin-top: 8px;
 }
 
 .registration-session-details {
@@ -563,12 +526,6 @@
 .registration-session-actions {
   display: grid;
   gap: 10px;
-}
-
-.registration-session-actions a:first-child {
-  border: 1px solid #ddd3c2;
-  background: #fff;
-  color: var(--navy);
 }
 
 .registration-session-actions button:not(:disabled) {
@@ -778,6 +735,78 @@
   line-height: 1;
 }
 
+/* Wide screens: each session is a single compact row, aligned with the column headers:
+   course | location | date + time | status | button. */
+@media (min-width: 1121px) {
+  .registration-results-headers,
+  .registration-session-card {
+    grid-template-columns: minmax(0, 1fr) 190px 250px 115px 120px;
+  }
+
+  .registration-session-list {
+    gap: 8px;
+  }
+
+  .registration-session-card {
+    padding: 10px 16px;
+  }
+
+  /* Flatten the wrappers so the title and the location become grid columns of their own. */
+  .registration-session-course,
+  .registration-session-meta-block,
+  .registration-session-meta {
+    display: contents;
+  }
+
+  .registration-session-title,
+  .registration-session-meta span.registration-field-city {
+    min-width: 0;
+  }
+
+  .registration-session-course h3 {
+    overflow: hidden;
+    font-size: 15px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .registration-session-meta span.registration-field-city {
+    display: flex;
+  }
+
+  .registration-session-meta svg {
+    flex-shrink: 0;
+  }
+
+  .registration-session-meta .registration-field-text {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .registration-session-details {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
+  }
+
+  .registration-session-details strong {
+    font-size: 14px;
+  }
+
+  .registration-session-badges {
+    flex-direction: row;
+  }
+
+  .registration-session-actions button {
+    min-height: 38px;
+    padding: 0 16px;
+    font-size: 13px;
+  }
+}
+
 @media (max-width: 1340px) {
   .registration-toolbar {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -823,17 +852,11 @@
   }
 
   .registration-session-card {
-    grid-template-columns: 150px minmax(0, 1fr);
-  }
-
-  .registration-session-details,
-  .registration-session-badges,
-  .registration-session-actions {
-    grid-column: 2;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .registration-session-actions {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 240px);
   }
 }
 
@@ -1074,7 +1097,7 @@
   .registration-session-card {
     grid-template-columns: 1fr;
     grid-template-areas:
-      'image'
+      'title'
       'meta'
       'details'
       'actions';
@@ -1082,7 +1105,6 @@
     gap: 7px;
   }
 
-  .registration-session-image,
   .registration-session-course,
   .registration-session-details,
   .registration-session-badges,
@@ -1090,38 +1112,16 @@
     grid-column: auto;
   }
 
-  .registration-session-image {
-    grid-area: image;
-    height: 100px;
-  }
-
   .registration-session-course {
     display: contents;
   }
 
   .registration-session-title {
-    grid-area: image;
-    align-self: end;
-    z-index: 1;
-    padding: 18px 10px 7px;
-    border-radius: 0 0 6px 6px;
-    background: linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0.55) 45%,
-      rgba(0, 0, 0, 0.82) 100%
-    );
+    grid-area: title;
   }
 
   .registration-session-title h3 {
-    color: #fff;
-    font-size: 15px;
-  }
-
-  .registration-session-title > p {
-    color: rgba(255, 255, 255, 0.85);
-    margin-top: 2px;
-    font-size: 11px;
+    font-size: 16px;
   }
 
   .registration-session-meta-block {
@@ -1140,15 +1140,6 @@
     font-size: 11.5px;
   }
 
-  .registration-session-meta .registration-field-modality,
-  .registration-session-meta .registration-field-duration {
-    display: none;
-  }
-
-  .registration-session-meta-block .registration-session-certificate {
-    display: none;
-  }
-
   .registration-session-details {
     grid-area: details;
     display: flex;
@@ -1162,11 +1153,6 @@
 
   .registration-session-details span {
     font-size: 11.5px;
-  }
-
-  .registration-session-details .registration-field-venue,
-  .registration-session-details .registration-field-nextdates {
-    display: none;
   }
 
   .registration-session-badges {
@@ -1184,11 +1170,10 @@
 
   .registration-session-actions {
     grid-area: actions;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 8px;
   }
 
-  .registration-session-actions a,
   .registration-session-actions button {
     min-height: 36px;
     padding: 0 8px;

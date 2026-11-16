@@ -7,14 +7,12 @@
   ChevronDown,
   Clock3,
   Download,
-  FileCheck2,
   Grid3X3,
   MapPin,
   RotateCcw,
   Search,
   SlidersHorizontal,
   Star,
-  UserRound,
   Users,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
@@ -55,10 +53,6 @@ function getMonthLabel(dateString: string) {
   return toTitleCase(monthFormatter.format(new Date(dateString)))
 }
 
-function getDurationLabel(hours: number) {
-  return Number.isInteger(hours) ? `${hours} horas` : `${hours.toFixed(1)} horas`
-}
-
 function matchesDurationFilter(filter: string, hours: number | null) {
   if (hours === null) return filter === 'Consultar'
 
@@ -94,12 +88,6 @@ function formatSessionDate(dateString: string) {
 
 function formatSchedule(start: string, end: string) {
   return `${timeFormatter.format(new Date(start))} - ${timeFormatter.format(new Date(end))}`
-}
-
-const dayMonthFormatter = new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short' })
-
-function formatUpcomingDate(dateString: string) {
-  return dayMonthFormatter.format(new Date(dateString)).replace('.', '')
 }
 
 const certificationOptions = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
@@ -157,12 +145,9 @@ const otherSpanishProvinces = [
 
 const provinceOptions = ['Todas las provincias', 'Madrid', 'Barcelona', ...otherSpanishProvinces]
 
-function getSessionMeta(session: RegistrationSession, laterSessions: RegistrationSession[]) {
+function getSessionMeta(session: RegistrationSession) {
   return {
     bonificable: session.isFundaeEligible,
-    certificateLabel: session.accreditationTitle,
-    featured: session.isFeatured,
-    nextDates: laterSessions.slice(0, 2).map((item) => formatUpcomingDate(item.startsAt)),
   }
 }
 
@@ -188,13 +173,16 @@ export function RegistrationPage() {
   const isMobileFilters = useMediaQuery('(max-width: 680px)')
   const [searchParams] = useSearchParams()
   const courseQuery = searchParams.get('curso')
+  // `?provincia=` (e.g. from a province chip on the catalog) pre-applies the province filter.
+  const provinceQuery = searchParams.get('provincia')
   const [search, setSearch] = useState(courseQuery ?? '')
   const [syncedCourseQuery, setSyncedCourseQuery] = useState(courseQuery)
-  const [selectedProvince, setSelectedProvince] = useState(provinceOptions[0])
+  const [syncedProvinceQuery, setSyncedProvinceQuery] = useState(provinceQuery)
+  const [selectedProvince, setSelectedProvince] = useState(provinceQuery ?? provinceOptions[0])
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías')
   const [selectedModality, setSelectedModality] = useState('Todas las modalidades')
   const [selectedMonth, setSelectedMonth] = useState('Cualquier fecha')
-  const [appliedProvince, setAppliedProvince] = useState(provinceOptions[0])
+  const [appliedProvince, setAppliedProvince] = useState(provinceQuery ?? provinceOptions[0])
   const [appliedCategory, setAppliedCategory] = useState('Todas las categorías')
   const [appliedModality, setAppliedModality] = useState('Todas las modalidades')
   const [appliedMonth, setAppliedMonth] = useState('Cualquier fecha')
@@ -211,9 +199,21 @@ export function RegistrationPage() {
     setSearch(courseQuery)
     setPage(1)
   }
+  if (provinceQuery && provinceQuery !== syncedProvinceQuery) {
+    setSyncedProvinceQuery(provinceQuery)
+    setSelectedProvince(provinceQuery)
+    setAppliedProvince(provinceQuery)
+    setPage(1)
+  }
+
+  // A venue province spelled differently from the fixed list (e.g. "Bizkaia") still needs to be
+  // a selectable option, or the select would show nothing while the filter is applied.
+  const provinceSelectOptions = provinceOptions.includes(selectedProvince)
+    ? provinceOptions
+    : [...provinceOptions, selectedProvince]
 
   useEffect(() => {
-    if (searchParams.get('curso')) {
+    if (searchParams.get('curso') || searchParams.get('provincia')) {
       document
         .getElementById('registration-results')
         ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -261,13 +261,7 @@ export function RegistrationPage() {
   const sessionMetaById = useMemo(() => {
     const map = new Map<string, ReturnType<typeof getSessionMeta>>()
     sessions.forEach((session) => {
-      const laterSessions = sessions.filter(
-        (item) =>
-          item.id !== session.id &&
-          item.courseSlug === session.courseSlug &&
-          item.startsAt > session.startsAt,
-      )
-      map.set(session.id, getSessionMeta(session, laterSessions))
+      map.set(session.id, getSessionMeta(session))
     })
     return map
   }, [sessions])
@@ -470,7 +464,7 @@ export function RegistrationPage() {
             <ToolbarSelect
               label="Provincia"
               value={selectedProvince}
-              options={provinceOptions}
+              options={provinceSelectOptions}
               onChange={updateProvince}
             />
             <ToolbarSelect
@@ -670,51 +664,34 @@ export function RegistrationPage() {
               <>
                 <div className="registration-results-headers">
                   <span>Curso</span>
-                  <span>Detalles de la sesión</span>
+                  <span>Ubicación</span>
+                  <span>Fecha y horario</span>
                 </div>
                 <div className="registration-session-list">
                   {visibleSessions.map((session) => {
                     const urgency = getSessionUrgency(session)
-                    const meta = sessionMetaById.get(session.id)!
 
                     return (
                       <article className="registration-session-card" key={session.id}>
-                        <div className="registration-session-image">
-                          <img src={session.image} alt={session.courseTitle} />
-                          {meta.featured ? (
-                            <span>
-                              <Star size={11} fill="currentColor" /> Más demandado
-                            </span>
-                          ) : null}
-                        </div>
-
                         <div className="registration-session-course">
                           <div className="registration-session-title">
-                            <h3>{session.courseTitle}</h3>
-                            <p>{session.category}</p>
+                            <h3 title={session.courseTitle}>
+                              <Link to={`/cursos-trekform/${session.courseSlug}`}>
+                                {session.courseTitle}
+                              </Link>
+                            </h3>
                           </div>
                           <div className="registration-session-meta-block">
                             <div className="registration-session-meta">
-                              <span className="registration-field-modality">
-                                <UserRound size={14} /> {session.modality}
-                              </span>
-                              {session.durationHours ? (
-                                <span className="registration-field-duration">
-                                  <Clock3 size={14} /> {getDurationLabel(session.durationHours)}
-                                </span>
-                              ) : null}
                               <span className="registration-field-city">
-                                <MapPin size={14} />{' '}
-                                {session.city === 'Online'
-                                  ? session.city
-                                  : `${session.city}, ${session.province}`}
+                                <MapPin size={14} />
+                                <span className="registration-field-text">
+                                  {session.city === 'Online'
+                                    ? session.city
+                                    : `${session.city}, ${session.province}`}
+                                </span>
                               </span>
                             </div>
-                            {meta.certificateLabel ? (
-                              <div className="registration-session-certificate">
-                                <FileCheck2 size={14} /> {meta.certificateLabel}
-                              </div>
-                            ) : null}
                           </div>
                         </div>
 
@@ -725,14 +702,6 @@ export function RegistrationPage() {
                           <span className="registration-field-schedule">
                             <Clock3 size={14} /> {formatSchedule(session.startsAt, session.endsAt)}
                           </span>
-                          <span className="registration-field-venue">
-                            <MapPin size={14} /> {session.venue}
-                          </span>
-                          {meta.nextDates.length ? (
-                            <small className="registration-field-nextdates">
-                              Próximas fechas: {meta.nextDates.join(' · ')}
-                            </small>
-                          ) : null}
                         </div>
 
                         <div className="registration-session-badges">
@@ -746,7 +715,6 @@ export function RegistrationPage() {
                         </div>
 
                         <div className="registration-session-actions">
-                          <Link to={`/cursos-trekform/${session.courseSlug}`}>Ver detalles</Link>
                           {session.status === 'full' ? (
                             <button type="button" disabled>
                               Completo
