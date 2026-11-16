@@ -724,7 +724,7 @@ export function RegistrationPage() {
                             {urgency === 'full'
                               ? 'Completo'
                               : urgency === 'last'
-                                ? 'Últimas plazas'
+                                ? '¡Últimas plazas!'
                                 : 'Inscripción abierta'}
                           </span>
                         </div>
