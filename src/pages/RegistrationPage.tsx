@@ -23,7 +23,7 @@ import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useRegistrationSessions } from '../hooks/useRegistrationSessions'
 import type { RegistrationSession } from '../services/registrations'
 
-const pageSize = 8
+const pageSize = 15
 
 const monthFormatter = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' })
 const weekdayFormatter = new Intl.DateTimeFormat('es-ES', {
