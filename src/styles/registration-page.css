@@ -388,6 +388,83 @@
   border-color: var(--accent-soft);
 }
 
+.registration-alert-banner {
+  margin-top: 16px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: rgba(244, 194, 127, 0.16);
+}
+
+.registration-alert-banner > svg {
+  flex-shrink: 0;
+  color: var(--navy);
+}
+
+.registration-alert-banner > div:first-of-type {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.registration-alert-banner strong {
+  color: var(--navy);
+  font-size: 15px;
+}
+
+.registration-alert-banner span {
+  color: #626262;
+  font-size: 13px;
+}
+
+.registration-alert-banner-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.registration-alert-banner-actions button {
+  min-height: 38px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--accent);
+  color: var(--navy);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.registration-alert-banner-actions button.is-secondary {
+  border: 1px solid #ddd3c2;
+  background: #fff;
+  font-weight: 800;
+}
+
+.registration-alert-banner-actions button:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+@media (max-width: 680px) {
+  .registration-alert-banner {
+    flex-wrap: wrap;
+  }
+
+  .registration-alert-banner-actions {
+    width: 100%;
+  }
+
+  .registration-alert-banner-actions button {
+    flex: 1;
+  }
+}
+
 .registration-results-headers {
   margin-top: 22px;
   padding: 0 16px;

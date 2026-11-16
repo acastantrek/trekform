@@ -20,6 +20,7 @@ import {
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useUserLocation, type UserLocationStatus } from '../hooks/useUserLocation'
@@ -128,6 +129,8 @@ export function CoursesPage() {
     Map<string, string>
   >(new Map())
   const userLocation = useUserLocation()
+  const [sessionsLoaded, setSessionsLoaded] = useState(false)
+  const [alertTarget, setAlertTarget] = useState<SessionAlertTarget | null>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const setModality = (value: string) => {
@@ -145,7 +148,11 @@ export function CoursesPage() {
           const province = provinces.get(session.province) ?? {
             name: session.province,
             venueCoordinates: [],
+            hasOpenSession: false,
           }
+          // Only open sessions count as available: a course whose sessions are all full is
+          // treated as having none, so the visitor is offered the "notify me" form instead.
+          if (session.status === 'open') province.hasOpenSession = true
           // A province can host several venue cities; keep each one's coordinates so the
           // distance shown is to the nearest of them.
           const coordinates =
@@ -168,8 +175,10 @@ export function CoursesPage() {
         setProvincesByCourseSlug(
           new Map([...provincesMap].map(([slug, provinces]) => [slug, [...provinces.values()]])),
         )
+        setSessionsLoaded(true)
       })
-      // Without sessions the cards simply show no provinces; "Inscribirme" still works.
+      // If sessions fail to load the cards show no provinces and "Inscribirme" falls back to the
+      // registrations page, since we can't tell which courses have open sessions.
       .catch(() => {})
   }, [])
 
@@ -548,6 +557,29 @@ export function CoursesPage() {
                   const registrationParams = new URLSearchParams({ curso: course.title })
                   if (selectedProvince) registrationParams.set('provincia', selectedProvince)
                   const registrationsLink = `/inscripciones?${registrationParams}#registration-results`
+                  // When there's no open session to enrol in (none at all, or none in the chosen
+                  // province), "Inscribirme" offers the "notify me" form instead. If the course is
+                  // open elsewhere, the form also links to every province's sessions.
+                  const courseHasOpenSession = provinceOptions.some(
+                    (province) => province.hasOpenSession,
+                  )
+                  const canEnrol = selectedProvince
+                    ? provinceOptions.some(
+                        (province) => province.name === selectedProvince && province.hasOpenSession,
+                      )
+                    : courseHasOpenSession
+                  const alertForThisCourse: SessionAlertTarget | null =
+                    sessionsLoaded && !canEnrol
+                      ? {
+                          courseId: course.id,
+                          courseTitle: course.title,
+                          province: selectedProvince,
+                          otherProvincesLink:
+                            selectedProvince && courseHasOpenSession
+                              ? `/inscripciones?${new URLSearchParams({ curso: course.title })}#registration-results`
+                              : null,
+                        }
+                      : null
 
                   return (
                     <article className="catalog-card" key={course.id}>
@@ -599,7 +631,16 @@ export function CoursesPage() {
                         />
                         <div className="catalog-card-actions">
                           <Link to={`/cursos-trekform/${course.slug}`}>Ver detalles</Link>
-                          <Link to={registrationsLink}>Inscribirme</Link>
+                          {alertForThisCourse ? (
+                            <button
+                              type="button"
+                              onClick={() => setAlertTarget(alertForThisCourse)}
+                            >
+                              Inscribirme
+                            </button>
+                          ) : (
+                            <Link to={registrationsLink}>Inscribirme</Link>
+                          )}
                         </div>
                       </div>
                     </article>
@@ -703,6 +744,10 @@ export function CoursesPage() {
           </div>
         </div>
       </section>
+
+      {alertTarget ? (
+        <SessionAlertModal {...alertTarget} onClose={() => setAlertTarget(null)} />
+      ) : null}
     </>
   )
 }
@@ -739,6 +784,15 @@ interface CourseProvince {
   name: string
   /** One entry per distinct venue city in the province (empty for "Online"). */
   venueCoordinates: Coordinates[]
+  /** Whether any of the course's sessions in this province is open for enrolment. */
+  hasOpenSession: boolean
+}
+
+interface SessionAlertTarget {
+  courseId: string
+  courseTitle: string
+  province: string | null
+  otherProvincesLink: string | null
 }
 
 interface ProvinceOption extends CourseProvince {

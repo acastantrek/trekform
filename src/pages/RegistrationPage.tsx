@@ -1,6 +1,7 @@
-﻿import {
+import {
   ArrowRight,
   Award,
+  BellRing,
   BriefcaseBusiness,
   CalendarDays,
   Check,
@@ -19,8 +20,11 @@ import type { ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
+import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
+import { useCourses } from '../hooks/useCourses'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useRegistrationSessions } from '../hooks/useRegistrationSessions'
+import { spanishProvinces } from '../lib/provinces'
 import type { RegistrationSession } from '../services/registrations'
 
 const pageSize = 15
@@ -92,58 +96,7 @@ function formatSchedule(start: string, end: string) {
 
 const certificationOptions = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
 
-const otherSpanishProvinces = [
-  'Álava',
-  'Albacete',
-  'Alicante',
-  'Almería',
-  'Asturias',
-  'Ávila',
-  'Badajoz',
-  'Baleares',
-  'Burgos',
-  'Cáceres',
-  'Cádiz',
-  'Cantabria',
-  'Castellón',
-  'Ciudad Real',
-  'Córdoba',
-  'Cuenca',
-  'Gerona',
-  'Granada',
-  'Guadalajara',
-  'Guipúzcoa',
-  'Huelva',
-  'Huesca',
-  'Jaén',
-  'La Coruña',
-  'La Rioja',
-  'Las Palmas',
-  'León',
-  'Lérida',
-  'Lugo',
-  'Málaga',
-  'Murcia',
-  'Navarra',
-  'Orense',
-  'Palencia',
-  'Pontevedra',
-  'Salamanca',
-  'Santa Cruz de Tenerife',
-  'Segovia',
-  'Sevilla',
-  'Soria',
-  'Tarragona',
-  'Teruel',
-  'Toledo',
-  'Valencia',
-  'Valladolid',
-  'Vizcaya',
-  'Zamora',
-  'Zaragoza',
-].sort((a, b) => a.localeCompare(b, 'es'))
-
-const provinceOptions = ['Todas las provincias', 'Madrid', 'Barcelona', ...otherSpanishProvinces]
+const provinceOptions = ['Todas las provincias', ...spanishProvinces]
 
 function getSessionMeta(session: RegistrationSession) {
   return {
@@ -170,6 +123,8 @@ function matchesCertificationFilter(
 
 export function RegistrationPage() {
   const { sessions, loading, error } = useRegistrationSessions()
+  const { courses } = useCourses()
+  const [alertOpen, setAlertOpen] = useState(false)
   const isMobileFilters = useMediaQuery('(max-width: 680px)')
   const [searchParams] = useSearchParams()
   const courseQuery = searchParams.get('curso')
@@ -355,6 +310,35 @@ export function RegistrationPage() {
     setAppliedMonth(selectedMonth)
     setPage(1)
     setFiltersOpen(false)
+  }
+
+  // When the search is exactly one course's title (e.g. arriving from a catalog card) and that
+  // course has no open session — at all, or in the chosen province — offer the "notify me" form.
+  // Full sessions don't count as available.
+  const alertCourse = useMemo(() => {
+    const query = normalize(search.trim())
+    return query ? (courses.find((course) => normalize(course.title) === query) ?? null) : null
+  }, [courses, search])
+  const alertProvince = appliedProvince === provinceOptions[0] ? null : appliedProvince
+  const alertCourseOpenAnywhere = alertCourse
+    ? sessions.some(
+        (session) => session.courseSlug === alertCourse.slug && session.status === 'open',
+      )
+    : false
+  const alertCourseOpenHere = alertCourse
+    ? sessions.some(
+        (session) =>
+          session.courseSlug === alertCourse.slug &&
+          session.status === 'open' &&
+          (!alertProvince || session.province === alertProvince),
+      )
+    : false
+  const showAlertBanner = !loading && !error && alertCourse !== null && !alertCourseOpenHere
+
+  const showAllProvinces = () => {
+    setSelectedProvince(provinceOptions[0])
+    setAppliedProvince(provinceOptions[0])
+    setPage(1)
   }
 
   const resetFilters = () => {
@@ -651,6 +635,29 @@ export function RegistrationPage() {
               </div>
             </div>
 
+            {showAlertBanner && alertCourse ? (
+              <div className="registration-alert-banner">
+                <BellRing size={22} aria-hidden="true" />
+                <div>
+                  <strong>
+                    No hay convocatorias abiertas de {alertCourse.title}
+                    {alertProvince ? ` en ${alertProvince}` : ''}
+                  </strong>
+                  <span>Déjanos tus datos y te avisamos en cuanto abramos una.</span>
+                </div>
+                <div className="registration-alert-banner-actions">
+                  {alertProvince && alertCourseOpenAnywhere ? (
+                    <button type="button" className="is-secondary" onClick={showAllProvinces}>
+                      Ver convocatorias en otras provincias
+                    </button>
+                  ) : null}
+                  <button type="button" onClick={() => setAlertOpen(true)}>
+                    Avísame
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
             {loading ? (
               <div className="registration-empty registration-loading" role="status">
                 <span className="registration-spinner" />
@@ -832,6 +839,14 @@ export function RegistrationPage() {
       {activeSession && (
         <EnrollmentModal session={activeSession} onClose={() => setActiveSession(null)} />
       )}
+      {alertOpen && alertCourse ? (
+        <SessionAlertModal
+          courseId={alertCourse.id}
+          courseTitle={alertCourse.title}
+          province={alertProvince}
+          onClose={() => setAlertOpen(false)}
+        />
+      ) : null}
     </div>
   )
 }

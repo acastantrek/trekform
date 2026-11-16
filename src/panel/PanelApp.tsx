@@ -13,6 +13,7 @@ import { BlogPostsPage } from './pages/blog/BlogPostsPage'
 import { BlogPostFormPage } from './pages/blog/BlogPostFormPage'
 import { BlogCategoriesPage } from './pages/blog/BlogCategoriesPage'
 import { EnrollmentsPage } from './pages/enrollments/EnrollmentsPage'
+import { SessionAlertsPage } from './pages/alerts/SessionAlertsPage'
 import { UsersPage } from './pages/users/UsersPage'
 import { DashboardPage } from './pages/dashboard/DashboardPage'
 
@@ -37,6 +38,7 @@ export function PanelApp() {
               <Route path="blog/:id" element={<BlogPostFormPage />} />
               <Route path="blog-categorias" element={<BlogCategoriesPage />} />
               <Route path="inscripciones" element={<EnrollmentsPage />} />
+              <Route path="avisos" element={<SessionAlertsPage />} />
               <Route path="usuarios" element={<UsersPage />} />
             </Route>
           </Route>
