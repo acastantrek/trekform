@@ -19,7 +19,7 @@
   margin-bottom: 60px;
 }
 .page-hero h1 {
-  font-size: clamp(50px, 7vw, 96px);
+  font-size: clamp(43px, 5.95vw, 82px);
   margin: 14px 0;
 }
 .page-hero p {
@@ -53,7 +53,7 @@
   justify-content: center;
 }
 .detail-hero h1 {
-  font-size: clamp(48px, 6vw, 88px);
+  font-size: clamp(41px, 5.1vw, 75px);
   margin: 15px 0 25px;
 }
 .detail-hero p {
@@ -97,7 +97,7 @@
   background: radial-gradient(circle at top left, rgba(255, 182, 6, 0.1), transparent 22%), #f8f3eb;
 }
 .contact-page h1 {
-  font-size: clamp(48px, 6vw, 80px);
+  font-size: clamp(41px, 5.1vw, 68px);
   margin: 15px 0;
 }
 .contact-page > div > p {
@@ -173,7 +173,7 @@
 .not-found h1 {
   max-width: 760px;
   margin: 0 0 16px;
-  font-size: clamp(32px, 5vw, 56px);
+  font-size: clamp(27px, 4.25vw, 48px);
   line-height: 1.05;
 }
 .not-found-text {

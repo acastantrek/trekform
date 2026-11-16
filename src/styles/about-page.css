@@ -90,7 +90,7 @@
 .about-hero-copy h1 {
   margin: 14px 0 20px;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(44px, 5.2vw, 74px);
+  font-size: clamp(37px, 4.42vw, 63px);
   font-weight: 900;
   line-height: 1.02;
   letter-spacing: -0.045em;
@@ -268,7 +268,7 @@
 .about-cta h2 {
   margin: 12px 0 20px;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(36px, 4vw, 58px);
+  font-size: clamp(31px, 3.4vw, 49px);
   font-weight: 900;
   line-height: 1.02;
   letter-spacing: -0.04em;
@@ -493,7 +493,7 @@
   }
   .about-hero-copy h1 {
     margin: 10px 0 12px;
-    font-size: 32px;
+    font-size: 27px;
   }
   .about-hero-copy p {
     font-size: 15px;
