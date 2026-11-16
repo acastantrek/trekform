@@ -21,7 +21,7 @@
 
 .legal-page-hero h1 {
   margin: 14px 0 0;
-  font-size: clamp(36px, 5vw, 56px);
+  font-size: clamp(31px, 4.25vw, 48px);
   max-width: 900px;
 }
 
@@ -48,7 +48,7 @@
 }
 
 .legal-page-content h2 {
-  font-size: 20px;
+  font-size: 17px;
   color: var(--navy);
 }
 

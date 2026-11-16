@@ -60,7 +60,7 @@
   max-width: 640px;
   margin: 0;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(46px, 5vw, 70px);
+  font-size: clamp(39px, 4.25vw, 60px);
   font-weight: 900;
   line-height: 0.92;
   letter-spacing: 0;
@@ -214,7 +214,7 @@
 .home-hero-form h2 {
   margin: 0;
   font-family: 'Inter Tight', sans-serif;
-  font-size: 21px;
+  font-size: 18px;
   line-height: 1.02;
   letter-spacing: -0.035em;
   color: var(--navy);
@@ -383,7 +383,7 @@
 }
 @media (max-width: 640px) {
   .slider-content h1 {
-    font-size: 42px;
+    font-size: 36px;
   }
   .slider-content p {
     font-size: 17px;
@@ -406,7 +406,7 @@
     font-size: 11px;
   }
   .home-hero-form h2 {
-    font-size: 22px;
+    font-size: 19px;
   }
   .home-hero-form-grid,
   .home-hero-form-grid label {

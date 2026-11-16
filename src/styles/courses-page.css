@@ -98,7 +98,7 @@
 .courses-hero-content h1 {
   max-width: 790px;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(46px, 5.3vw, 82px);
+  font-size: clamp(39px, 4.51vw, 70px);
   line-height: 0.92;
   margin: 0 0 18px;
   text-transform: uppercase;
@@ -211,7 +211,7 @@
 }
 .catalog-sidebar h2 {
   font-family: 'Inter Tight', sans-serif;
-  font-size: 16px;
+  font-size: 14px;
   text-transform: uppercase;
   letter-spacing: 0;
   margin: 0 0 18px;
@@ -505,7 +505,7 @@
 }
 .catalog-empty h2 {
   margin: 18px 0 7px;
-  font-size: 28px;
+  font-size: 24px;
 }
 .catalog-loading {
   display: flex;
@@ -547,7 +547,7 @@
 }
 .catalog-company-cta h2 {
   font-family: 'Inter Tight', sans-serif;
-  font-size: 24px;
+  font-size: 20px;
   letter-spacing: 0;
   margin: 0 0 10px;
 }
@@ -716,7 +716,7 @@
     align-items: flex-start;
   }
   .courses-hero-content h1 {
-    font-size: 40px;
+    font-size: 34px;
   }
   .courses-hero-content > p {
     max-width: 100%;
@@ -785,7 +785,7 @@
     padding: 34px 16px 56px;
   }
   .courses-hero-content h1 {
-    font-size: 34px;
+    font-size: 29px;
   }
   .catalog-section {
     padding-inline: 10px;

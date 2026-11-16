@@ -224,7 +224,7 @@ h3 {
   letter-spacing: -0.04em;
 }
 h1 {
-  font-size: clamp(54px, 6.6vw, 102px);
+  font-size: clamp(46px, 5.61vw, 87px);
   line-height: 0.88;
   max-width: 720px;
 }
@@ -431,7 +431,7 @@ h2 em {
 }
 .section-heading h2,
 .companies h2 {
-  font-size: clamp(38px, 4vw, 62px);
+  font-size: clamp(32px, 3.4vw, 53px);
   margin-top: 12px;
 }
 .section-heading p {
@@ -608,7 +608,7 @@ h2 em {
   color: #91a4b4;
 }
 .method h2 {
-  font-size: clamp(45px, 5vw, 75px);
+  font-size: clamp(38px, 4.25vw, 64px);
   line-height: 1;
   margin: 18px 0 25px;
 }
@@ -672,7 +672,7 @@ h2 em {
   letter-spacing: 2px;
 }
 .contact h2 {
-  font-size: clamp(38px, 5vw, 70px);
+  font-size: clamp(32px, 4.25vw, 60px);
   margin: 15px 0;
 }
 .contact p {

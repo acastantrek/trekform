@@ -84,7 +84,7 @@
   margin: 0;
   max-width: 640px;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(18px, 2.2vw, 24px);
+  font-size: clamp(15px, 1.87vw, 20px);
   font-weight: 900;
   line-height: 1.1;
   color: var(--orange);
@@ -578,7 +578,7 @@
 .no-sessions-hero h2 {
   margin: 6px 0 0;
   color: #fff;
-  font-size: clamp(23px, 4vw, 29px);
+  font-size: clamp(20px, 3.4vw, 25px);
   line-height: 1.08;
   letter-spacing: -0.02em;
 }
