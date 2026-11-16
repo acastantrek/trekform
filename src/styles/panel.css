@@ -352,6 +352,31 @@
   white-space: nowrap;
 }
 
+/* Emails stay on one line: wide enough for typical addresses, "…" (full value on hover)
+   for very long ones, instead of breaking mid-address. */
+.panel-app .data-table .col-email {
+  width: 24%;
+}
+
+.panel-app .data-table td.col-email {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.panel-app .data-table td.col-email > a {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.panel-app .data-table .col-date {
+  width: 9%;
+  white-space: nowrap;
+}
+
 .panel-app .data-table .row-actions .btn-sm {
   padding: 5px 8px;
 }

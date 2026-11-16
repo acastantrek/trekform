@@ -174,7 +174,12 @@ export function SessionAlertsPage() {
             { header: 'Nombre', render: (row) => row.name },
             {
               header: 'Email',
-              render: (row) => <a href={`mailto:${row.email}`}>{row.email}</a>,
+              className: 'col-email',
+              render: (row) => (
+                <a href={`mailto:${row.email}`} title={row.email}>
+                  {row.email}
+                </a>
+              ),
             },
             {
               header: 'Teléfono',
@@ -182,8 +187,12 @@ export function SessionAlertsPage() {
             },
             { header: 'Curso', render: (row) => row.courseTitle },
             { header: 'Provincia', render: (row) => row.province ?? 'Cualquiera' },
-            { header: 'Alta', render: (row) => formatDate(row.createdAt) },
-            { header: 'Avisado', render: (row) => formatDate(row.notifiedAt) },
+            { header: 'Alta', className: 'col-date', render: (row) => formatDate(row.createdAt) },
+            {
+              header: 'Avisado',
+              className: 'col-date',
+              render: (row) => formatDate(row.notifiedAt),
+            },
             {
               header: 'Estado',
               render: (row) => (
