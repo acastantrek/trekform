@@ -18,20 +18,33 @@ export function useUserLocation() {
       return
     }
     setStatus('locating')
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setCoordinates({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        })
-        setStatus('ready')
-      },
-      (error) => {
-        setStatus(error.code === error.PERMISSION_DENIED ? 'denied' : 'unavailable')
-      },
-      // City-level precision is enough and much faster than GPS; reuse a fix up to 30 min old.
-      { enableHighAccuracy: false, timeout: 10_000, maximumAge: 30 * 60 * 1000 },
-    )
+    // The first network-location fix often times out or comes back POSITION_UNAVAILABLE (notably
+    // Chrome on Windows while its location provider warms up) and then succeeds right after, so
+    // retry silently with a longer timeout before falling back to the manual "retry" button.
+    const timeouts = [10_000, 15_000, 20_000]
+    const attempt = (index: number) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCoordinates({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          })
+          setStatus('ready')
+        },
+        (error) => {
+          if (error.code === error.PERMISSION_DENIED) {
+            setStatus('denied')
+          } else if (index + 1 < timeouts.length) {
+            attempt(index + 1)
+          } else {
+            setStatus('unavailable')
+          }
+        },
+        // City-level precision is enough and much faster than GPS; reuse a fix up to 30 min old.
+        { enableHighAccuracy: false, timeout: timeouts[index], maximumAge: 30 * 60 * 1000 },
+      )
+    }
+    attempt(0)
   }, [])
 
   useEffect(() => {
