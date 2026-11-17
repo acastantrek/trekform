@@ -18,13 +18,14 @@ import {
   Users,
 } from 'lucide-react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
-import { useEffect, useId, useMemo, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { ProvincePickerModal } from '../components/registrations/ProvincePickerModal'
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useUserLocation, type UserLocationStatus } from '../hooks/useUserLocation'
-import { coordinatesForPlace, distanceKm, formatDistance, type Coordinates } from '../lib/geo'
+import { coordinatesForPlace, distanceKm, type Coordinates } from '../lib/geo'
 import { getRegistrationSessions } from '../services/registrations'
 import type { Course } from '../types/course'
 
@@ -125,12 +126,11 @@ export function CoursesPage() {
   const [provincesByCourseSlug, setProvincesByCourseSlug] = useState<Map<string, CourseProvince[]>>(
     new Map(),
   )
-  const [selectedProvinceByCourseSlug, setSelectedProvinceByCourseSlug] = useState<
-    Map<string, string>
-  >(new Map())
   const userLocation = useUserLocation()
   const [sessionsLoaded, setSessionsLoaded] = useState(false)
   const [alertTarget, setAlertTarget] = useState<SessionAlertTarget | null>(null)
+  const [pickerCourse, setPickerCourse] = useState<Course | null>(null)
+  const navigate = useNavigate()
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const setModality = (value: string) => {
@@ -177,8 +177,8 @@ export function CoursesPage() {
         )
         setSessionsLoaded(true)
       })
-      // If sessions fail to load the cards show no provinces and "Inscribirme" falls back to the
-      // registrations page, since we can't tell which courses have open sessions.
+      // If sessions fail to load, "Convocatorias" goes straight to the registrations page,
+      // since we can't tell which provinces (if any) have open sessions.
       .catch(() => {})
   }, [])
 
@@ -218,6 +218,47 @@ export function CoursesPage() {
     })
     return map
   }, [provincesByCourseSlug, userLocation.coordinates])
+
+  const registrationsLink = (course: Course, province: string | null) => {
+    const params = new URLSearchParams({ curso: course.title })
+    if (province) params.set('provincia', province)
+    return `/inscripciones?${params}#registration-results`
+  }
+
+  // "Convocatorias": when the course has open sessions, ask which province first (nearest
+  // first); otherwise go straight to the "notify me" form.
+  const openConvocatorias = (course: Course) => {
+    const provinces = provinceOptionsByCourseSlug.get(course.slug) ?? []
+    if (provinces.some((province) => province.hasOpenSession)) setPickerCourse(course)
+    else
+      setAlertTarget({
+        courseId: course.id,
+        courseTitle: course.title,
+        province: null,
+        otherProvincesLink: null,
+      })
+  }
+
+  // Picking a province (or all of them) opens the registrations page filtered accordingly; a
+  // province whose sessions are all full offers the "notify me" form, linking to the others.
+  const selectPickerProvince = (province: string | null) => {
+    const course = pickerCourse
+    if (!course) return
+    setPickerCourse(null)
+    const option = province
+      ? provinceOptionsByCourseSlug.get(course.slug)?.find((item) => item.name === province)
+      : null
+    if (province && option && !option.hasOpenSession) {
+      setAlertTarget({
+        courseId: course.id,
+        courseTitle: course.title,
+        province,
+        otherProvincesLink: registrationsLink(course, null),
+      })
+      return
+    }
+    navigate(registrationsLink(course, province))
+  }
 
   const toggleFilterValue = (setter: Dispatch<SetStateAction<string[]>>, value: string) => {
     setter((current) =>
@@ -550,37 +591,6 @@ export function CoursesPage() {
                 {visibleCourses.map((course, index) => {
                   const absoluteIndex = (page - 1) * pageSize + index
                   const meta = courseMetaById.get(course.id)!
-                  const provinceOptions = provinceOptionsByCourseSlug.get(course.slug) ?? []
-                  const selectedProvince = selectedProvinceByCourseSlug.get(course.slug) ?? null
-                  // "Inscribirme" opens the registrations page filtered by this course, and also by
-                  // the chosen province if there is one (otherwise every province's sessions).
-                  const registrationParams = new URLSearchParams({ curso: course.title })
-                  if (selectedProvince) registrationParams.set('provincia', selectedProvince)
-                  const registrationsLink = `/inscripciones?${registrationParams}#registration-results`
-                  // When there's no open session to enrol in (none at all, or none in the chosen
-                  // province), "Inscribirme" offers the "notify me" form instead. If the course is
-                  // open elsewhere, the form also links to every province's sessions.
-                  const courseHasOpenSession = provinceOptions.some(
-                    (province) => province.hasOpenSession,
-                  )
-                  const canEnrol = selectedProvince
-                    ? provinceOptions.some(
-                        (province) => province.name === selectedProvince && province.hasOpenSession,
-                      )
-                    : courseHasOpenSession
-                  const alertForThisCourse: SessionAlertTarget | null =
-                    sessionsLoaded && !canEnrol
-                      ? {
-                          courseId: course.id,
-                          courseTitle: course.title,
-                          province: selectedProvince,
-                          otherProvincesLink:
-                            selectedProvince && courseHasOpenSession
-                              ? `/inscripciones?${new URLSearchParams({ curso: course.title })}#registration-results`
-                              : null,
-                        }
-                      : null
-
                   return (
                     <article className="catalog-card" key={course.id}>
                       <div className="catalog-image">
@@ -617,29 +627,14 @@ export function CoursesPage() {
                             </span>
                           </div>
                         ) : null}
-                        <CourseProvinces
-                          provinces={provinceOptions}
-                          selected={selectedProvince}
-                          onSelect={(province) =>
-                            setSelectedProvinceByCourseSlug((current) => {
-                              const next = new Map(current)
-                              if (province) next.set(course.slug, province)
-                              else next.delete(course.slug)
-                              return next
-                            })
-                          }
-                        />
                         <div className="catalog-card-actions">
                           <Link to={`/cursos-trekform/${course.slug}`}>Ver detalles</Link>
-                          {alertForThisCourse ? (
-                            <button
-                              type="button"
-                              onClick={() => setAlertTarget(alertForThisCourse)}
-                            >
-                              Inscribirme
+                          {sessionsLoaded ? (
+                            <button type="button" onClick={() => openConvocatorias(course)}>
+                              Convocatorias
                             </button>
                           ) : (
-                            <Link to={registrationsLink}>Inscribirme</Link>
+                            <Link to={registrationsLink(course, null)}>Convocatorias</Link>
                           )}
                         </div>
                       </div>
@@ -745,6 +740,16 @@ export function CoursesPage() {
         </div>
       </section>
 
+      {pickerCourse ? (
+        <ProvincePickerModal
+          courseTitle={pickerCourse.title}
+          provinces={provinceOptionsByCourseSlug.get(pickerCourse.slug) ?? []}
+          locationStatus={userLocation.status}
+          onLocate={userLocation.locate}
+          onSelect={selectPickerProvince}
+          onClose={() => setPickerCourse(null)}
+        />
+      ) : null}
       {alertTarget ? (
         <SessionAlertModal {...alertTarget} onClose={() => setAlertTarget(null)} />
       ) : null}
@@ -778,8 +783,6 @@ function CatalogSelect({
   )
 }
 
-const visibleProvinceCount = 3
-
 interface CourseProvince {
   name: string
   /** One entry per distinct venue city in the province (empty for "Online"). */
@@ -810,10 +813,10 @@ const locateLabels: Record<UserLocationStatus, string> = {
 function LocateButton({ status, onLocate }: { status: UserLocationStatus; onLocate: () => void }) {
   const hint =
     status === 'denied'
-      ? 'Activa el permiso de ubicación del navegador para ver las provincias más cercanas'
+      ? 'Activa el permiso de ubicación del navegador para ver las convocatorias más cercanas'
       : status === 'ready'
-        ? 'Las provincias de cada curso aparecen ordenadas de más cercana a más lejana'
-        : 'Usa tu ubicación para ordenar las provincias de cada curso por cercanía'
+        ? 'Las provincias de cada convocatoria aparecen ordenadas de más cercana a más lejana'
+        : 'Usa tu ubicación para ordenar las convocatorias de cada curso por cercanía'
 
   return (
     <button
@@ -831,128 +834,6 @@ function LocateButton({ status, onLocate }: { status: UserLocationStatus; onLoca
       )}
       {locateLabels[status]}
     </button>
-  )
-}
-
-function ProvinceOptionButton({
-  province,
-  selected,
-  onClick,
-}: {
-  province: ProvinceOption
-  selected: boolean
-  onClick: () => void
-}) {
-  return (
-    <button
-      type="button"
-      className="course-province-option"
-      aria-pressed={selected}
-      onClick={onClick}
-    >
-      <span className="course-province-radio" aria-hidden="true" />
-      <span className="course-province-name">{province.name}</span>
-      {province.distanceKm !== null ? (
-        <span className="course-province-distance">{formatDistance(province.distanceKm)}</span>
-      ) : null}
-    </button>
-  )
-}
-
-function CourseProvinces({
-  provinces,
-  selected,
-  onSelect,
-}: {
-  provinces: ProvinceOption[]
-  selected: string | null
-  onSelect: (province: string | null) => void
-}) {
-  const [open, setOpen] = useState(false)
-  const containerRef = useRef<HTMLDivElement>(null)
-  const labelId = useId()
-  const menuId = useId()
-
-  useEffect(() => {
-    if (!open) return
-    const closeOnOutsideClick = (event: PointerEvent) => {
-      if (!containerRef.current?.contains(event.target as Node)) setOpen(false)
-    }
-    const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setOpen(false)
-    }
-    document.addEventListener('pointerdown', closeOnOutsideClick)
-    document.addEventListener('keydown', closeOnEscape)
-    return () => {
-      document.removeEventListener('pointerdown', closeOnOutsideClick)
-      document.removeEventListener('keydown', closeOnEscape)
-    }
-  }, [open])
-
-  if (provinces.length === 0) return null
-
-  // The card always lists the same number of rows (the nearest first once located), so it never
-  // changes height; the rest open in a floating menu. A province picked from that menu takes the
-  // last visible slot, so the current choice always stays in view.
-  const shown = provinces.slice(0, visibleProvinceCount)
-  const picked = provinces.find((province) => province.name === selected)
-  if (picked && !shown.includes(picked)) shown[shown.length - 1] = picked
-  const rest = provinces.filter((province) => !shown.includes(province))
-
-  const toggle = (name: string) => onSelect(selected === name ? null : name)
-
-  return (
-    <div className="course-provinces" ref={containerRef}>
-      <p className="course-provinces-label" id={labelId}>
-        <MapPin aria-hidden="true" />
-        Selecciona tu provincia
-      </p>
-      <ul className="course-provinces-list" aria-labelledby={labelId}>
-        {shown.map((province) => (
-          <li key={province.name}>
-            <ProvinceOptionButton
-              province={province}
-              selected={selected === province.name}
-              onClick={() => toggle(province.name)}
-            />
-          </li>
-        ))}
-      </ul>
-      {rest.length > 0 ? (
-        <div className="course-provinces-more">
-          <button
-            type="button"
-            className="course-provinces-toggle"
-            aria-expanded={open}
-            aria-controls={menuId}
-            onClick={() => setOpen((value) => !value)}
-          >
-            Ver {rest.length} {rest.length === 1 ? 'provincia' : 'provincias'} más
-            <ChevronDown size={12} aria-hidden="true" className={open ? 'is-rotated' : ''} />
-          </button>
-          {open ? (
-            <ul
-              className="course-provinces-list course-provinces-menu"
-              id={menuId}
-              aria-labelledby={labelId}
-            >
-              {rest.map((province) => (
-                <li key={province.name}>
-                  <ProvinceOptionButton
-                    province={province}
-                    selected={false}
-                    onClick={() => {
-                      onSelect(province.name)
-                      setOpen(false)
-                    }}
-                  />
-                </li>
-              ))}
-            </ul>
-          ) : null}
-        </div>
-      ) : null}
-    </div>
   )
 }
 
