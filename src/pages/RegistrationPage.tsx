@@ -1,31 +1,33 @@
-﻿import {
+import {
   ArrowRight,
   Award,
+  BellRing,
   BriefcaseBusiness,
   CalendarDays,
   Check,
   ChevronDown,
   Clock3,
   Download,
-  FileCheck2,
   Grid3X3,
   MapPin,
   RotateCcw,
   Search,
   SlidersHorizontal,
   Star,
-  UserRound,
   Users,
 } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
+import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
+import { useCourses } from '../hooks/useCourses'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useRegistrationSessions } from '../hooks/useRegistrationSessions'
+import { spanishProvinces } from '../lib/provinces'
 import type { RegistrationSession } from '../services/registrations'
 
-const pageSize = 8
+const pageSize = 15
 
 const monthFormatter = new Intl.DateTimeFormat('es-ES', { month: 'long', year: 'numeric' })
 const weekdayFormatter = new Intl.DateTimeFormat('es-ES', {
@@ -55,10 +57,6 @@ function getMonthLabel(dateString: string) {
   return toTitleCase(monthFormatter.format(new Date(dateString)))
 }
 
-function getDurationLabel(hours: number) {
-  return Number.isInteger(hours) ? `${hours} horas` : `${hours.toFixed(1)} horas`
-}
-
 function matchesDurationFilter(filter: string, hours: number | null) {
   if (hours === null) return filter === 'Consultar'
 
@@ -76,13 +74,21 @@ function matchesDurationFilter(filter: string, hours: number | null) {
   }
 }
 
+// "Últimas plazas" once free seats drop to this share of the capacity or less.
+const lastSeatsShare = 0.4
+
 function getSessionUrgency(session: RegistrationSession) {
+  // Also covers open sessions with no free seats left (see getRegistrationSessions).
   if (session.status === 'full') return 'full'
 
   const daysUntilStart =
     (new Date(session.startsAt).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+  const fewSeatsLeft =
+    session.capacity !== null &&
+    session.seatsRemaining !== null &&
+    session.seatsRemaining <= session.capacity * lastSeatsShare
 
-  if (daysUntilStart <= 4 || (session.capacity ?? 99) <= 8) return 'last'
+  if (daysUntilStart <= 4 || fewSeatsLeft) return 'last'
 
   return 'open'
 }
@@ -96,73 +102,13 @@ function formatSchedule(start: string, end: string) {
   return `${timeFormatter.format(new Date(start))} - ${timeFormatter.format(new Date(end))}`
 }
 
-const dayMonthFormatter = new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short' })
-
-function formatUpcomingDate(dateString: string) {
-  return dayMonthFormatter.format(new Date(dateString)).replace('.', '')
-}
-
 const certificationOptions = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
 
-const otherSpanishProvinces = [
-  'Álava',
-  'Albacete',
-  'Alicante',
-  'Almería',
-  'Asturias',
-  'Ávila',
-  'Badajoz',
-  'Baleares',
-  'Burgos',
-  'Cáceres',
-  'Cádiz',
-  'Cantabria',
-  'Castellón',
-  'Ciudad Real',
-  'Córdoba',
-  'Cuenca',
-  'Gerona',
-  'Granada',
-  'Guadalajara',
-  'Guipúzcoa',
-  'Huelva',
-  'Huesca',
-  'Jaén',
-  'La Coruña',
-  'La Rioja',
-  'Las Palmas',
-  'León',
-  'Lérida',
-  'Lugo',
-  'Málaga',
-  'Murcia',
-  'Navarra',
-  'Orense',
-  'Palencia',
-  'Pontevedra',
-  'Salamanca',
-  'Santa Cruz de Tenerife',
-  'Segovia',
-  'Sevilla',
-  'Soria',
-  'Tarragona',
-  'Teruel',
-  'Toledo',
-  'Valencia',
-  'Valladolid',
-  'Vizcaya',
-  'Zamora',
-  'Zaragoza',
-].sort((a, b) => a.localeCompare(b, 'es'))
+const provinceOptions = ['Todas las provincias', ...spanishProvinces]
 
-const provinceOptions = ['Todas las provincias', 'Madrid', 'Barcelona', ...otherSpanishProvinces]
-
-function getSessionMeta(session: RegistrationSession, laterSessions: RegistrationSession[]) {
+function getSessionMeta(session: RegistrationSession) {
   return {
     bonificable: session.isFundaeEligible,
-    certificateLabel: session.accreditationTitle,
-    featured: session.isFeatured,
-    nextDates: laterSessions.slice(0, 2).map((item) => formatUpcomingDate(item.startsAt)),
   }
 }
 
@@ -185,16 +131,21 @@ function matchesCertificationFilter(
 
 export function RegistrationPage() {
   const { sessions, loading, error } = useRegistrationSessions()
+  const { courses } = useCourses()
+  const [alertOpen, setAlertOpen] = useState(false)
   const isMobileFilters = useMediaQuery('(max-width: 680px)')
   const [searchParams] = useSearchParams()
   const courseQuery = searchParams.get('curso')
+  // `?provincia=` (e.g. from a province chip on the catalog) pre-applies the province filter.
+  const provinceQuery = searchParams.get('provincia')
   const [search, setSearch] = useState(courseQuery ?? '')
   const [syncedCourseQuery, setSyncedCourseQuery] = useState(courseQuery)
-  const [selectedProvince, setSelectedProvince] = useState(provinceOptions[0])
+  const [syncedProvinceQuery, setSyncedProvinceQuery] = useState(provinceQuery)
+  const [selectedProvince, setSelectedProvince] = useState(provinceQuery ?? provinceOptions[0])
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías')
   const [selectedModality, setSelectedModality] = useState('Todas las modalidades')
   const [selectedMonth, setSelectedMonth] = useState('Cualquier fecha')
-  const [appliedProvince, setAppliedProvince] = useState(provinceOptions[0])
+  const [appliedProvince, setAppliedProvince] = useState(provinceQuery ?? provinceOptions[0])
   const [appliedCategory, setAppliedCategory] = useState('Todas las categorías')
   const [appliedModality, setAppliedModality] = useState('Todas las modalidades')
   const [appliedMonth, setAppliedMonth] = useState('Cualquier fecha')
@@ -211,9 +162,21 @@ export function RegistrationPage() {
     setSearch(courseQuery)
     setPage(1)
   }
+  if (provinceQuery && provinceQuery !== syncedProvinceQuery) {
+    setSyncedProvinceQuery(provinceQuery)
+    setSelectedProvince(provinceQuery)
+    setAppliedProvince(provinceQuery)
+    setPage(1)
+  }
+
+  // A venue province spelled differently from the fixed list (e.g. "Bizkaia") still needs to be
+  // a selectable option, or the select would show nothing while the filter is applied.
+  const provinceSelectOptions = provinceOptions.includes(selectedProvince)
+    ? provinceOptions
+    : [...provinceOptions, selectedProvince]
 
   useEffect(() => {
-    if (searchParams.get('curso')) {
+    if (searchParams.get('curso') || searchParams.get('provincia')) {
       document
         .getElementById('registration-results')
         ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -261,13 +224,7 @@ export function RegistrationPage() {
   const sessionMetaById = useMemo(() => {
     const map = new Map<string, ReturnType<typeof getSessionMeta>>()
     sessions.forEach((session) => {
-      const laterSessions = sessions.filter(
-        (item) =>
-          item.id !== session.id &&
-          item.courseSlug === session.courseSlug &&
-          item.startsAt > session.startsAt,
-      )
-      map.set(session.id, getSessionMeta(session, laterSessions))
+      map.set(session.id, getSessionMeta(session))
     })
     return map
   }, [sessions])
@@ -361,6 +318,35 @@ export function RegistrationPage() {
     setAppliedMonth(selectedMonth)
     setPage(1)
     setFiltersOpen(false)
+  }
+
+  // When the search is exactly one course's title (e.g. arriving from a catalog card) and that
+  // course has no open session — at all, or in the chosen province — offer the "notify me" form.
+  // Full sessions don't count as available.
+  const alertCourse = useMemo(() => {
+    const query = normalize(search.trim())
+    return query ? (courses.find((course) => normalize(course.title) === query) ?? null) : null
+  }, [courses, search])
+  const alertProvince = appliedProvince === provinceOptions[0] ? null : appliedProvince
+  const alertCourseOpenAnywhere = alertCourse
+    ? sessions.some(
+        (session) => session.courseSlug === alertCourse.slug && session.status === 'open',
+      )
+    : false
+  const alertCourseOpenHere = alertCourse
+    ? sessions.some(
+        (session) =>
+          session.courseSlug === alertCourse.slug &&
+          session.status === 'open' &&
+          (!alertProvince || session.province === alertProvince),
+      )
+    : false
+  const showAlertBanner = !loading && !error && alertCourse !== null && !alertCourseOpenHere
+
+  const showAllProvinces = () => {
+    setSelectedProvince(provinceOptions[0])
+    setAppliedProvince(provinceOptions[0])
+    setPage(1)
   }
 
   const resetFilters = () => {
@@ -470,7 +456,7 @@ export function RegistrationPage() {
             <ToolbarSelect
               label="Provincia"
               value={selectedProvince}
-              options={provinceOptions}
+              options={provinceSelectOptions}
               onChange={updateProvince}
             />
             <ToolbarSelect
@@ -657,6 +643,29 @@ export function RegistrationPage() {
               </div>
             </div>
 
+            {showAlertBanner && alertCourse ? (
+              <div className="registration-alert-banner">
+                <BellRing size={22} aria-hidden="true" />
+                <div>
+                  <strong>
+                    No hay convocatorias abiertas de {alertCourse.title}
+                    {alertProvince ? ` en ${alertProvince}` : ''}
+                  </strong>
+                  <span>Déjanos tus datos y te avisamos en cuanto abramos una.</span>
+                </div>
+                <div className="registration-alert-banner-actions">
+                  {alertProvince && alertCourseOpenAnywhere ? (
+                    <button type="button" className="is-secondary" onClick={showAllProvinces}>
+                      Ver convocatorias en otras provincias
+                    </button>
+                  ) : null}
+                  <button type="button" onClick={() => setAlertOpen(true)}>
+                    Avísame
+                  </button>
+                </div>
+              </div>
+            ) : null}
+
             {loading ? (
               <div className="registration-empty registration-loading" role="status">
                 <span className="registration-spinner" />
@@ -670,51 +679,34 @@ export function RegistrationPage() {
               <>
                 <div className="registration-results-headers">
                   <span>Curso</span>
-                  <span>Detalles de la sesión</span>
+                  <span>Ubicación</span>
+                  <span>Fecha y horario</span>
                 </div>
                 <div className="registration-session-list">
                   {visibleSessions.map((session) => {
                     const urgency = getSessionUrgency(session)
-                    const meta = sessionMetaById.get(session.id)!
 
                     return (
                       <article className="registration-session-card" key={session.id}>
-                        <div className="registration-session-image">
-                          <img src={session.image} alt={session.courseTitle} />
-                          {meta.featured ? (
-                            <span>
-                              <Star size={11} fill="currentColor" /> Más demandado
-                            </span>
-                          ) : null}
-                        </div>
-
                         <div className="registration-session-course">
                           <div className="registration-session-title">
-                            <h3>{session.courseTitle}</h3>
-                            <p>{session.category}</p>
+                            <h3 title={session.courseTitle}>
+                              <Link to={`/cursos-trekform/${session.courseSlug}`}>
+                                {session.courseTitle}
+                              </Link>
+                            </h3>
                           </div>
                           <div className="registration-session-meta-block">
                             <div className="registration-session-meta">
-                              <span className="registration-field-modality">
-                                <UserRound size={14} /> {session.modality}
-                              </span>
-                              {session.durationHours ? (
-                                <span className="registration-field-duration">
-                                  <Clock3 size={14} /> {getDurationLabel(session.durationHours)}
-                                </span>
-                              ) : null}
                               <span className="registration-field-city">
-                                <MapPin size={14} />{' '}
-                                {session.city === 'Online'
-                                  ? session.city
-                                  : `${session.city}, ${session.province}`}
+                                <MapPin size={14} />
+                                <span className="registration-field-text">
+                                  {session.city === 'Online'
+                                    ? session.city
+                                    : `${session.city}, ${session.province}`}
+                                </span>
                               </span>
                             </div>
-                            {meta.certificateLabel ? (
-                              <div className="registration-session-certificate">
-                                <FileCheck2 size={14} /> {meta.certificateLabel}
-                              </div>
-                            ) : null}
                           </div>
                         </div>
 
@@ -725,14 +717,6 @@ export function RegistrationPage() {
                           <span className="registration-field-schedule">
                             <Clock3 size={14} /> {formatSchedule(session.startsAt, session.endsAt)}
                           </span>
-                          <span className="registration-field-venue">
-                            <MapPin size={14} /> {session.venue}
-                          </span>
-                          {meta.nextDates.length ? (
-                            <small className="registration-field-nextdates">
-                              Próximas fechas: {meta.nextDates.join(' · ')}
-                            </small>
-                          ) : null}
                         </div>
 
                         <div className="registration-session-badges">
@@ -740,13 +724,12 @@ export function RegistrationPage() {
                             {urgency === 'full'
                               ? 'Completo'
                               : urgency === 'last'
-                                ? 'Últimas plazas'
+                                ? '¡Últimas plazas!'
                                 : 'Inscripción abierta'}
                           </span>
                         </div>
 
                         <div className="registration-session-actions">
-                          <Link to={`/cursos-trekform/${session.courseSlug}`}>Ver detalles</Link>
                           {session.status === 'full' ? (
                             <button type="button" disabled>
                               Completo
@@ -864,6 +847,14 @@ export function RegistrationPage() {
       {activeSession && (
         <EnrollmentModal session={activeSession} onClose={() => setActiveSession(null)} />
       )}
+      {alertOpen && alertCourse ? (
+        <SessionAlertModal
+          courseId={alertCourse.id}
+          courseTitle={alertCourse.title}
+          province={alertProvince}
+          onClose={() => setAlertOpen(false)}
+        />
+      ) : null}
     </div>
   )
 }

@@ -1,7 +1,8 @@
-﻿import {
+import {
   ArrowLeft,
   ArrowRight,
   Award,
+  BellRing,
   BookOpen,
   Check,
   ChevronRight,
@@ -20,6 +21,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { YoutubeLightbox } from '../components/common/YoutubeLightbox'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
+import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import {
   getCourseDetail,
   type CourseDetail,
@@ -138,6 +140,7 @@ function toRegistrationSession(course: CourseDetail, session: CourseSession): Re
     modality: getModalityLabel(course.modality),
     durationHours: course.durationMinutes ? course.durationMinutes / 60 : null,
     capacity: session.capacity,
+    seatsRemaining: session.seatsRemaining,
     priceCents: session.priceCents,
     status: session.status,
   }
@@ -148,6 +151,7 @@ export function CourseDetailPage() {
   const [course, setCourse] = useState<CourseDetail | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
+  const [alertOpen, setAlertOpen] = useState(false)
   const [error, setError] = useState('')
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [isVideoOpen, setIsVideoOpen] = useState(false)
@@ -451,11 +455,14 @@ export function CourseDetailPage() {
               Inscríbete ahora <ArrowRight size={18} />
             </button>
           ) : (
-            <Link
-              to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}
+            // No open session (none scheduled, or all full): offer the "notify me" form.
+            <button
+              type="button"
+              className="course-detail-enroll-button"
+              onClick={() => setAlertOpen(true)}
             >
-              Inscríbete ahora <ArrowRight size={18} />
-            </Link>
+              Avísame de nuevas fechas <BellRing size={18} />
+            </button>
           )}
           <dl>
             <div>
@@ -627,6 +634,14 @@ export function CourseDetailPage() {
       {activeSession && (
         <EnrollmentModal session={activeSession} onClose={() => setActiveSession(null)} />
       )}
+      {alertOpen ? (
+        <SessionAlertModal
+          courseId={course.id}
+          courseTitle={course.title}
+          province={null}
+          onClose={() => setAlertOpen(false)}
+        />
+      ) : null}
 
       {isVideoOpen && videoId ? (
         <YoutubeLightbox

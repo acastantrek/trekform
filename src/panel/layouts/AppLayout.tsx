@@ -9,6 +9,7 @@ const links = [
   { label: 'Categorías', to: '/panel/categorias' },
   { label: 'Convocatorias', to: '/panel/convocatorias' },
   { label: 'Inscripciones', to: '/panel/inscripciones' },
+  { label: 'Avisos', to: '/panel/avisos' },
   { label: 'Blog', to: '/panel/blog' },
   { label: 'Categorías del blog', to: '/panel/blog-categorias' },
   { label: 'Usuarios', to: '/panel/usuarios' },

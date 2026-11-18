@@ -27,6 +27,8 @@ export interface RegistrationSession {
   modality: string
   durationHours: number | null
   capacity: number | null
+  /** Free seats (capacity minus non-cancelled enrolments); null when unknown. */
+  seatsRemaining: number | null
   priceCents: number | null
   status: RegistrationSessionStatus
 }
@@ -64,6 +66,11 @@ interface CourseRow {
 interface CategoryRow {
   id: string
   name: string
+}
+
+interface SeatsRow {
+  course_session_id: string
+  seats_remaining: number
 }
 
 interface VenueRow {
@@ -106,23 +113,25 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
 
   const client = untypedSupabase
 
-  const [sessionsResult, coursesResult, categoriesResult, venuesResult] = await Promise.all([
-    client
-      .from('course_sessions')
-      .select('id, slug, starts_at, ends_at, status, capacity, price_cents, course_id, venue_id')
-      .neq('status', 'completed')
-      .gte('ends_at', nowIso)
-      .order('starts_at', { ascending: true }),
-    client
-      .from('courses')
-      .select(
-        'id, slug, title, excerpt, objectives, accreditation_title, accreditation_items, benefits_items, is_official_certification, is_fundae_eligible, is_featured, modality, duration_hours, image_url, category_id',
-      )
-      .eq('status', 'published')
-      .order('title', { ascending: true }),
-    client.from('course_categories').select('id, name').order('name', { ascending: true }),
-    client.from('venues').select('id, name, address, postal_code, locations(city, province)'),
-  ])
+  const [sessionsResult, coursesResult, categoriesResult, venuesResult, seatsResult] =
+    await Promise.all([
+      client
+        .from('course_sessions')
+        .select('id, slug, starts_at, ends_at, status, capacity, price_cents, course_id, venue_id')
+        .neq('status', 'completed')
+        .gte('ends_at', nowIso)
+        .order('starts_at', { ascending: true }),
+      client
+        .from('courses')
+        .select(
+          'id, slug, title, excerpt, objectives, accreditation_title, accreditation_items, benefits_items, is_official_certification, is_fundae_eligible, is_featured, modality, duration_hours, image_url, category_id',
+        )
+        .eq('status', 'published')
+        .order('title', { ascending: true }),
+      client.from('course_categories').select('id, name').order('name', { ascending: true }),
+      client.from('venues').select('id, name, address, postal_code, locations(city, province)'),
+      client.rpc('session_seats_remaining'),
+    ])
 
   if (sessionsResult.error) {
     throw new Error(`No se pudieron cargar las convocatorias: ${sessionsResult.error.message}`)
@@ -146,6 +155,16 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
       category.name,
     ]),
   )
+  // Free seats are a nice-to-have: if they can't be loaded the sessions still show, just
+  // without seat-based "Últimas plazas" / "Completo".
+  const seatsBySession = new Map<string, number>(
+    seatsResult.error
+      ? []
+      : ((seatsResult.data as SeatsRow[] | null) ?? []).map((row) => [
+          row.course_session_id,
+          row.seats_remaining,
+        ]),
+  )
   const venueById = new Map<string, VenueRow>(
     ((venuesResult.data as unknown as VenueRow[]) ?? []).map((venue) => [venue.id, venue]),
   )
@@ -158,6 +177,7 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
       const venue = session.venue_id ? venueById.get(session.venue_id) : null
       const city = venue?.locations?.city ?? 'Online'
       const province = venue?.locations?.province ?? 'Online'
+      const seatsRemaining = seatsBySession.get(session.id) ?? null
 
       return {
         id: session.id,
@@ -184,8 +204,10 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
         modality: formatModality(course.modality),
         durationHours: course.duration_hours,
         capacity: session.capacity,
+        seatsRemaining,
         priceCents: session.price_cents,
-        status: session.status,
+        // An open session with no free seats left is full, whatever the panel status says.
+        status: session.status === 'open' && seatsRemaining === 0 ? 'full' : session.status,
       } satisfies RegistrationSession
     })
     .filter((session): session is RegistrationSession => Boolean(session))

@@ -106,6 +106,8 @@ export interface CourseSession {
   startsAt: string
   endsAt: string
   capacity: number
+  /** Free seats (capacity minus non-cancelled enrolments); null when unknown. */
+  seatsRemaining: number | null
   priceCents: number
   status: 'open' | 'full' | 'completed'
   venue: string
@@ -205,27 +207,36 @@ interface CourseDetailRow {
   }>
 }
 
-function mapSessions(sessions: CourseDetailRow['course_sessions']) {
+function mapSessions(
+  sessions: CourseDetailRow['course_sessions'],
+  seatsBySession: Map<string, number>,
+) {
   return sessions
     .filter((session) => session.status !== 'completed' && new Date(session.ends_at) >= new Date())
-    .map((session) => ({
-      id: session.id,
-      slug: session.slug,
-      startsAt: session.starts_at,
-      endsAt: session.ends_at,
-      capacity: session.capacity,
-      priceCents: session.price_cents,
-      status: session.status,
-      venue: session.venues?.name ?? 'Formación online',
-      address: session.venues?.address ?? '',
-      postalCode: session.venues?.postal_code ?? null,
-      city: session.venues?.locations?.city ?? 'Online',
-      province: session.venues?.locations?.province ?? '',
-    }))
+    .map((session) => {
+      const seatsRemaining = seatsBySession.get(session.id) ?? null
+      return {
+        id: session.id,
+        slug: session.slug,
+        startsAt: session.starts_at,
+        endsAt: session.ends_at,
+        capacity: session.capacity,
+        seatsRemaining,
+        priceCents: session.price_cents,
+        // An open session with no free seats left is full, whatever the panel status says.
+        status:
+          session.status === 'open' && seatsRemaining === 0 ? ('full' as const) : session.status,
+        venue: session.venues?.name ?? 'Formación online',
+        address: session.venues?.address ?? '',
+        postalCode: session.venues?.postal_code ?? null,
+        city: session.venues?.locations?.city ?? 'Online',
+        province: session.venues?.locations?.province ?? '',
+      }
+    })
     .sort((a, b) => new Date(a.startsAt).getTime() - new Date(b.startsAt).getTime())
 }
 
-function mapCourseDetail(row: CourseDetailRow): CourseDetail {
+function mapCourseDetail(row: CourseDetailRow, seatsBySession: Map<string, number>): CourseDetail {
   const { categories } = collectCategories(row)
 
   return {
@@ -259,7 +270,7 @@ function mapCourseDetail(row: CourseDetailRow): CourseDetail {
     isFundaeEligible: row.is_fundae_eligible,
     isFeatured: row.is_featured,
     categories,
-    sessions: mapSessions(row.course_sessions),
+    sessions: mapSessions(row.course_sessions, seatsBySession),
   }
 }
 
@@ -267,19 +278,31 @@ export async function getCourseDetail(slug: string): Promise<CourseDetail | null
   if (!untypedSupabase) throw new Error('Falta configurar la conexión con Supabase.')
 
   const client = untypedSupabase
-  const result = await client
-    .from('courses')
-    .select(
-      'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, duration_minutes, brochure_url, video_url, methodology, modality_label, duration_label, audience_label, typology, extra_sections, is_official_certification, is_fundae_eligible, is_featured, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, postal_code, locations(city, province)))',
-    )
-    .eq('slug', slug)
-    .eq('status', 'published')
-    .maybeSingle()
+  const [result, seatsResult] = await Promise.all([
+    client
+      .from('courses')
+      .select(
+        'id, slug, title, short_title, excerpt, hero_text, description, objectives, accreditation_title, accreditation_items, benefits_items, audience_description, audience, featured_image_url, modality, duration_minutes, brochure_url, video_url, methodology, modality_label, duration_label, audience_label, typology, extra_sections, is_official_certification, is_fundae_eligible, is_featured, course_categories!courses_category_id_fkey(name), course_category_assignments(course_categories(name)), course_sessions(id, slug, starts_at, ends_at, capacity, price_cents, status, venues(name, address, postal_code, locations(city, province)))',
+      )
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .maybeSingle(),
+    client.rpc('session_seats_remaining'),
+  ])
 
   if (result.error) {
     throw new Error(`No se pudo cargar el curso: ${result.error.message}`)
   }
   if (!result.data) return null
 
-  return mapCourseDetail(result.data as unknown as CourseDetailRow)
+  // Free seats are a nice-to-have: without them sessions keep their panel status.
+  const seatsBySession = new Map<string, number>(
+    seatsResult.error
+      ? []
+      : (
+          (seatsResult.data as { course_session_id: string; seats_remaining: number }[] | null) ??
+          []
+        ).map((row) => [row.course_session_id, row.seats_remaining]),
+  )
+  return mapCourseDetail(result.data as unknown as CourseDetailRow, seatsBySession)
 }

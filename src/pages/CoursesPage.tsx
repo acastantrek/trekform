@@ -1,4 +1,4 @@
-﻿import {
+import {
   ArrowRight,
   Award,
   BriefcaseBusiness,
@@ -8,6 +8,7 @@
   Clock3,
   Download,
   Grid3X3,
+  LocateFixed,
   MapPin,
   RotateCcw,
   Search,
@@ -18,12 +19,14 @@
 } from 'lucide-react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
-import { NoSessionsModal } from '../components/registrations/NoSessionsModal'
+import { Link, useNavigate } from 'react-router-dom'
+import { ProvincePickerModal } from '../components/registrations/ProvincePickerModal'
+import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
 import { useMediaQuery } from '../hooks/useMediaQuery'
-import { getRegistrationSessions, type RegistrationSession } from '../services/registrations'
+import { useUserLocation, type UserLocationStatus } from '../hooks/useUserLocation'
+import { coordinatesForPlace, distanceKm, type Coordinates } from '../lib/geo'
+import { getRegistrationSessions } from '../services/registrations'
 import type { Course } from '../types/course'
 
 const pageSize = 8
@@ -77,8 +80,6 @@ function getCourseMeta(course: Course) {
   return { duration, durationHours, modality, certificate, officialCertification, bonificable }
 }
 
-const cardDateFormatter = new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short' })
-
 function matchesDurationFilter(filter: string, hours: number) {
   switch (filter) {
     case 'Hasta 4 horas':
@@ -122,15 +123,14 @@ export function CoursesPage() {
   const [appliedCategory, setAppliedCategory] = useState('Todos')
   const [appliedModality, setAppliedModality] = useState(modalities[0])
   const [page, setPage] = useState(1)
-  const [nextSessionByCourseSlug, setNextSessionByCourseSlug] = useState<
-    Map<string, RegistrationSession>
-  >(new Map())
-  const [sessionsByCourseSlug, setSessionsByCourseSlug] = useState<
-    Map<string, RegistrationSession[]>
-  >(new Map())
-  const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
+  const [provincesByCourseSlug, setProvincesByCourseSlug] = useState<Map<string, CourseProvince[]>>(
+    new Map(),
+  )
+  const userLocation = useUserLocation()
   const [sessionsLoaded, setSessionsLoaded] = useState(false)
-  const [noSessionsCourseTitle, setNoSessionsCourseTitle] = useState<string | null>(null)
+  const [alertTarget, setAlertTarget] = useState<SessionAlertTarget | null>(null)
+  const [pickerCourse, setPickerCourse] = useState<Course | null>(null)
+  const navigate = useNavigate()
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const setModality = (value: string) => {
@@ -141,24 +141,45 @@ export function CoursesPage() {
   useEffect(() => {
     getRegistrationSessions()
       .then((sessions) => {
-        const nextOpenMap = new Map<string, RegistrationSession>()
-        const bySlugMap = new Map<string, RegistrationSession[]>()
+        const provincesMap = new Map<string, Map<string, CourseProvince>>()
         sessions.forEach((session) => {
-          if (session.status === 'open' && !nextOpenMap.has(session.courseSlug)) {
-            nextOpenMap.set(session.courseSlug, session)
+          const provinces =
+            provincesMap.get(session.courseSlug) ?? new Map<string, CourseProvince>()
+          const province = provinces.get(session.province) ?? {
+            name: session.province,
+            venueCoordinates: [],
+            hasOpenSession: false,
           }
-          const list = bySlugMap.get(session.courseSlug) ?? []
-          list.push(session)
-          bySlugMap.set(session.courseSlug, list)
+          // Only open sessions count as available: a course whose sessions are all full is
+          // treated as having none, so the visitor is offered the "notify me" form instead.
+          if (session.status === 'open') province.hasOpenSession = true
+          // A province can host several venue cities; keep each one's coordinates so the
+          // distance shown is to the nearest of them.
+          const coordinates =
+            session.province === 'Online'
+              ? null
+              : coordinatesForPlace(session.city, session.province)
+          if (
+            coordinates &&
+            !province.venueCoordinates.some(
+              (known) =>
+                known.latitude === coordinates.latitude &&
+                known.longitude === coordinates.longitude,
+            )
+          ) {
+            province.venueCoordinates.push(coordinates)
+          }
+          provinces.set(session.province, province)
+          provincesMap.set(session.courseSlug, provinces)
         })
-        setNextSessionByCourseSlug(nextOpenMap)
-        setSessionsByCourseSlug(bySlugMap)
+        setProvincesByCourseSlug(
+          new Map([...provincesMap].map(([slug, provinces]) => [slug, [...provinces.values()]])),
+        )
         setSessionsLoaded(true)
       })
-      .catch(() => {
-        setNextSessionByCourseSlug(new Map())
-        setSessionsByCourseSlug(new Map())
-      })
+      // If sessions fail to load, "Convocatorias" goes straight to the registrations page,
+      // since we can't tell which provinces (if any) have open sessions.
+      .catch(() => {})
   }, [])
 
   const catalogCategories = useMemo(() => {
@@ -173,6 +194,71 @@ export function CoursesPage() {
     })
     return map
   }, [allCourses])
+
+  // Each course's venue provinces, nearest first once we know where the visitor is (alphabetical
+  // otherwise). Provinces without coordinates — "Online" or an unknown place — always go last.
+  const provinceOptionsByCourseSlug = useMemo(() => {
+    const origin = userLocation.coordinates
+    const map = new Map<string, ProvinceOption[]>()
+    provincesByCourseSlug.forEach((provinces, slug) => {
+      const options = provinces.map((province) => ({
+        ...province,
+        distanceKm:
+          origin && province.venueCoordinates.length > 0
+            ? Math.min(...province.venueCoordinates.map((venue) => distanceKm(origin, venue)))
+            : null,
+      }))
+      options.sort((a, b) => {
+        if (a.distanceKm !== null && b.distanceKm !== null) return a.distanceKm - b.distanceKm
+        if (a.distanceKm !== null) return -1
+        if (b.distanceKm !== null) return 1
+        return a.name.localeCompare(b.name, 'es')
+      })
+      map.set(slug, options)
+    })
+    return map
+  }, [provincesByCourseSlug, userLocation.coordinates])
+
+  const registrationsLink = (course: Course, province: string | null) => {
+    const params = new URLSearchParams({ curso: course.title })
+    if (province) params.set('provincia', province)
+    return `/inscripciones?${params}#registration-results`
+  }
+
+  // "Convocatorias": when the course has open sessions, ask which province first (nearest
+  // first); otherwise go straight to the "notify me" form.
+  const openConvocatorias = (course: Course) => {
+    const provinces = provinceOptionsByCourseSlug.get(course.slug) ?? []
+    if (provinces.some((province) => province.hasOpenSession)) setPickerCourse(course)
+    else
+      setAlertTarget({
+        courseId: course.id,
+        courseTitle: course.title,
+        province: null,
+        otherProvincesLink: null,
+      })
+  }
+
+  // Picking a province (or all of them) opens the registrations page filtered accordingly; a
+  // province whose sessions are all full offers the "notify me" form, linking to the others.
+  const selectPickerProvince = (province: string | null) => {
+    const course = pickerCourse
+    if (!course) return
+    setPickerCourse(null)
+    const option = province
+      ? provinceOptionsByCourseSlug.get(course.slug)?.find((item) => item.name === province)
+      : null
+    if (province && option && !option.hasOpenSession) {
+      setAlertTarget({
+        courseId: course.id,
+        courseTitle: course.title,
+        province,
+        otherProvincesLink: registrationsLink(course, null),
+      })
+      return
+    }
+    navigate(registrationsLink(course, province))
+  }
 
   const toggleFilterValue = (setter: Dispatch<SetStateAction<string[]>>, value: string) => {
     setter((current) =>
@@ -488,6 +574,7 @@ export function CoursesPage() {
                   <CalendarDays size={15} /> Próximas convocatorias
                 </button>
               </div>
+              <LocateButton status={userLocation.status} onLocate={userLocation.locate} />
             </div>
 
             {loading ? (
@@ -504,8 +591,6 @@ export function CoursesPage() {
                 {visibleCourses.map((course, index) => {
                   const absoluteIndex = (page - 1) * pageSize + index
                   const meta = courseMetaById.get(course.id)!
-                  const upcomingSessions = (sessionsByCourseSlug.get(course.slug) ?? []).slice(0, 3)
-
                   return (
                     <article className="catalog-card" key={course.id}>
                       <div className="catalog-image">
@@ -542,40 +627,14 @@ export function CoursesPage() {
                             </span>
                           </div>
                         ) : null}
-                        <div className="course-dates">
-                          <small>Próx. fechas:</small>
-                          {upcomingSessions.length > 0 ? (
-                            upcomingSessions.map((session) => (
-                              <span key={session.id}>
-                                {cardDateFormatter.format(new Date(session.startsAt))}
-                              </span>
-                            ))
-                          ) : (
-                            <span>Próximamente</span>
-                          )}
-                        </div>
                         <div className="catalog-card-actions">
                           <Link to={`/cursos-trekform/${course.slug}`}>Ver detalles</Link>
-                          {nextSessionByCourseSlug.has(course.slug) ? (
-                            <button
-                              type="button"
-                              onClick={() =>
-                                setActiveSession(nextSessionByCourseSlug.get(course.slug)!)
-                              }
-                            >
-                              Inscribirme
-                            </button>
-                          ) : sessionsLoaded ? (
-                            <button
-                              type="button"
-                              onClick={() => setNoSessionsCourseTitle(course.title)}
-                            >
-                              Inscribirme
+                          {sessionsLoaded ? (
+                            <button type="button" onClick={() => openConvocatorias(course)}>
+                              Convocatorias
                             </button>
                           ) : (
-                            <Link to={`/cursos-trekform/${course.slug}#convocatorias`}>
-                              Inscribirme
-                            </Link>
+                            <Link to={registrationsLink(course, null)}>Convocatorias</Link>
                           )}
                         </div>
                       </div>
@@ -681,15 +740,19 @@ export function CoursesPage() {
         </div>
       </section>
 
-      {activeSession && (
-        <EnrollmentModal session={activeSession} onClose={() => setActiveSession(null)} />
-      )}
-      {noSessionsCourseTitle && (
-        <NoSessionsModal
-          courseTitle={noSessionsCourseTitle}
-          onClose={() => setNoSessionsCourseTitle(null)}
+      {pickerCourse ? (
+        <ProvincePickerModal
+          courseTitle={pickerCourse.title}
+          provinces={provinceOptionsByCourseSlug.get(pickerCourse.slug) ?? []}
+          locationStatus={userLocation.status}
+          onLocate={userLocation.locate}
+          onSelect={selectPickerProvince}
+          onClose={() => setPickerCourse(null)}
         />
-      )}
+      ) : null}
+      {alertTarget ? (
+        <SessionAlertModal {...alertTarget} onClose={() => setAlertTarget(null)} />
+      ) : null}
     </>
   )
 }
@@ -717,6 +780,60 @@ function CatalogSelect({
         <ChevronDown />
       </div>
     </label>
+  )
+}
+
+interface CourseProvince {
+  name: string
+  /** One entry per distinct venue city in the province (empty for "Online"). */
+  venueCoordinates: Coordinates[]
+  /** Whether any of the course's sessions in this province is open for enrolment. */
+  hasOpenSession: boolean
+}
+
+interface SessionAlertTarget {
+  courseId: string
+  courseTitle: string
+  province: string | null
+  otherProvincesLink: string | null
+}
+
+interface ProvinceOption extends CourseProvince {
+  distanceKm: number | null
+}
+
+const locateLabels: Record<UserLocationStatus, string> = {
+  idle: 'Cerca de mí',
+  locating: 'Buscando…',
+  ready: 'Ordenado por cercanía',
+  denied: 'Ubicación bloqueada',
+  unavailable: 'Reintentar ubicación',
+}
+
+function LocateButton({ status, onLocate }: { status: UserLocationStatus; onLocate: () => void }) {
+  const hint =
+    status === 'denied'
+      ? 'Activa el permiso de ubicación del navegador para ver las convocatorias más cercanas'
+      : status === 'ready'
+        ? 'Las provincias de cada convocatoria aparecen ordenadas de más cercana a más lejana'
+        : 'Usa tu ubicación para ordenar las convocatorias de cada curso por cercanía'
+
+  return (
+    <button
+      type="button"
+      className={`catalog-locate${status === 'ready' ? ' is-active' : ''}`}
+      onClick={onLocate}
+      disabled={status === 'locating'}
+      title={hint}
+      aria-live="polite"
+    >
+      {status === 'locating' ? (
+        <span className="catalog-locate-spinner" aria-hidden="true" />
+      ) : (
+        <LocateFixed size={15} aria-hidden="true" />
+      )}
+      {locateLabels[status]}
+    </button>
   )
 }
 
