@@ -111,76 +111,225 @@
   gap: 28px;
 }
 .course-card {
+  --card-radius: 16px;
+  position: relative;
+  isolation: isolate;
   min-width: 0;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
   background: #fff;
-  border: 1px solid #e4e7e2;
-  border-radius: 8px;
-  box-shadow: 0 12px 28px rgba(46, 46, 46, 0.07);
+  border: 1px solid rgba(46, 46, 46, 0.08);
+  border-radius: var(--card-radius);
+  box-shadow:
+    0 1px 2px rgba(46, 46, 46, 0.04),
+    0 8px 24px rgba(46, 46, 46, 0.06);
+  /* Opacity is listed so the scroll-reveal fade still works. */
   transition:
-    transform 0.24s ease,
-    box-shadow 0.24s ease;
+    opacity 0.72s ease,
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.3s ease;
 }
-.course-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 22px 44px rgba(46, 46, 46, 0.13);
+/* Gradient ring that lights up around the card on hover (same as the catalog cards). */
+.course-card::before {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  inset: -1px;
+  padding: 1.5px;
+  border-radius: calc(var(--card-radius) + 1px);
+  background: linear-gradient(140deg, #ffb606 0%, var(--accent-soft) 40%, transparent 70%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.course-card:hover,
+.course-card:focus-within {
+  border-color: transparent;
+  transform: translateY(-8px);
+  box-shadow:
+    0 2px 4px rgba(46, 46, 46, 0.04),
+    0 26px 50px rgba(46, 46, 46, 0.14),
+    0 22px 44px -12px rgba(255, 182, 6, 0.45);
+}
+.course-card:hover::before,
+.course-card:focus-within::before {
+  opacity: 1;
 }
 .course-image {
-  height: 185px;
-  background-size: cover;
-  background-position: center;
   position: relative;
+  height: 178px;
+  margin: 8px 8px 0;
+  overflow: hidden;
+  border-radius: calc(var(--card-radius) - 6px);
+  background-color: #171717;
+  /* The course photos (1200x630) carry grey strips above and below the picture (rows ~72-561
+     hold the content, centred). Centred and at least 450px wide, the strips never reach the box. */
+  background-size: max(100%, 450px) auto;
+  background-position: center;
+  filter: none;
 }
+/* Cinematic shade so the pills read on any photo. */
 .course-image::after {
   content: '';
   position: absolute;
+  z-index: 0;
   inset: 0;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.18), transparent 50%);
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.28) 0%, transparent 32%),
+    linear-gradient(0deg, rgba(10, 10, 10, 0.78) 0%, rgba(10, 10, 10, 0.18) 46%, transparent 64%);
 }
-.course-image > span {
+/* Light sweep across the photo on hover. */
+.course-image::before {
+  content: '';
   position: absolute;
-  left: 22px;
-  bottom: -28px;
-  z-index: 2;
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: #fff !important;
-  color: var(--accent);
-  border: 1px solid #f0e2d6;
-  box-shadow: 0 12px 28px rgba(46, 46, 46, 0.12);
-  font-weight: 900;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  left: -75%;
+  width: 50%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 100%
+  );
+  transform: skewX(-18deg);
+  pointer-events: none;
 }
+.course-card:hover .course-image::before {
+  left: 130%;
+  transition: left 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* Category: frosted-glass pill sitting on the shade. */
 .course-image b {
-  display: none;
+  position: absolute;
+  z-index: 2;
+  left: 12px;
+  bottom: 12px;
+  max-width: calc(100% - 24px);
+  display: block;
+  overflow: hidden;
+  padding: 6px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(10px) saturate(1.4);
+  -webkit-backdrop-filter: blur(10px) saturate(1.4);
+  color: #fff;
+  line-height: 1;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .course-info {
-  padding: 46px 24px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
 }
+/* Accent rule above the title that stretches to the full width on hover. */
 .course-info h3 {
-  margin: 0 0 10px;
+  position: relative;
   min-height: 48px;
+  margin: 0 0 14px;
+  padding-top: 14px;
   font-family: 'Inter Tight', sans-serif;
   font-size: 20px;
   line-height: 1.08;
   letter-spacing: -0.015em;
   color: var(--navy);
 }
+.course-info h3::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #ffb606, var(--accent-soft));
+  transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.course-card:hover .course-info h3::before {
+  width: 100%;
+}
 .meta {
   display: none;
 }
+/* "Ver curso": dark pill that fills with the brand yellow from the left on hover. */
 .course-info a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 16px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  margin-top: auto;
+  height: 42px;
   padding: 0;
   border: 0;
-  color: var(--navy);
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--navy);
+  color: #fff;
   font-size: 13px;
   font-weight: 900;
+  box-shadow: 0 8px 18px rgba(46, 46, 46, 0.18);
+  transition:
+    color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+.course-info a::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(135deg, #ffd56a, #ffb606);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.course-info a svg {
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.course-card:hover .course-info a {
+  box-shadow: 0 10px 22px rgba(255, 182, 6, 0.32);
+}
+.course-info a:hover,
+.course-info a:focus-visible {
+  color: var(--navy);
+}
+.course-info a:hover::before,
+.course-info a:focus-visible::before {
+  transform: scaleX(1);
+}
+.course-info a:hover svg {
+  transform: translateX(4px);
+}
+.course-info a:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .course-card,
+  .course-card::before,
+  .course-image::before,
+  .course-info a::before {
+    transition: none;
+  }
+  .course-card:hover,
+  .course-card:focus-within {
+    transform: none;
+  }
+  .course-card:hover .course-image::before {
+    left: -75%;
+  }
 }
 .category-section {
   padding: 8px max(5vw, 32px) 48px;
@@ -191,31 +340,113 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
+/* Same look as the course cards (and the catalog): white card, golden ring and lift on hover,
+   accent rule above the name that stretches to the full width. */
 .category-card {
+  --card-radius: 16px;
+  position: relative;
+  isolation: isolate;
   display: grid;
+  justify-items: start;
   gap: 10px;
-  padding: 30px 26px;
-  background: #faf8f4;
-  border: 1px solid #e4e7e2;
-  border-radius: 8px;
-  color: var(--navy);
-  transition:
-    transform 0.24s ease,
-    box-shadow 0.24s ease,
-    background 0.24s ease;
-}
-.category-card:hover {
-  transform: translateY(-4px);
+  padding: 26px 24px 24px;
   background: #fff;
-  box-shadow: 0 18px 36px rgba(46, 46, 46, 0.1);
+  border: 1px solid rgba(46, 46, 46, 0.08);
+  border-radius: var(--card-radius);
+  color: var(--navy);
+  box-shadow:
+    0 1px 2px rgba(46, 46, 46, 0.04),
+    0 8px 24px rgba(46, 46, 46, 0.06);
+  /* Opacity is listed so the scroll-reveal fade still works. */
+  transition:
+    opacity 0.72s ease,
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.3s ease;
 }
+.category-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  padding: 1.5px;
+  border-radius: calc(var(--card-radius) + 1px);
+  background: linear-gradient(140deg, #ffb606 0%, var(--accent-soft) 40%, transparent 70%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.category-card:hover,
+.category-card:focus-visible {
+  border-color: transparent;
+  transform: translateY(-8px);
+  box-shadow:
+    0 2px 4px rgba(46, 46, 46, 0.04),
+    0 26px 50px rgba(46, 46, 46, 0.14),
+    0 22px 44px -12px rgba(255, 182, 6, 0.45);
+}
+.category-card:hover::before,
+.category-card:focus-visible::before {
+  opacity: 1;
+}
+.category-card:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 3px;
+}
+/* Icon on a golden tile, like the number pill on the course cards. */
 .category-card svg {
-  color: var(--accent);
+  box-sizing: content-box;
+  margin-bottom: 6px;
+  padding: 13px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ffd56a, #ffb606);
+  color: var(--navy);
+  box-shadow:
+    0 10px 22px rgba(255, 182, 6, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.category-card:hover svg {
+  transform: rotate(-8deg) scale(1.06);
 }
 .category-card strong {
+  position: relative;
+  justify-self: stretch;
+  padding-top: 14px;
   font-family: 'Inter Tight', sans-serif;
   font-size: 16px;
   line-height: 1.2;
+}
+.category-card strong::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #ffb606, var(--accent-soft));
+  transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.category-card:hover strong::before {
+  width: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .category-card,
+  .category-card::before,
+  .category-card svg,
+  .category-card strong::before {
+    transition: none;
+  }
+  .category-card:hover,
+  .category-card:focus-visible,
+  .category-card:hover svg {
+    transform: none;
+  }
 }
 .category-card span {
   color: #7a7a75;

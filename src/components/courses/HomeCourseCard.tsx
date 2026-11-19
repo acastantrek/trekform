@@ -22,7 +22,6 @@ export function HomeCourseCard({ course, index }: { course: Course; index: numbe
       }
     >
       <div className="course-image" style={{ backgroundImage: `url(${course.image})` }}>
-        <span>{String(index + 1).padStart(2, '0')}</span>
         <b>{course.category}</b>
       </div>
       <div className="course-info">
