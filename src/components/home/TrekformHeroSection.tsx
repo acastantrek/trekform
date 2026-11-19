@@ -2,6 +2,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { submitContactRequest } from '../../services/contact'
+import { CountUp } from '../common/CountUp'
 
 type SubmitState = 'idle' | 'sending' | 'success' | 'error'
 
@@ -48,14 +49,14 @@ export function TrekformHeroSection() {
     <section className="home-slider">
       <div className="slider-content" data-reveal>
         <span className="eyebrow" data-reveal data-reveal-delay="0.02">
-          <i /> FORMACIÓN QUE TE LLEVA MÁS LEJOS
+          <i /> LÍDERES EN FORMACIÓN A NIVEL NACIONAL
         </span>
         <h1 data-reveal data-reveal-delay="0.08">
-          Maquinaria industrial <span>y PRL</span>
+          Formación en maquinaria industrial <span>y PRL</span>
         </h1>
         <p data-reveal data-reveal-delay="0.14">
-          Formación práctica y certificada para profesionales y empresas, con convocatorias en toda
-          España.
+          Formación teórico-práctica y certificada para particulares, profesionales y empresas, con
+          convocatorias en toda España.
         </p>
         <div className="hero-actions" data-reveal data-reveal-delay="0.2">
           <a href="#hero-form" className="primary">
@@ -72,19 +73,19 @@ export function TrekformHeroSection() {
           data-reveal-delay="0.26"
         >
           <div data-reveal data-reveal-delay="0.04">
-            <strong>+20</strong>
+            <CountUp value="+20" />
             <span>Años de experiencia</span>
           </div>
           <div data-reveal data-reveal-delay="0.08">
-            <strong>+200.000</strong>
+            <CountUp value="+250.000" />
             <span>Alumnos formados</span>
           </div>
           <div data-reveal data-reveal-delay="0.12">
-            <strong>+4.000</strong>
+            <CountUp value="+5.500" />
             <span>Empresas</span>
           </div>
           <div data-reveal data-reveal-delay="0.16">
-            <strong>+18.000</strong>
+            <CountUp value="+18.000" />
             <span>Cursos impartidos</span>
           </div>
         </div>

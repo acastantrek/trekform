@@ -1,10 +1,11 @@
 ﻿import { ArrowRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
+import { CountUp } from '../common/CountUp'
 
 const stats = [
   { value: '+20', label: 'Años de experiencia' },
-  { value: '+200.000', label: 'Alumnos formados' },
-  { value: '+4.000', label: 'Empresas' },
+  { value: '+250.000', label: 'Alumnos formados' },
+  { value: '+5.500', label: 'Empresas' },
   { value: '+18.000', label: 'Cursos impartidos' },
 ]
 
@@ -35,7 +36,7 @@ export function TrekformStatsSection() {
             data-reveal
             style={{ '--reveal-delay': `${0.05 + index * 0.06}s` } as CSSProperties}
           >
-            <strong>{stat.value}</strong>
+            <CountUp value={stat.value} />
             <span>{stat.label}</span>
           </div>
         ))}
