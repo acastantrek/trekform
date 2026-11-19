@@ -23,6 +23,7 @@
 }
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 88px;
 }
 body {
   margin: 0;
@@ -93,8 +94,9 @@ a {
   justify-content: space-between;
   background: rgba(255, 255, 255, 0.76);
   backdrop-filter: blur(18px);
-  position: relative;
-  z-index: 20;
+  position: sticky;
+  top: 0;
+  z-index: 50;
   border-bottom: 1px solid rgba(46, 46, 46, 0.08);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.55) inset;
 }
