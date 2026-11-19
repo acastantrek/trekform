@@ -28,6 +28,19 @@ const categoryIcons: Record<string, LucideIcon> = {
   hosteleria: UtensilsCrossed,
 }
 
+// Photo shown on each category card, fading in from the left.
+const categoryImages: Record<string, string> = {
+  'maquinaria-industrial': '/imagenes/carretilla-trekform-2.jpg',
+  'trabajos-en-altura': '/imagenes/conoce_un_poco_mejor_los_trabajos_en_altura_trekform.jpg',
+  'espacios-confinados': '/imagenes/home_espacios_confinados_trekform.jpg',
+  'formacion-telco': '/imagenes/curso_telco_espacios_confinados.jpg',
+  'trekform-online': '/imagenes/curso_ciberseguridad.jpg',
+  'construccion-metal': '/cursos/curso-de-prl-construccion-tpc-metal-tpm.jpg',
+  prevencion: '/imagenes/curso_epis.jpg',
+  logistica: '/imagenes/curso_picking.jpg',
+  hosteleria: '/imagenes/curso_manipulador_alimentos.jpg',
+}
+
 export function CategoriesShowcase() {
   const [categories, setCategories] = useState<CategoryOverview[]>([])
 
@@ -55,13 +68,19 @@ export function CategoriesShowcase() {
       <div className="category-grid">
         {categories.map((category, index) => {
           const Icon = categoryIcons[category.slug] ?? LayoutGrid
+          const image = categoryImages[category.slug]
           return (
             <Link
-              to="/cursos-trekform"
+              to={`/cursos-trekform?categoria=${encodeURIComponent(category.name)}`}
               className="category-card"
               key={category.id}
               data-reveal
-              style={{ '--reveal-delay': `${0.05 + index * 0.04}s` } as CSSProperties}
+              style={
+                {
+                  '--reveal-delay': `${0.05 + index * 0.04}s`,
+                  ...(image ? { '--category-image': `url('${image}')` } : {}),
+                } as CSSProperties
+              }
             >
               <Icon size={26} />
               <strong>{category.name}</strong>

@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import type { CSSProperties, Dispatch, ReactNode, SetStateAction } from 'react'
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ProvincePickerModal } from '../components/registrations/ProvincePickerModal'
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
@@ -114,12 +114,16 @@ function matchesCertificationFilter(
 export function CoursesPage() {
   const { courses: allCourses, loading, error } = useCourses()
   const isMobileFilters = useMediaQuery('(max-width: 680px)')
-  const [category, setCategoryDraft] = useState('Todos')
+  // `?categoria=` (e.g. from a category card on the home) pre-applies the category filter.
+  const [searchParams] = useSearchParams()
+  const categoryQuery = searchParams.get('categoria')
+  const [syncedCategoryQuery, setSyncedCategoryQuery] = useState(categoryQuery)
+  const [category, setCategoryDraft] = useState(categoryQuery ?? 'Todos')
   const [search, setSearch] = useState('')
   const [modality, setModalityDraft] = useState(modalities[0])
   const [durationFilters, setDurationFilters] = useState<string[]>([])
   const [certificationFilters, setCertificationFilters] = useState<string[]>([])
-  const [appliedCategory, setAppliedCategory] = useState('Todos')
+  const [appliedCategory, setAppliedCategory] = useState(categoryQuery ?? 'Todos')
   const [appliedModality, setAppliedModality] = useState(modalities[0])
   const [page, setPage] = useState(1)
   const [provincesByCourseSlug, setProvincesByCourseSlug] = useState<Map<string, CourseProvince[]>>(
@@ -133,6 +137,21 @@ export function CoursesPage() {
   const [pickerImage, setPickerImage] = useState('')
   const navigate = useNavigate()
   const [filtersOpen, setFiltersOpen] = useState(false)
+
+  if (categoryQuery && categoryQuery !== syncedCategoryQuery) {
+    setSyncedCategoryQuery(categoryQuery)
+    setCategoryDraft(categoryQuery)
+    setAppliedCategory(categoryQuery)
+    setPage(1)
+  }
+
+  useEffect(() => {
+    if (searchParams.get('categoria')) {
+      document
+        .getElementById('catalog-results')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [searchParams])
 
   const setModality = (value: string) => {
     setModalityDraft(value)

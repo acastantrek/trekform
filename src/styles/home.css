@@ -397,6 +397,24 @@
   outline: 2px solid var(--navy);
   outline-offset: 3px;
 }
+/* Category photo on the right half, fading out towards the left so the text stays readable. */
+.category-card::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  /* At least 420px wide: also crops the white strips some course photos carry top and bottom. */
+  background: var(--category-image, none) center / max(100%, 420px) auto no-repeat;
+  -webkit-mask-image: linear-gradient(90deg, transparent 25%, rgba(0, 0, 0, 0.35) 55%, #000 100%);
+  mask-image: linear-gradient(90deg, transparent 25%, rgba(0, 0, 0, 0.35) 55%, #000 100%);
+  opacity: 0.85;
+  transition: opacity 0.45s ease;
+  pointer-events: none;
+}
+.category-card:hover::after {
+  opacity: 1;
+}
 /* Icon on a golden tile, like the number pill on the course cards. */
 .category-card svg {
   box-sizing: content-box;
