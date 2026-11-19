@@ -2,7 +2,6 @@ import {
   ArrowLeft,
   ArrowRight,
   Award,
-  BellRing,
   BookOpen,
   Check,
   ChevronRight,
@@ -194,6 +193,11 @@ export function CourseDetailPage() {
   const durationLabel = course.durationLabel ?? formatDuration(course.durationMinutes)
   const certificationLabel = course.accreditationTitle ?? 'Diploma acreditativo Trekform'
   const nextOpenSession = course.sessions.find((session) => session.status === 'open')
+  // No upcoming session at all (open or full): the registrations page would be empty for this
+  // course, so the session CTAs open the "notify me" form instead of linking there.
+  const hasSessions = course.sessions.length > 0
+  const allSessionsLink = `/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`
+  const openCourseAlert = () => setAlertTarget({ province: null, otherProvincesLink: null })
 
   // Same flow as "Ver convocatorias" on the catalog: pick a province (or all), then land on the
   // registrations page filtered to this course. Provinces are alphabetical, "Online" last.
@@ -307,12 +311,15 @@ export function CourseDetailPage() {
             <h1>{accentedTitle(course.title)}</h1>
             <p className="course-detail-excerpt">{course.heroText || course.excerpt}</p>
             <div className="course-detail-hero-actions">
-              <Link
-                to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}
-                className="course-detail-primary"
-              >
-                Ver convocatorias <ArrowRight size={18} />
-              </Link>
+              {hasSessions ? (
+                <Link to={allSessionsLink} className="course-detail-primary">
+                  Ver convocatorias <ArrowRight size={18} />
+                </Link>
+              ) : (
+                <button type="button" className="course-detail-primary" onClick={openCourseAlert}>
+                  Ver convocatorias <ArrowRight size={18} />
+                </button>
+              )}
               <Link to="/contacto" className="course-detail-secondary">
                 Solicitar información
               </Link>
@@ -459,13 +466,9 @@ export function CourseDetailPage() {
               Inscríbete ahora <ArrowRight size={18} />
             </button>
           ) : (
-            // No open session (none scheduled, or all full): offer the "notify me" form.
-            <button
-              type="button"
-              className="course-detail-enroll-button"
-              onClick={() => setAlertTarget({ province: null, otherProvincesLink: null })}
-            >
-              Avísame de nuevas fechas <BellRing size={18} />
+            // No open session (none scheduled, or all full): still "Inscríbete ahora", but it opens the "notify me" form.
+            <button type="button" className="course-detail-enroll-button" onClick={openCourseAlert}>
+              Inscríbete ahora <ArrowRight size={18} />
             </button>
           )}
           <dl>
@@ -474,23 +477,33 @@ export function CourseDetailPage() {
               <dd>
                 {nextOpenSession ? (
                   sessionDateFormatter.format(new Date(nextOpenSession.startsAt))
+                ) : hasSessions ? (
+                  <Link to={allSessionsLink}>Consultar fechas</Link>
                 ) : (
-                  <Link
-                    to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}
+                  <button
+                    type="button"
+                    className="course-detail-link-button"
+                    onClick={openCourseAlert}
                   >
                     Consultar fechas
-                  </Link>
+                  </button>
                 )}
               </dd>
             </div>
             <div>
               <dt>Calendario</dt>
               <dd>
-                <Link
-                  to={`/inscripciones?curso=${encodeURIComponent(course.title)}#registration-results`}
-                >
-                  Ver todas las convocatorias
-                </Link>
+                {hasSessions ? (
+                  <Link to={allSessionsLink}>Ver todas las convocatorias</Link>
+                ) : (
+                  <button
+                    type="button"
+                    className="course-detail-link-button"
+                    onClick={openCourseAlert}
+                  >
+                    Ver todas las convocatorias
+                  </button>
+                )}
               </dd>
             </div>
           </dl>

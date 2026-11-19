@@ -49,7 +49,8 @@
   gap: 12px;
   margin-top: 34px;
 }
-.course-detail-hero-actions a {
+.course-detail-hero-actions a,
+.course-detail-hero-actions button {
   display: inline-flex;
   align-items: center;
   gap: 23px;
@@ -59,8 +60,18 @@
   text-transform: uppercase;
 }
 .course-detail-primary {
+  border: 0;
   background: var(--accent);
   color: var(--navy);
+}
+/* "Consultar fechas" / "Ver todas las convocatorias" as buttons (course with no sessions): look like the links. */
+.course-detail-link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
 }
 .course-detail-secondary {
   border: 1px solid #566274;
@@ -422,7 +433,8 @@
   gap: 14px;
   margin-top: 34px;
 }
-.course-detail-hero-actions a {
+.course-detail-hero-actions a,
+.course-detail-hero-actions button {
   min-height: 54px;
   padding: 0 22px;
   border-radius: 999px;
@@ -727,7 +739,8 @@
   margin-top: 26px;
   gap: 16px;
 }
-.course-detail-hero-actions a {
+.course-detail-hero-actions a,
+.course-detail-hero-actions button {
   min-width: 220px;
   min-height: 56px;
   padding: 0 22px;
@@ -1222,6 +1235,7 @@
     font-size: 16px;
   }
   .course-detail-hero-actions a,
+  .course-detail-hero-actions button,
   .course-detail-final-cta a {
     width: 100%;
   }
