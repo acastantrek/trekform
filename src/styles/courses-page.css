@@ -349,119 +349,286 @@
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
 }
+.catalog-grid {
+  /* Room for the hover lift and glow without crowding the next row. */
+  row-gap: 22px;
+}
 .catalog-card {
-  /* Visible so the provinces menu can overflow the card; the image clips its own corners. */
-  overflow: visible;
+  --card-radius: 16px;
+  position: relative;
+  isolation: isolate;
   min-width: 0;
   display: flex;
   flex-direction: column;
+  overflow: visible;
+  border: 1px solid rgba(46, 46, 46, 0.08);
+  border-radius: var(--card-radius);
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgba(46, 46, 46, 0.04),
+    0 8px 24px rgba(46, 46, 46, 0.06);
+  transition:
+    transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+    border-color 0.3s ease;
+  animation: catalog-card-in 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: calc(var(--card-index, 0) * 55ms);
 }
+/* Gradient ring that lights up around the card on hover. */
+.catalog-card::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: -1px;
+  padding: 1.5px;
+  border-radius: calc(var(--card-radius) + 1px);
+  background: linear-gradient(140deg, var(--accent) 0%, var(--accent-soft) 40%, transparent 70%);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.catalog-card:hover,
+.catalog-card:focus-within {
+  border-color: transparent;
+  transform: translateY(-8px);
+  box-shadow:
+    0 2px 4px rgba(46, 46, 46, 0.04),
+    0 26px 50px rgba(46, 46, 46, 0.14),
+    0 22px 44px -12px rgba(255, 182, 6, 0.45);
+}
+.catalog-card:hover::before,
+.catalog-card:focus-within::before {
+  opacity: 1;
+}
+@keyframes catalog-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .catalog-image {
   position: relative;
-  height: 142px;
+  height: 178px;
+  margin: 8px 8px 0;
   overflow: hidden;
-  border-radius: 7px 7px 0 0;
+  border-radius: calc(var(--card-radius) - 6px);
   background: #171717;
+}
+/* Cinematic shade so the pills read on any photo. */
+.catalog-image::before {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.28) 0%, transparent 32%),
+    linear-gradient(0deg, rgba(10, 10, 10, 0.78) 0%, rgba(10, 10, 10, 0.18) 46%, transparent 64%);
+  pointer-events: none;
+}
+/* Light sweep across the photo on hover. */
+.catalog-image::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: -75%;
+  width: 50%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.28) 50%,
+    transparent 100%
+  );
+  transform: skewX(-18deg);
+  pointer-events: none;
+}
+.catalog-card:hover .catalog-image::after {
+  left: 130%;
+  transition: left 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .catalog-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: saturate(0.95) contrast(1.02);
-  transition: transform 0.25s ease;
+  filter: saturate(1.02) contrast(1.03);
+  transform: scale(1.01);
+  transition:
+    transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 0.6s ease;
 }
 .catalog-card:hover .catalog-image img {
-  transform: scale(1.04);
+  transform: scale(1.09);
+  filter: saturate(1.12) contrast(1.06);
 }
 .catalog-image span,
 .catalog-image b,
 .catalog-image em {
   position: absolute;
-  z-index: 1;
-  border-radius: 3px;
-  padding: 4px 7px;
-  font-size: 9px;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 9.5px;
   line-height: 1;
   font-weight: 900;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   font-style: normal;
 }
+/* Category: frosted-glass pill sitting on the shade. */
 .catalog-image span {
-  left: 10px;
-  top: 10px;
-  max-width: calc(100% - 20px);
+  left: 12px;
+  bottom: 12px;
+  max-width: calc(100% - 24px);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: #fff;
-  background: rgba(46, 46, 46, 0.82);
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(10px) saturate(1.4);
+  -webkit-backdrop-filter: blur(10px) saturate(1.4);
 }
 .catalog-image b {
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   color: var(--navy);
-  background: var(--accent);
+  background: linear-gradient(135deg, #fff3d6, var(--accent-soft));
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.22);
 }
 .catalog-image em {
-  left: 10px;
-  bottom: 10px;
+  top: 12px;
+  left: 12px;
   color: var(--navy);
-  background: var(--accent);
+  background: linear-gradient(135deg, #ffd56a, var(--accent));
+  box-shadow:
+    0 6px 18px rgba(255, 182, 6, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
+.catalog-image em::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--navy);
+  animation: catalog-pulse 1.8s ease-in-out infinite;
+}
+@keyframes catalog-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.7);
+  }
+}
+
 .catalog-card-body {
-  padding: 14px 15px 15px;
+  padding: 16px;
   min-width: 0;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
+/* Accent rule above the title that stretches on hover. */
 .catalog-card-body h2 {
-  min-height: 38px;
-  margin: 0 0 8px;
+  position: relative;
+  min-height: 42px;
+  margin: 0 0 14px;
+  padding-top: 14px;
   font-family: 'Inter Tight', sans-serif;
   font-size: 18px;
-  line-height: 1.05;
-  letter-spacing: 0;
-}
-.catalog-card-details {
-  /* Pushes this button and the actions below it to the bottom of the card, so
-     buttons line up across a row whatever the title length. */
-  margin-top: auto;
-  align-self: flex-start;
-  display: inline-flex;
-  align-items: center;
-  height: 24px;
-  margin-bottom: 10px;
-  padding: 0 10px;
-  border: 1px solid #d5d5d2;
-  border-radius: 4px;
-  background: #fff;
-  color: #202020;
-  font-size: 11px;
   font-weight: 800;
-  text-decoration: none;
-  transition:
-    border-color 0.15s ease,
-    color 0.15s ease;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
 }
-.catalog-card-details:hover {
-  border-color: #b5790c;
-  color: #b5790c;
+.catalog-card-body h2::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+  transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.catalog-card-details:focus-visible {
-  outline: 2px solid var(--navy);
-  outline-offset: 2px;
+.catalog-card:hover .catalog-card-body h2::before {
+  width: 64px;
 }
 .catalog-card-body h2 a {
   color: inherit;
   text-decoration: none;
-  transition: color 0.15s ease;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat;
+  transition:
+    color 0.2s ease,
+    background-size 0.35s ease;
 }
 .catalog-card-body h2 a:hover {
   color: #b5790c;
+  background-size: 100% 1.5px;
 }
 .catalog-card-body h2 a:focus-visible {
   outline: 2px solid var(--navy);
   outline-offset: 2px;
   border-radius: 2px;
+}
+.catalog-card-details {
+  /* Pushes this link and the action below it to the bottom of the card, so
+     buttons line up across a row whatever the title length. */
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  color: #4a4a47;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.catalog-card-details svg {
+  width: 17px;
+  height: 17px;
+  padding: 2px;
+  border-radius: 50%;
+  background: rgba(255, 182, 6, 0.18);
+  color: #b5790c;
+  transition:
+    transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+.catalog-card-details:hover {
+  color: #b5790c;
+}
+.catalog-card-details:hover svg {
+  transform: translate(2px, -2px);
+  background: var(--accent);
+  color: var(--navy);
+}
+.catalog-card-details:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 3px;
+  border-radius: 3px;
 }
 .catalog-card-body > p {
   min-height: 32px;
@@ -540,23 +707,92 @@
 .catalog-card-actions {
   display: grid;
   grid-template-columns: 1fr;
-  padding-top: 10px;
+  padding-top: 12px;
+  border-top: 1px dashed rgba(46, 46, 46, 0.12);
 }
+/* Dark pill that fills with the brand yellow from the left on hover. */
 .catalog-card-actions a,
 .catalog-card-actions button {
-  height: 36px;
-  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  gap: 8px;
+  background: var(--navy);
+  color: #fff;
+  font-size: 12.5px;
   font-weight: 900;
+  letter-spacing: 0.02em;
+  box-shadow: 0 8px 18px rgba(46, 46, 46, 0.18);
+  transition:
+    color 0.35s ease,
+    box-shadow 0.35s ease;
 }
-.catalog-card-actions a,
-.catalog-card-actions button {
-  border: 0;
-  background: linear-gradient(135deg, var(--accent-soft), var(--accent));
+.catalog-card-actions a::before,
+.catalog-card-actions button::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(135deg, #ffd56a, var(--accent));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.catalog-card-actions svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.catalog-card:hover .catalog-card-actions a,
+.catalog-card:hover .catalog-card-actions button {
+  box-shadow: 0 10px 22px rgba(255, 182, 6, 0.32);
+}
+.catalog-card-actions a:hover,
+.catalog-card-actions button:hover,
+.catalog-card-actions a:focus-visible,
+.catalog-card-actions button:focus-visible {
   color: var(--navy);
+}
+.catalog-card-actions a:hover::before,
+.catalog-card-actions button:hover::before,
+.catalog-card-actions a:focus-visible::before,
+.catalog-card-actions button:focus-visible::before {
+  transform: scaleX(1);
+}
+.catalog-card-actions a:hover svg,
+.catalog-card-actions button:hover svg {
+  transform: translateX(4px);
+}
+.catalog-card-actions a:focus-visible,
+.catalog-card-actions button:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .catalog-card,
+  .catalog-card::before,
+  .catalog-image img,
+  .catalog-image::after,
+  .catalog-image em::before,
+  .catalog-card-actions a::before,
+  .catalog-card-actions button::before {
+    animation: none;
+    transition: none;
+  }
+  .catalog-card:hover,
+  .catalog-card:focus-within,
+  .catalog-card:hover .catalog-image img {
+    transform: none;
+  }
+  .catalog-card:hover .catalog-image::after {
+    left: -75%;
+  }
 }
 .catalog-empty {
   text-align: center;
@@ -856,6 +1092,9 @@
   }
   .catalog-card-body {
     padding: 14px;
+  }
+  .catalog-image {
+    height: 168px;
   }
   .catalog-pagination button {
     min-width: 32px;

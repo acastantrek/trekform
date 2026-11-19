@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  ArrowUpRight,
   Award,
   BriefcaseBusiness,
   CalendarDays,
@@ -15,7 +16,7 @@ import {
   Star,
   Users,
 } from 'lucide-react'
-import type { Dispatch, ReactNode, SetStateAction } from 'react'
+import type { CSSProperties, Dispatch, ReactNode, SetStateAction } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ProvincePickerModal } from '../components/registrations/ProvincePickerModal'
@@ -596,7 +597,11 @@ export function CoursesPage() {
                   const imageSrc =
                     course.image || fallbackImages[absoluteIndex % fallbackImages.length]
                   return (
-                    <article className="catalog-card" key={course.id}>
+                    <article
+                      className="catalog-card"
+                      key={course.id}
+                      style={{ '--card-index': index } as CSSProperties}
+                    >
                       <div className="catalog-image">
                         <img src={imageSrc} alt={course.title} />
                         <span>{course.category}</span>
@@ -612,15 +617,20 @@ export function CoursesPage() {
                           to={`/cursos-trekform/${course.slug}`}
                           aria-label={`Ver detalles de ${course.title}`}
                         >
-                          Ver detalles
+                          Ver detalles <ArrowUpRight aria-hidden="true" />
                         </Link>
                         <div className="catalog-card-actions">
                           {sessionsLoaded ? (
-                            <button type="button" onClick={() => openConvocatorias(course, imageSrc)}>
-                              Ver convocatorias
+                            <button
+                              type="button"
+                              onClick={() => openConvocatorias(course, imageSrc)}
+                            >
+                              Ver convocatorias <ArrowRight aria-hidden="true" />
                             </button>
                           ) : (
-                            <Link to={registrationsLink(course, null)}>Ver convocatorias</Link>
+                            <Link to={registrationsLink(course, null)}>
+                              Ver convocatorias <ArrowRight aria-hidden="true" />
+                            </Link>
                           )}
                         </div>
                       </div>
