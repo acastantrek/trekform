@@ -8,6 +8,8 @@ import { LatestNews } from '../components/home/LatestNews'
 import { TestimonialsCarousel } from '../components/home/TestimonialsCarousel'
 import { TrekformHeroSection } from '../components/home/TrekformHeroSection'
 import { TrekformStatsSection } from '../components/home/TrekformStatsSection'
+import { trekformStats } from '../components/home/trekformStats'
+import { CountUp } from '../components/common/CountUp'
 import { TrekformVideoSection } from '../components/home/TrekformVideoSection'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useScrollReveal } from '../hooks/useScrollReveal'
@@ -20,6 +22,14 @@ export function HomePage() {
     <>
       <TrekformHeroSection />
       <section className="course-section" data-reveal={isMobile ? undefined : true}>
+        <div className="home-key-stats" aria-label="Cifras destacadas de Trekform">
+          {trekformStats.map((stat) => (
+            <div key={stat.label}>
+              <CountUp value={stat.value} />
+              <span>{stat.label}</span>
+            </div>
+          ))}
+        </div>
         <div className="section-heading" data-reveal data-reveal-delay="0.05">
           <div>
             <span className="kicker">NUESTROS CURSOS DESTACADOS</span>

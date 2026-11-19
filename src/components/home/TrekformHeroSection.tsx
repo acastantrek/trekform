@@ -2,7 +2,6 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { submitContactRequest } from '../../services/contact'
-import { CountUp } from '../common/CountUp'
 
 type SubmitState = 'idle' | 'sending' | 'success' | 'error'
 
@@ -66,30 +65,7 @@ export function TrekformHeroSection() {
             Ver cursos <UserCheck size={18} />
           </Link>
         </div>
-        <div
-          className="hero-stats-row"
-          aria-label="Cifras destacadas de Trekform"
-          data-reveal
-          data-reveal-delay="0.26"
-        >
-          <div data-reveal data-reveal-delay="0.04">
-            <CountUp value="+20" />
-            <span>Años de experiencia</span>
-          </div>
-          <div data-reveal data-reveal-delay="0.08">
-            <CountUp value="+250.000" />
-            <span>Alumnos formados</span>
-          </div>
-          <div data-reveal data-reveal-delay="0.12">
-            <CountUp value="+5.500" />
-            <span>Empresas</span>
-          </div>
-          <div data-reveal data-reveal-delay="0.16">
-            <CountUp value="+18.000" />
-            <span>Cursos impartidos</span>
-          </div>
-        </div>
-        <div className="hero-proof-row" data-reveal data-reveal-delay="0.32">
+        <div className="hero-proof-row" data-reveal data-reveal-delay="0.26">
           <article data-reveal data-reveal-delay="0.06">
             <ShieldCheck />
             <strong>Formación certificada</strong>

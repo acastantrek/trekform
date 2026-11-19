@@ -1,13 +1,7 @@
 ﻿import { ArrowRight } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { CountUp } from '../common/CountUp'
-
-const stats = [
-  { value: '+20', label: 'Años de experiencia' },
-  { value: '+250.000', label: 'Alumnos formados' },
-  { value: '+5.500', label: 'Empresas' },
-  { value: '+18.000', label: 'Cursos impartidos' },
-]
+import { trekformStats } from './trekformStats'
 
 const statsBg = '/imagenes/carretilla-trekform-2.jpg'
 
@@ -30,7 +24,7 @@ export function TrekformStatsSection() {
         </a>
       </div>
       <div className="stats-grid">
-        {stats.map((stat, index) => (
+        {trekformStats.map((stat, index) => (
           <div
             key={stat.label}
             data-reveal
