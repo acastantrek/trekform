@@ -71,7 +71,7 @@ export function CookiesPolicyPage() {
           </section>
 
           <section>
-            <h2>Contenido de terceros: vídeos de YouTube</h2>
+            <h2>Contenido de terceros: vídeos de YouTube y mapas de Google Maps</h2>
             <p>
               Algunas páginas incluyen vídeos de YouTube (Google). Los cargamos en modo de
               privacidad mejorada (<strong>youtube-nocookie.com</strong>) y solo cuando pulsas el
@@ -85,6 +85,20 @@ export function CookiesPolicyPage() {
                 política de cookies
               </a>
               .
+            </p>
+            <p>
+              Cuando abres la inscripción a una convocatoria presencial, mostramos un mapa de{' '}
+              <strong>Google Maps</strong> (Google) con la ubicación del centro de formación. Al
+              cargarse el mapa tu navegador se conecta con Google, que puede recibir tu dirección
+              IP y guardar datos en tu navegador conforme a su propia{' '}
+              <a
+                href="https://policies.google.com/technologies/cookies?hl=es"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                política de cookies
+              </a>
+              . Trekform no recibe ni utiliza esos datos.
             </p>
             <p>
               Los enlaces a nuestras redes sociales (Facebook, Instagram, LinkedIn, X y YouTube) son

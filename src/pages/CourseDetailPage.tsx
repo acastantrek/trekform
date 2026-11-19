@@ -9,7 +9,6 @@ import {
   Clock3,
   Download,
   FileText,
-  MapPin,
   MessageCircle,
   Monitor,
   Play,
@@ -18,17 +17,14 @@ import {
   UsersRound,
 } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { YoutubeLightbox } from '../components/common/YoutubeLightbox'
-import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
-import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import {
-  getCourseDetail,
-  type CourseDetail,
-  type CourseSession,
-  type CourseTypology,
-} from '../services/courses'
-import type { RegistrationSession } from '../services/registrations'
+  ProvincePickerModal,
+  type ProvincePickerOption,
+} from '../components/registrations/ProvincePickerModal'
+import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
+import { getCourseDetail, type CourseDetail, type CourseTypology } from '../services/courses'
 import { getTestimonialsByCourse, type Testimonial } from '../services/testimonials'
 
 const DEFAULT_TYPOLOGY: CourseTypology = {
@@ -91,8 +87,6 @@ function getModalityLabel(modality: string) {
   return 'Presencial'
 }
 
-const sessionDayFormatter = new Intl.DateTimeFormat('es-ES', { day: '2-digit' })
-const sessionMonthFormatter = new Intl.DateTimeFormat('es-ES', { month: 'short' })
 const sessionDateFormatter = new Intl.DateTimeFormat('es-ES', {
   day: '2-digit',
   month: 'long',
@@ -114,44 +108,17 @@ function initials(name: string) {
     .join('')
 }
 
-function toRegistrationSession(course: CourseDetail, session: CourseSession): RegistrationSession {
-  return {
-    id: session.id,
-    slug: session.slug,
-    courseSlug: course.slug,
-    courseTitle: course.title,
-    category: course.categories[0] ?? 'Formación',
-    excerpt: course.excerpt,
-    objectives: course.objectives,
-    accreditationTitle: course.accreditationTitle,
-    accreditationItems: course.accreditationItems,
-    benefitsItems: course.benefitsItems,
-    isOfficialCertification: course.isOfficialCertification,
-    isFundaeEligible: course.isFundaeEligible,
-    isFeatured: course.isFeatured,
-    image: course.image,
-    city: session.city,
-    province: session.province,
-    venue: session.venue,
-    address: session.address,
-    postalCode: session.postalCode,
-    startsAt: session.startsAt,
-    endsAt: session.endsAt,
-    modality: getModalityLabel(course.modality),
-    durationHours: course.durationMinutes ? course.durationMinutes / 60 : null,
-    capacity: session.capacity,
-    seatsRemaining: session.seatsRemaining,
-    priceCents: session.priceCents,
-    status: session.status,
-  }
-}
-
 export function CourseDetailPage() {
   const { slug = '' } = useParams()
   const [course, setCourse] = useState<CourseDetail | null>(null)
   const [loading, setLoading] = useState(true)
-  const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
-  const [alertOpen, setAlertOpen] = useState(false)
+  /** "Notify me" form: for the whole course (province null) or one province whose sessions are full. */
+  const [alertTarget, setAlertTarget] = useState<{
+    province: string | null
+    otherProvincesLink: string | null
+  } | null>(null)
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const navigate = useNavigate()
   const [error, setError] = useState('')
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [isVideoOpen, setIsVideoOpen] = useState(false)
@@ -227,6 +194,43 @@ export function CourseDetailPage() {
   const durationLabel = course.durationLabel ?? formatDuration(course.durationMinutes)
   const certificationLabel = course.accreditationTitle ?? 'Diploma acreditativo Trekform'
   const nextOpenSession = course.sessions.find((session) => session.status === 'open')
+
+  // Same flow as "Ver convocatorias" on the catalog: pick a province (or all), then land on the
+  // registrations page filtered to this course. Provinces are alphabetical, "Online" last.
+  const provinceOptions: ProvincePickerOption[] = [
+    ...course.sessions
+      .reduce((map, session) => {
+        const option = map.get(session.province) ?? {
+          name: session.province,
+          distanceKm: null,
+          hasOpenSession: false,
+        }
+        if (session.status === 'open') option.hasOpenSession = true
+        return map.set(session.province, option)
+      }, new Map<string, ProvincePickerOption>())
+      .values(),
+  ].sort((a, b) => {
+    if (a.name === 'Online') return 1
+    if (b.name === 'Online') return -1
+    return a.name.localeCompare(b.name, 'es')
+  })
+
+  const registrationsLink = (province: string | null) => {
+    const params = new URLSearchParams({ curso: course.title })
+    if (province) params.set('provincia', province)
+    return `/inscripciones?${params}#registration-results`
+  }
+
+  // A province whose sessions are all full offers the "notify me" form, linking to the others.
+  const selectPickerProvince = (province: string | null) => {
+    setPickerOpen(false)
+    const option = province ? provinceOptions.find((item) => item.name === province) : null
+    if (province && option && !option.hasOpenSession) {
+      setAlertTarget({ province, otherProvincesLink: registrationsLink(null) })
+      return
+    }
+    navigate(registrationsLink(province))
+  }
   const typology = course.typology ?? (course.modality !== 'online' ? DEFAULT_TYPOLOGY : null)
   const trustCards = [
     {
@@ -450,7 +454,7 @@ export function CourseDetailPage() {
             <button
               type="button"
               className="course-detail-enroll-button"
-              onClick={() => setActiveSession(toRegistrationSession(course, nextOpenSession))}
+              onClick={() => setPickerOpen(true)}
             >
               Inscríbete ahora <ArrowRight size={18} />
             </button>
@@ -459,7 +463,7 @@ export function CourseDetailPage() {
             <button
               type="button"
               className="course-detail-enroll-button"
-              onClick={() => setAlertOpen(true)}
+              onClick={() => setAlertTarget({ province: null, otherProvincesLink: null })}
             >
               Avísame de nuevas fechas <BellRing size={18} />
             </button>
@@ -510,55 +514,6 @@ export function CourseDetailPage() {
           </div>
         </aside>
       </section>
-
-      {course.sessions.length > 0 ? (
-        <section className="course-detail-sessions">
-          <div className="course-detail-section-heading">
-            <div>
-              <span className="course-detail-kicker">PRÓXIMAS CONVOCATORIAS</span>
-              <h2>Elige la fecha que mejor te encaje</h2>
-            </div>
-            <p>
-              Todas las convocatorias incluyen materiales, certificado y seguimiento personalizado.
-            </p>
-          </div>
-
-          <div className="course-detail-sessions-list">
-            {course.sessions.map((session) => (
-              <article className="course-detail-session-card" key={session.id}>
-                <div className="course-detail-session-date">
-                  <span>{sessionMonthFormatter.format(new Date(session.startsAt))}</span>
-                  <strong>{sessionDayFormatter.format(new Date(session.startsAt))}</strong>
-                </div>
-
-                <div className="course-detail-session-info">
-                  <h3>{sessionDateFormatter.format(new Date(session.startsAt))}</h3>
-                  <p>
-                    <MapPin size={14} />
-                    {session.venue}
-                    {session.city ? ` · ${session.city}` : ''}
-                  </p>
-                </div>
-
-                <button
-                  type="button"
-                  className="course-detail-session-cta"
-                  disabled={session.status !== 'open'}
-                  onClick={() => setActiveSession(toRegistrationSession(course, session))}
-                >
-                  {session.status === 'open' ? (
-                    <>
-                      Inscríbete <ArrowRight size={16} />
-                    </>
-                  ) : (
-                    'Plazas completas'
-                  )}
-                </button>
-              </article>
-            ))}
-          </div>
-        </section>
-      ) : null}
 
       {course.brochureUrl ? (
         <section className="course-detail-brochure-cta">
@@ -631,15 +586,22 @@ export function CourseDetailPage() {
         </Link>
       </section>
 
-      {activeSession && (
-        <EnrollmentModal session={activeSession} onClose={() => setActiveSession(null)} />
-      )}
-      {alertOpen ? (
+      {pickerOpen ? (
+        <ProvincePickerModal
+          imageSrc={course.image}
+          imageAlt={course.title}
+          provinces={provinceOptions}
+          onSelect={selectPickerProvince}
+          onClose={() => setPickerOpen(false)}
+        />
+      ) : null}
+      {alertTarget ? (
         <SessionAlertModal
           courseId={course.id}
           courseTitle={course.title}
-          province={null}
-          onClose={() => setAlertOpen(false)}
+          province={alertTarget.province}
+          otherProvincesLink={alertTarget.otherProvincesLink}
+          onClose={() => setAlertTarget(null)}
         />
       ) : null}
 

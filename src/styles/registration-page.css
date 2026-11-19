@@ -469,7 +469,7 @@
   margin-top: 22px;
   padding: 0 16px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 190px 150px 140px;
+  grid-template-columns: minmax(0, 1fr) 190px 150px;
   gap: 16px;
   color: #8a8a85;
   font-size: 13px;
@@ -484,7 +484,7 @@
 .registration-session-card {
   padding: 16px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 190px 150px 140px;
+  grid-template-columns: minmax(0, 1fr) 190px 150px;
   gap: 16px;
   align-items: center;
 }
@@ -546,13 +546,6 @@
   line-height: 1.45;
 }
 
-.registration-session-badges {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-}
-
 .badge {
   min-height: 26px;
   padding: 0 10px;
@@ -605,17 +598,33 @@
   gap: 10px;
 }
 
-.registration-session-actions button:not(:disabled) {
+/* Availability buttons: green = open, yellow = last seats, red = full (not clickable). */
+.registration-session-actions button {
   border: 0;
-  background: var(--accent);
-  color: var(--navy);
+  border-radius: 6px;
+  transition:
+    background-color 0.15s ease,
+    filter 0.15s ease;
 }
 
-.registration-session-actions button:disabled {
-  border: 0;
-  background: #e5e1d8;
-  color: #8a8378;
+.registration-session-actions button.is-open {
+  background: #198754;
+  color: #fff;
+}
+
+.registration-session-actions button.is-last {
+  background: #ffc107;
+  color: #000;
+}
+
+.registration-session-actions button.is-full {
+  background: #dc3545;
+  color: #fff;
   cursor: not-allowed;
+}
+
+.registration-session-actions button:not(:disabled):hover {
+  filter: brightness(0.92);
 }
 
 .registration-pagination {
@@ -813,11 +822,11 @@
 }
 
 /* Wide screens: each session is a single compact row, aligned with the column headers:
-   course | location | date + time | status | button. */
+   course | location | date + time | button. */
 @media (min-width: 1121px) {
   .registration-results-headers,
   .registration-session-card {
-    grid-template-columns: minmax(0, 1fr) 190px 250px 115px 120px;
+    grid-template-columns: minmax(0, 1fr) 190px 250px 150px;
   }
 
   .registration-session-list {
@@ -871,10 +880,6 @@
 
   .registration-session-details strong {
     font-size: 14px;
-  }
-
-  .registration-session-badges {
-    flex-direction: row;
   }
 
   .registration-session-actions button {
@@ -1184,7 +1189,6 @@
 
   .registration-session-course,
   .registration-session-details,
-  .registration-session-badges,
   .registration-session-actions {
     grid-column: auto;
   }
@@ -1232,19 +1236,6 @@
     font-size: 11.5px;
   }
 
-  .registration-session-badges {
-    grid-area: meta;
-    justify-self: end;
-    align-self: center;
-    gap: 0;
-  }
-
-  .registration-session-badges .badge {
-    min-height: 20px;
-    padding: 0 8px;
-    font-size: 10px;
-  }
-
   .registration-session-actions {
     grid-area: actions;
     grid-template-columns: 1fr;
@@ -1257,11 +1248,6 @@
     border-radius: 5px;
     gap: 4px;
     font-size: 12px;
-  }
-
-  .registration-session-actions button:not(:disabled) {
-    background: linear-gradient(135deg, var(--accent-soft), var(--accent));
-    color: var(--navy);
   }
 
   .registration-pagination {

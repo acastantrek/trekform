@@ -5,7 +5,6 @@ import {
   CalendarDays,
   Check,
   ChevronDown,
-  Clock3,
   Download,
   Grid3X3,
   LocateFixed,
@@ -14,7 +13,6 @@ import {
   Search,
   SlidersHorizontal,
   Star,
-  User,
   Users,
 } from 'lucide-react'
 import type { Dispatch, ReactNode, SetStateAction } from 'react'
@@ -29,7 +27,7 @@ import { coordinatesForPlace, distanceKm, type Coordinates } from '../lib/geo'
 import { getRegistrationSessions } from '../services/registrations'
 import type { Course } from '../types/course'
 
-const pageSize = 8
+const pageSize = 16
 const categoryOrder = [
   'Maquinaria industrial',
   'Trabajos en altura',
@@ -130,6 +128,8 @@ export function CoursesPage() {
   const [sessionsLoaded, setSessionsLoaded] = useState(false)
   const [alertTarget, setAlertTarget] = useState<SessionAlertTarget | null>(null)
   const [pickerCourse, setPickerCourse] = useState<Course | null>(null)
+  /** The image shown on the card that opened the picker, reused as the modal's banner. */
+  const [pickerImage, setPickerImage] = useState('')
   const navigate = useNavigate()
   const [filtersOpen, setFiltersOpen] = useState(false)
 
@@ -227,10 +227,12 @@ export function CoursesPage() {
 
   // "Convocatorias": when the course has open sessions, ask which province first (nearest
   // first); otherwise go straight to the "notify me" form.
-  const openConvocatorias = (course: Course) => {
+  const openConvocatorias = (course: Course, imageSrc: string) => {
     const provinces = provinceOptionsByCourseSlug.get(course.slug) ?? []
-    if (provinces.some((province) => province.hasOpenSession)) setPickerCourse(course)
-    else
+    if (provinces.some((province) => province.hasOpenSession)) {
+      setPickerCourse(course)
+      setPickerImage(imageSrc)
+    } else
       setAlertTarget({
         courseId: course.id,
         courseTitle: course.title,
@@ -591,50 +593,34 @@ export function CoursesPage() {
                 {visibleCourses.map((course, index) => {
                   const absoluteIndex = (page - 1) * pageSize + index
                   const meta = courseMetaById.get(course.id)!
+                  const imageSrc =
+                    course.image || fallbackImages[absoluteIndex % fallbackImages.length]
                   return (
                     <article className="catalog-card" key={course.id}>
                       <div className="catalog-image">
-                        <img
-                          src={
-                            course.image || fallbackImages[absoluteIndex % fallbackImages.length]
-                          }
-                          alt={course.title}
-                        />
+                        <img src={imageSrc} alt={course.title} />
                         <span>{course.category}</span>
                         {meta.bonificable ? <b>Bonificable</b> : null}
                         {course.featured ? <em>Más demandado</em> : null}
                       </div>
                       <div className="catalog-card-body">
-                        <h2>{course.title}</h2>
-                        <p>
-                          {course.description ||
-                            'Formación segura y práctica con profesores especializados.'}
-                        </p>
-                        <div className="course-meta-row">
-                          <span>
-                            <User /> {meta.modality}
-                          </span>
-                          {meta.duration ? (
-                            <span>
-                              <Clock3 /> {meta.duration}
-                            </span>
-                          ) : null}
-                        </div>
-                        {meta.certificate ? (
-                          <div className="course-meta-row">
-                            <span>
-                              <Award /> {meta.certificate}
-                            </span>
-                          </div>
-                        ) : null}
+                        <h2>
+                          <Link to={`/cursos-trekform/${course.slug}`}>{course.title}</Link>
+                        </h2>
+                        <Link
+                          className="catalog-card-details"
+                          to={`/cursos-trekform/${course.slug}`}
+                          aria-label={`Ver detalles de ${course.title}`}
+                        >
+                          Ver detalles
+                        </Link>
                         <div className="catalog-card-actions">
-                          <Link to={`/cursos-trekform/${course.slug}`}>Ver detalles</Link>
                           {sessionsLoaded ? (
-                            <button type="button" onClick={() => openConvocatorias(course)}>
-                              Convocatorias
+                            <button type="button" onClick={() => openConvocatorias(course, imageSrc)}>
+                              Ver convocatorias
                             </button>
                           ) : (
-                            <Link to={registrationsLink(course, null)}>Convocatorias</Link>
+                            <Link to={registrationsLink(course, null)}>Ver convocatorias</Link>
                           )}
                         </div>
                       </div>
@@ -742,10 +728,9 @@ export function CoursesPage() {
 
       {pickerCourse ? (
         <ProvincePickerModal
-          courseTitle={pickerCourse.title}
+          imageSrc={pickerImage}
+          imageAlt={pickerCourse.title}
           provinces={provinceOptionsByCourseSlug.get(pickerCourse.slug) ?? []}
-          locationStatus={userLocation.status}
-          onLocate={userLocation.locate}
           onSelect={selectPickerProvince}
           onClose={() => setPickerCourse(null)}
         />

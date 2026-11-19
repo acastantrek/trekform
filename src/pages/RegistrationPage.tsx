@@ -719,24 +719,18 @@ export function RegistrationPage() {
                           </span>
                         </div>
 
-                        <div className="registration-session-badges">
-                          <span className={`badge badge-${urgency}`}>
-                            {urgency === 'full'
-                              ? 'Completo'
-                              : urgency === 'last'
-                                ? '¡Últimas plazas!'
-                                : 'Inscripción abierta'}
-                          </span>
-                        </div>
-
                         <div className="registration-session-actions">
-                          {session.status === 'full' ? (
-                            <button type="button" disabled>
+                          {urgency === 'full' ? (
+                            <button type="button" className="is-full" disabled>
                               Completo
                             </button>
                           ) : (
-                            <button type="button" onClick={() => setActiveSession(session)}>
-                              Inscribirme
+                            <button
+                              type="button"
+                              className={`is-${urgency}`}
+                              onClick={() => setActiveSession(session)}
+                            >
+                              {urgency === 'last' ? '¡Últimas plazas!' : 'Inscríbete!'}
                             </button>
                           )}
                         </div>

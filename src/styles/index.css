@@ -32,6 +32,6 @@
   font-family: 'Inter Tight', sans-serif !important;
 }
 
-:where(.blog-hero h1, .course-detail-session-date strong) {
+:where(.blog-hero h1) {
   text-transform: uppercase !important;
 }

@@ -19,6 +19,16 @@ import { submitContactRequest } from '../../services/contact'
 import { submitSimulatedPayment } from '../../services/enrollments'
 import type { RegistrationSession } from '../../services/registrations'
 
+/** Street address plus city (e.g. "Carrer del Treball, 8, Reus"), without the venue's name. */
+function venueMapQuery(session: RegistrationSession) {
+  return encodeURIComponent([session.address, session.city].filter(Boolean).join(', '))
+}
+
+/** Keyless Google Maps embed (no API key needed) centred on the same search. */
+function googleMapsEmbedUrl(session: RegistrationSession) {
+  return `https://www.google.com/maps?q=${venueMapQuery(session)}&z=15&output=embed`
+}
+
 type Step = 'choose' | 'individual' | 'individual-success' | 'company' | 'company-success'
 
 const dateFormatter = new Intl.DateTimeFormat('es-ES', {
@@ -253,6 +263,66 @@ export function EnrollmentModal({
             className={`enrollment-modal-content${step === 'individual' ? ' enrollment-modal-content--individual' : ' enrollment-modal-content--full'}`}
           >
             <div className="enrollment-modal-main">
+              {step === 'individual' && (
+                <section>
+                  <h3>Datos del alumno</h3>
+                  <form
+                    className="enrollment-modal-form"
+                    id="enrollment-individual-form"
+                    onSubmit={handleIndividualSubmit}
+                  >
+                    <div className="enrollment-modal-form-grid">
+                      <label>
+                        <span>Nombre</span>
+                        <input
+                          name="name"
+                          placeholder="Nombre"
+                          autoComplete="given-name"
+                          required
+                        />
+                      </label>
+                      <label>
+                        <span>Apellidos</span>
+                        <input
+                          name="lastName"
+                          placeholder="Apellidos"
+                          autoComplete="family-name"
+                          required
+                        />
+                      </label>
+                      <label>
+                        <span>DNI/NIE/Pasaporte</span>
+                        <input name="docId" placeholder="DNI/NIE/Pasaporte" required />
+                      </label>
+                      <label>
+                        <span>Email</span>
+                        <input
+                          name="email"
+                          type="email"
+                          placeholder="tu@email.com"
+                          autoComplete="email"
+                          required
+                        />
+                      </label>
+                    </div>
+                    <label className="enrollment-modal-consent">
+                      <input type="checkbox" required />
+                      <span>
+                        He leído y acepto la{' '}
+                        <Link
+                          to="/politica-de-privacidad"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          política de privacidad
+                        </Link>
+                        .
+                      </span>
+                    </label>
+                  </form>
+                </section>
+              )}
+
               <section className="enrollment-modal-description">
                 <h3>Descripción</h3>
                 <p>{session.excerpt}</p>
@@ -333,66 +403,6 @@ export function EnrollmentModal({
                 </section>
               )}
 
-              {step === 'individual' && (
-                <section>
-                  <h3>Datos del alumno</h3>
-                  <form
-                    className="enrollment-modal-form"
-                    id="enrollment-individual-form"
-                    onSubmit={handleIndividualSubmit}
-                  >
-                    <div className="enrollment-modal-form-grid">
-                      <label>
-                        <span>Nombre</span>
-                        <input
-                          name="name"
-                          placeholder="Nombre"
-                          autoComplete="given-name"
-                          required
-                        />
-                      </label>
-                      <label>
-                        <span>Apellidos</span>
-                        <input
-                          name="lastName"
-                          placeholder="Apellidos"
-                          autoComplete="family-name"
-                          required
-                        />
-                      </label>
-                      <label>
-                        <span>DNI/NIE/Pasaporte</span>
-                        <input name="docId" placeholder="DNI/NIE/Pasaporte" required />
-                      </label>
-                      <label>
-                        <span>Email</span>
-                        <input
-                          name="email"
-                          type="email"
-                          placeholder="tu@email.com"
-                          autoComplete="email"
-                          required
-                        />
-                      </label>
-                    </div>
-                    <label className="enrollment-modal-consent">
-                      <input type="checkbox" required />
-                      <span>
-                        He leído y acepto la{' '}
-                        <Link
-                          to="/politica-de-privacidad"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          política de privacidad
-                        </Link>
-                        .
-                      </span>
-                    </label>
-                  </form>
-                </section>
-              )}
-
               {step === 'individual-success' && (
                 <section className="enrollment-modal-success">
                   <CheckCircle2 size={34} />
@@ -421,11 +431,20 @@ export function EnrollmentModal({
                     <MapPin size={14} /> {session.address || session.city}
                   </p>
                   {session.city !== 'Online' ? (
-                    <p>
-                      {[session.postalCode, session.city, session.province]
-                        .filter(Boolean)
-                        .join(', ')}
-                    </p>
+                    <>
+                      <p>
+                        {[session.postalCode, session.city, session.province]
+                          .filter(Boolean)
+                          .join(', ')}
+                      </p>
+                      <iframe
+                        className="enrollment-modal-map"
+                        src={googleMapsEmbedUrl(session)}
+                        title={`Mapa de ${session.venue}`}
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                      />
+                    </>
                   ) : null}
                 </div>
                 <Link

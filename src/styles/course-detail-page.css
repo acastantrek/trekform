@@ -1130,85 +1130,6 @@
   background: linear-gradient(135deg, var(--accent-soft), var(--accent));
   color: var(--navy);
 }
-.course-detail-sessions {
-  max-width: 1430px;
-  margin: 0 auto 56px;
-  padding: 0 max(3vw, 22px);
-}
-.course-detail-sessions-list {
-  display: grid;
-  gap: 14px;
-}
-.course-detail-session-card {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 22px;
-  align-items: center;
-  padding: 20px 24px;
-  border: 1px solid #dededb;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(46, 46, 46, 0.05);
-}
-.course-detail-session-date {
-  display: grid;
-  justify-items: center;
-  gap: 2px;
-  min-width: 60px;
-  padding: 10px 12px;
-  border-radius: 6px;
-  background: var(--navy);
-}
-.course-detail-session-date span {
-  color: var(--navy);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-}
-.course-detail-session-date strong {
-  color: #fff;
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 22px;
-  line-height: 1;
-}
-.course-detail-session-info h3 {
-  margin: 0 0 4px;
-  color: var(--navy);
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 15px;
-  text-transform: none;
-}
-.course-detail-session-info p {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 0;
-  color: #75756f;
-  font-size: 13px;
-}
-.course-detail-session-info p svg {
-  flex: 0 0 auto;
-  color: var(--accent);
-}
-.course-detail-session-cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 12px 18px;
-  border: 0;
-  border-radius: 5px;
-  background: linear-gradient(135deg, var(--accent-soft), var(--accent));
-  color: var(--navy);
-  font-size: 11px;
-  font-weight: 900;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.course-detail-session-cta:disabled {
-  background: #e4e4e1;
-  color: #9a9a95;
-  cursor: not-allowed;
-}
 .course-detail-reviews {
   max-width: 1430px;
   margin: 0 auto 56px;
@@ -1312,14 +1233,5 @@
   .course-detail-final-cta {
     margin-left: 20px;
     margin-right: 20px;
-  }
-  .course-detail-session-card {
-    grid-template-columns: auto minmax(0, 1fr);
-    row-gap: 12px;
-  }
-  .course-detail-session-cta {
-    grid-column: 1 / -1;
-    justify-content: center;
-    width: 100%;
   }
 }
