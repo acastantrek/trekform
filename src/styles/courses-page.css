@@ -570,7 +570,7 @@
   transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .catalog-card:hover .catalog-card-body h2::before {
-  width: 64px;
+  width: 100%;
 }
 .catalog-card-body h2 a {
   color: inherit;
