@@ -102,7 +102,7 @@ export function AboutPage() {
         </article>
         <article data-reveal data-reveal-delay="0.08">
           <HardHat />
-          <strong>200.000+</strong>
+          <strong>250.000+</strong>
           <span>Alumnos formados</span>
         </article>
         <article data-reveal data-reveal-delay="0.12">

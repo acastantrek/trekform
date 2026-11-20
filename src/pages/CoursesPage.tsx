@@ -398,7 +398,7 @@ export function CoursesPage() {
               <Award /> <strong>+20 años</strong> de experiencia
             </span>
             <span className="courses-hero-enter courses-hero-enter--5">
-              <Users /> <strong>+200.000</strong> alumnos formados
+              <Users /> <strong>+250.000</strong> alumnos formados
             </span>
             <span className="courses-hero-enter courses-hero-enter--6">
               <MapPin /> <strong>Cobertura</strong> nacional
