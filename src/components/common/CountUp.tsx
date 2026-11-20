@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-const DURATION_MS = 1500
+const DURATION_MS = 3000
 
 /** Thousands with a dot, also for 4-digit numbers ("5.500"), which `es-ES` leaves ungrouped. */
 function formatThousands(value: number) {
@@ -19,7 +19,7 @@ function prefersReducedMotion() {
 
 /**
  * A `<strong>` whose figure counts up from 0 the first time it scrolls into view, like the
- * counters on the current trekform.com (1.5s, linear). `value` is the final text, e.g.
+ * counters on the current trekform.com (here slowed to 3s, linear). `value` is the final text, e.g.
  * "+250.000": anything before the digits (the "+") stays fixed while the number runs.
  * The figure is plain text inside the `<strong>` (no wrapper elements), so it keeps exactly
  * the styles the page already gives that `<strong>`.
