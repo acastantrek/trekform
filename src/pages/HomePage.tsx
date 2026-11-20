@@ -32,9 +32,9 @@ export function HomePage() {
         </div>
         <div className="section-heading" data-reveal data-reveal-delay="0.05">
           <div>
-            <span className="kicker">NUESTROS CURSOS DESTACADOS</span>
+            <span className="kicker">APRENDE. CERTIFÍCATE. AVANZA.</span>
             <h2>
-              Aprende. <span>Certifícate. Avanza.</span>
+              Nuestros <span>cursos destacados</span>
             </h2>
           </div>
           <Link to="/cursos-trekform">
