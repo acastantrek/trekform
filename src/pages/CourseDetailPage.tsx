@@ -86,12 +86,6 @@ function getModalityLabel(modality: string) {
   return 'Presencial'
 }
 
-const sessionDateFormatter = new Intl.DateTimeFormat('es-ES', {
-  day: '2-digit',
-  month: 'long',
-  year: 'numeric',
-})
-
 function getAudienceLabel(audience: CourseDetail['audience']) {
   if (audience === 'companies') return 'Empresas'
   if (audience === 'individuals') return 'Particulares'
@@ -472,24 +466,6 @@ export function CourseDetailPage() {
             </button>
           )}
           <dl>
-            <div>
-              <dt>Próxima convocatoria</dt>
-              <dd>
-                {nextOpenSession ? (
-                  sessionDateFormatter.format(new Date(nextOpenSession.startsAt))
-                ) : hasSessions ? (
-                  <Link to={allSessionsLink}>Consultar fechas</Link>
-                ) : (
-                  <button
-                    type="button"
-                    className="course-detail-link-button"
-                    onClick={openCourseAlert}
-                  >
-                    Consultar fechas
-                  </button>
-                )}
-              </dd>
-            </div>
             <div>
               <dt>Calendario</dt>
               <dd>
