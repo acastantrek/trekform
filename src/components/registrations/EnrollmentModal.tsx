@@ -263,6 +263,25 @@ export function EnrollmentModal({
             className={`enrollment-modal-content${step === 'individual' ? ' enrollment-modal-content--individual' : ' enrollment-modal-content--full'}`}
           >
             <div className="enrollment-modal-main">
+              <section className="enrollment-modal-description">
+                <h3>Descripción</h3>
+                <p>{session.excerpt}</p>
+              </section>
+
+              {(!isMobile || step === 'choose') && (
+                <section className="enrollment-modal-accreditation">
+                  <h3>{accreditationTitle}</h3>
+                  <div className="enrollment-modal-checks">
+                    {accreditationPoints.map((point) => (
+                      <div key={point}>
+                        <CheckCircle2 size={16} />
+                        <span>{point}</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
               {step === 'individual' && (
                 <section>
                   <h3>Datos del alumno</h3>
@@ -323,11 +342,6 @@ export function EnrollmentModal({
                 </section>
               )}
 
-              <section className="enrollment-modal-description">
-                <h3>Descripción</h3>
-                <p>{session.excerpt}</p>
-              </section>
-
               {step === 'choose' && (
                 <section>
                   <h3>Selecciona el tipo de inscripción</h3>
@@ -372,20 +386,6 @@ export function EnrollmentModal({
                 </section>
               )}
 
-              {(!isMobile || step === 'choose') && (
-                <section className="enrollment-modal-accreditation">
-                  <h3>{accreditationTitle}</h3>
-                  <div className="enrollment-modal-checks">
-                    {accreditationPoints.map((point) => (
-                      <div key={point}>
-                        <CheckCircle2 size={16} />
-                        <span>{point}</span>
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
-
               {(!isMobile || step === 'choose') && benefitsPoints.length > 0 && (
                 <section className="enrollment-modal-benefits">
                   <h3>Qué recibirás</h3>
@@ -420,9 +420,8 @@ export function EnrollmentModal({
                 <h4>{session.courseTitle}</h4>
                 <div className="enrollment-modal-sidebar-block">
                   <span className="enrollment-modal-sidebar-label">Fecha | Horario</span>
-                  <p>
-                    {sessionDate} · {sessionSchedule}
-                  </p>
+                  <p>{sessionDate}</p>
+                  <p>{sessionSchedule}</p>
                 </div>
                 <div className="enrollment-modal-sidebar-block">
                   <span className="enrollment-modal-sidebar-label">Instalaciones</span>
