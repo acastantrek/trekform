@@ -71,14 +71,12 @@
 }
 
 .registration-search-field > div,
-.registration-toolbar-select > div,
-.sort-select > div {
+.registration-toolbar-select > div {
   position: relative;
 }
 
 .registration-search-field input,
-.registration-toolbar-select select,
-.sort-select select {
+.registration-toolbar-select select {
   width: 100%;
   height: 50px;
   border: 1px solid #d8d4cb;
@@ -92,14 +90,12 @@
   outline: none;
 }
 
-.registration-toolbar-select select,
-.sort-select select {
+.registration-toolbar-select select {
   appearance: none;
 }
 
 .registration-search-field svg,
-.registration-toolbar-select svg,
-.sort-select svg {
+.registration-toolbar-select svg {
   position: absolute;
   top: 50%;
   right: 14px;
@@ -114,34 +110,194 @@
   gap: 14px;
 }
 
+/* Calendario: the buttons take the whole second row of the toolbar. */
 .registration-toolbar-actions-wide {
-  grid-column: span 3;
+  grid-column: 1 / -1;
 }
 
-/* Courses page: search, category and the two buttons fit in a single row. */
-.courses-toolbar {
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.3fr);
+/* Calendario on wide screens: every field and both buttons in one row, with the buttons sized to
+   their text and as tall as the fields instead of filling a whole row. */
+@media (min-width: 861px) {
+  .calendar-toolbar {
+    grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)) auto;
+    align-items: end;
+  }
+
+  .calendar-toolbar .registration-toolbar-actions-wide {
+    grid-column: auto;
+    gap: 8px;
+  }
+
+  .calendar-toolbar .registration-toolbar-reset,
+  .calendar-toolbar .registration-toolbar-submit {
+    flex: none;
+    min-height: 50px;
+    padding: 0 18px;
+    font-size: 13px;
+  }
+
+  .calendar-toolbar .registration-toolbar-reset {
+    padding: 0 14px;
+  }
 }
 
-.courses-toolbar .registration-toolbar-actions-wide {
-  grid-column: auto;
-}
-
-/* Courses page: compact toolbar. The field titles are only kept for screen readers (the search
-   placeholder and the "Todas las categorías" option already say what each field is) and every
-   control is shorter, so the bar takes a single slim row overlapping the hero a little. */
+/* Courses page: compact toolbar holding only the search, which filters as you type (categories
+   are the chips below it). Its title is only kept for screen readers, since the placeholder
+   already says what it is, and the bar overlaps the hero a little. */
 .courses-toolbar-wrap {
   margin-top: -36px;
 }
 
+/* Narrower than the page and centred (the base toolbar already uses margin: 0 auto). */
 .courses-toolbar {
+  max-width: 1100px;
+  grid-template-columns: minmax(0, 1fr);
   padding: 12px;
   gap: 10px;
   align-items: center;
 }
 
-.courses-toolbar .registration-search-field > span,
-.courses-toolbar .registration-toolbar-select > span {
+/* Courses page: category chips in one horizontal row under the toolbar; clicking one filters the
+   catalog. When they don't fit (mobile) the row scrolls sideways by swiping, with snap points so
+   it settles on a chip. A faded edge and an arrow appear on each side that still hides chips
+   (classes set from CategoryChips.tsx), so visitors know there is more to swipe to. */
+.courses-category-chips {
+  position: relative;
+  max-width: 1480px;
+  margin: 14px auto 0;
+}
+
+.courses-category-chips-list {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 16px;
+  touch-action: pan-x pan-y;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.courses-category-chips-list::-webkit-scrollbar {
+  display: none;
+}
+
+.courses-category-chips-list button {
+  flex: none;
+  scroll-snap-align: start;
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid #dededb;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--navy);
+  font-size: 13px;
+  font-weight: 800;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.courses-category-chips-list button:hover {
+  border-color: var(--accent);
+}
+
+.courses-category-chips-list button.is-active {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.courses-category-chips-list button:focus-visible,
+.courses-category-chips-arrow:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+/* Faded edges over the row, matching the page background. */
+.courses-category-chips::before,
+.courses-category-chips::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 56px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.courses-category-chips::before {
+  left: 0;
+  background: linear-gradient(90deg, #f5f5f4 30%, rgba(245, 245, 244, 0));
+}
+
+.courses-category-chips::after {
+  right: 0;
+  background: linear-gradient(270deg, #f5f5f4 30%, rgba(245, 245, 244, 0));
+}
+
+.courses-category-chips.can-scroll-left::before,
+.courses-category-chips.can-scroll-right::after {
+  opacity: 1;
+}
+
+.courses-category-chips-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--navy);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(46, 46, 46, 0.25);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%);
+  transition: opacity 0.2s ease;
+}
+
+.courses-category-chips-arrow.is-left {
+  left: 0;
+}
+
+.courses-category-chips-arrow.is-right {
+  right: 0;
+  animation: courses-chips-nudge 1.6s ease-in-out 3;
+}
+
+.courses-category-chips.can-scroll-left .courses-category-chips-arrow.is-left,
+.courses-category-chips.can-scroll-right .courses-category-chips-arrow.is-right {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* A gentle nudge on arrival hints that the row can be swiped. */
+@keyframes courses-chips-nudge {
+  0%,
+  100% {
+    transform: translate(0, -50%);
+  }
+  50% {
+    transform: translate(4px, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .courses-category-chips-arrow.is-right {
+    animation: none;
+  }
+}
+
+.courses-toolbar .registration-search-field > span {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -153,19 +309,8 @@
   border: 0;
 }
 
-.courses-toolbar .registration-search-field input,
-.courses-toolbar .registration-toolbar-select select {
+.courses-toolbar .registration-search-field input {
   height: 44px;
-}
-
-.courses-toolbar .registration-toolbar-actions {
-  align-items: center;
-  gap: 10px;
-}
-
-.courses-toolbar .registration-toolbar-reset,
-.courses-toolbar .registration-toolbar-submit {
-  min-height: 44px;
 }
 
 .registration-toolbar-reset {
@@ -230,12 +375,9 @@
   max-width: 1480px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 280px minmax(0, 1fr);
   gap: 18px;
 }
 
-.registration-sidebar,
-.registration-summary,
 .registration-session-card,
 .registration-empty,
 .registration-trust-row article {
@@ -244,186 +386,8 @@
   border-radius: 10px;
 }
 
-.registration-sidebar {
-  position: sticky;
-  top: 112px;
-  align-self: start;
-  padding: 22px 18px;
-}
-
-.registration-sidebar h2 {
-  margin: 0 0 18px;
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 20px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.registration-sidebar-group + .registration-sidebar-group {
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid #eee7db;
-}
-
-.registration-sidebar-group h3 {
-  margin: 0 0 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 14px;
-  font-weight: 900;
-  text-transform: uppercase;
-}
-
-.registration-sidebar-group > div {
-  display: grid;
-  gap: 10px;
-}
-
-.registration-sidebar-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: #3d3d3d;
-  font-size: 14px;
-}
-
-.registration-sidebar-checkbox input {
-  width: 15px;
-  height: 15px;
-  margin: 0;
-  accent-color: var(--accent);
-}
-
-.sidebar-link-button,
-.registration-sidebar-reset {
-  border: 0;
-  background: transparent;
-  color: var(--navy);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.registration-sidebar-reset {
-  min-height: 44px;
-  margin-top: 20px;
-  padding: 0 14px;
-  justify-content: center;
-  border: 1px solid #ebe3d7;
-  border-radius: 6px;
-  color: var(--navy);
-}
-
 .registration-results {
   min-width: 0;
-}
-
-.registration-summary {
-  padding: 18px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-}
-
-.registration-summary p {
-  margin: 0;
-  color: #555;
-}
-
-.registration-summary strong {
-  margin-right: 6px;
-  color: var(--navy);
-  font-size: 30px;
-  line-height: 1;
-}
-
-.registration-summary-controls {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 14px;
-}
-
-.availability-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  color: #575757;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.availability-toggle button {
-  width: 44px;
-  height: 24px;
-  padding: 2px;
-  border: 0;
-  border-radius: 999px;
-  background: #ddd7cd;
-  transition: background 180ms ease;
-}
-
-.availability-toggle button i {
-  display: block;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #fff;
-  transition: transform 180ms ease;
-}
-
-.availability-toggle button.active {
-  background: var(--accent);
-}
-
-.availability-toggle button.active i {
-  transform: translateX(20px);
-}
-
-.sort-select {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #575757;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.sort-select select {
-  min-width: 150px;
-  height: 40px;
-  padding-right: 36px;
-  font-size: 13px;
-}
-
-.registration-view-switch {
-  display: inline-flex;
-  gap: 8px;
-}
-
-.registration-view-switch button {
-  min-height: 40px;
-  padding: 0 14px;
-  border: 1px solid #e5ddcf;
-  border-radius: 6px;
-  background: #fff;
-  color: #5b5b5b;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  font-weight: 800;
-}
-
-.registration-view-switch .active {
-  background: rgba(244, 194, 127, 0.2);
-  color: var(--navy);
-  border-color: var(--accent-soft);
 }
 
 .registration-alert-banner {
@@ -936,14 +900,6 @@
     grid-column: span 3;
   }
 
-  .registration-results-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .registration-sidebar {
-    position: static;
-  }
-
   .registration-company-cta {
     grid-template-columns: 200px 1fr;
   }
@@ -957,12 +913,6 @@
 
   .registration-trust-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 1020px) {
-  .registration-sidebar {
-    display: none;
   }
 }
 
@@ -993,16 +943,6 @@
 
   .registration-search-field {
     grid-column: 1 / -1;
-  }
-
-  .registration-summary {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .registration-summary-controls {
-    width: 100%;
-    justify-content: flex-start;
   }
 
   .registration-company-cta,
@@ -1173,25 +1113,6 @@
     box-shadow: 0 2px 8px rgba(46, 46, 46, 0.05);
   }
 
-  .registration-summary {
-    padding: 0;
-    border: 0;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .registration-summary strong {
-    font-size: 18px;
-  }
-
-  .registration-summary p {
-    color: var(--navy);
-  }
-
-  .registration-summary-controls {
-    display: none;
-  }
-
   .registration-session-list {
     gap: 10px;
   }
@@ -1279,10 +1200,5 @@
     background: var(--accent);
     border-color: var(--accent);
     color: var(--navy);
-  }
-
-  .registration-view-switch {
-    width: 100%;
-    flex-direction: column;
   }
 }

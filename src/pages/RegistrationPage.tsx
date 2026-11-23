@@ -1,22 +1,17 @@
 import {
   ArrowRight,
-  Award,
   BellRing,
   BriefcaseBusiness,
   CalendarDays,
   Check,
   ChevronDown,
   Clock3,
-  Download,
-  Grid3X3,
   MapPin,
   RotateCcw,
   Search,
   SlidersHorizontal,
   Star,
-  Users,
 } from 'lucide-react'
-import type { ReactNode } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
@@ -57,23 +52,6 @@ function getMonthLabel(dateString: string) {
   return toTitleCase(monthFormatter.format(new Date(dateString)))
 }
 
-function matchesDurationFilter(filter: string, hours: number | null) {
-  if (hours === null) return filter === 'Consultar'
-
-  switch (filter) {
-    case 'Hasta 4 horas':
-      return hours <= 4
-    case '4 - 8 horas':
-      return hours > 4 && hours <= 8
-    case '8 - 16 horas':
-      return hours > 8 && hours <= 16
-    case '+16 horas':
-      return hours > 16
-    default:
-      return false
-  }
-}
-
 // "Últimas plazas" once free seats drop to this share of the capacity or less.
 const lastSeatsShare = 0.4
 
@@ -102,32 +80,7 @@ function formatSchedule(start: string, end: string) {
   return `${timeFormatter.format(new Date(start))} - ${timeFormatter.format(new Date(end))}`
 }
 
-const certificationOptions = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
-
 const provinceOptions = ['Todas las provincias', ...spanishProvinces]
-
-function getSessionMeta(session: RegistrationSession) {
-  return {
-    bonificable: session.isFundaeEligible,
-  }
-}
-
-function matchesCertificationFilter(
-  filter: string,
-  session: RegistrationSession,
-  meta: ReturnType<typeof getSessionMeta>,
-) {
-  switch (filter) {
-    case 'Carnet / Diploma homologado':
-      return session.isOfficialCertification
-    case 'Bonificable FUNDAE':
-      return meta.bonificable
-    case 'PRL':
-      return normalize(session.category).includes('prevencion')
-    default:
-      return true
-  }
-}
 
 export function RegistrationPage() {
   const { sessions, loading, error } = useRegistrationSessions()
@@ -143,16 +96,10 @@ export function RegistrationPage() {
   const [syncedProvinceQuery, setSyncedProvinceQuery] = useState(provinceQuery)
   const [selectedProvince, setSelectedProvince] = useState(provinceQuery ?? provinceOptions[0])
   const [selectedCategory, setSelectedCategory] = useState('Todas las categorías')
-  const [selectedModality, setSelectedModality] = useState('Todas las modalidades')
   const [selectedMonth, setSelectedMonth] = useState('Cualquier fecha')
   const [appliedProvince, setAppliedProvince] = useState(provinceQuery ?? provinceOptions[0])
   const [appliedCategory, setAppliedCategory] = useState('Todas las categorías')
-  const [appliedModality, setAppliedModality] = useState('Todas las modalidades')
   const [appliedMonth, setAppliedMonth] = useState('Cualquier fecha')
-  const [durationFilters, setDurationFilters] = useState<string[]>([])
-  const [certificationFilters, setCertificationFilters] = useState<string[]>([])
-  const [onlyAvailable, setOnlyAvailable] = useState(false)
-  const [sortBy, setSortBy] = useState('Más próximas')
   const [page, setPage] = useState(1)
   const [activeSession, setActiveSession] = useState<RegistrationSession | null>(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
@@ -193,11 +140,6 @@ export function RegistrationPage() {
     if (!isMobileFilters) setAppliedCategory(value)
     setPage(1)
   }
-  const updateModality = (value: string) => {
-    setSelectedModality(value)
-    if (!isMobileFilters) setAppliedModality(value)
-    setPage(1)
-  }
   const updateMonth = (value: string) => {
     setSelectedMonth(value)
     if (!isMobileFilters) setAppliedMonth(value)
@@ -208,10 +150,6 @@ export function RegistrationPage() {
     () => ['Todas las categorías', ...new Set(sessions.map((session) => session.category))],
     [sessions],
   )
-  const modalityOptions = useMemo(
-    () => ['Todas las modalidades', ...new Set(sessions.map((session) => session.modality))],
-    [sessions],
-  )
   const monthOptions = useMemo(
     () => [
       'Cualquier fecha',
@@ -219,21 +157,11 @@ export function RegistrationPage() {
     ],
     [sessions],
   )
-  const durationOptions = ['Hasta 4 horas', '4 - 8 horas', '8 - 16 horas', '+16 horas', 'Consultar']
-
-  const sessionMetaById = useMemo(() => {
-    const map = new Map<string, ReturnType<typeof getSessionMeta>>()
-    sessions.forEach((session) => {
-      map.set(session.id, getSessionMeta(session))
-    })
-    return map
-  }, [sessions])
 
   const filteredSessions = useMemo(() => {
     const query = normalize(search.trim())
 
     const visible = sessions.filter((session) => {
-      const meta = sessionMetaById.get(session.id)!
       const matchesSearch =
         query.length === 0 ||
         normalize(
@@ -251,52 +179,23 @@ export function RegistrationPage() {
         appliedProvince === provinceOptions[0] || session.province === appliedProvince
       const matchesCategory =
         appliedCategory === categoryOptions[0] || session.category === appliedCategory
-      const matchesModality =
-        appliedModality === modalityOptions[0] || session.modality === appliedModality
       const matchesMonth =
         appliedMonth === monthOptions[0] || getMonthLabel(session.startsAt) === appliedMonth
-      const matchesAvailability = !onlyAvailable || session.status !== 'full'
-      const matchesDuration =
-        durationFilters.length === 0 ||
-        durationFilters.some((filter) => matchesDurationFilter(filter, session.durationHours))
-      const matchesCertification =
-        certificationFilters.length === 0 ||
-        certificationFilters.some((filter) => matchesCertificationFilter(filter, session, meta))
 
-      return (
-        matchesSearch &&
-        matchesProvince &&
-        matchesCategory &&
-        matchesModality &&
-        matchesMonth &&
-        matchesAvailability &&
-        matchesDuration &&
-        matchesCertification
-      )
+      return matchesSearch && matchesProvince && matchesCategory && matchesMonth
     })
 
-    return visible.sort((left, right) => {
-      if (sortBy === 'Curso A-Z') {
-        return left.courseTitle.localeCompare(right.courseTitle, 'es')
-      }
-
-      return new Date(left.startsAt).getTime() - new Date(right.startsAt).getTime()
-    })
+    return visible.sort(
+      (left, right) => new Date(left.startsAt).getTime() - new Date(right.startsAt).getTime(),
+    )
   }, [
     appliedCategory,
     appliedProvince,
-    appliedModality,
     appliedMonth,
     categoryOptions,
-    certificationFilters,
-    durationFilters,
-    modalityOptions,
     monthOptions,
-    onlyAvailable,
     search,
-    sessionMetaById,
     sessions,
-    sortBy,
   ])
 
   const totalPages = Math.max(1, Math.ceil(filteredSessions.length / pageSize))
@@ -314,7 +213,6 @@ export function RegistrationPage() {
   const applyFilters = () => {
     setAppliedProvince(selectedProvince)
     setAppliedCategory(selectedCategory)
-    setAppliedModality(selectedModality)
     setAppliedMonth(selectedMonth)
     setPage(1)
     setFiltersOpen(false)
@@ -355,25 +253,10 @@ export function RegistrationPage() {
     setAppliedProvince(provinceOptions[0])
     setSelectedCategory(categoryOptions[0] ?? 'Todas las categorías')
     setAppliedCategory(categoryOptions[0] ?? 'Todas las categorías')
-    setSelectedModality(modalityOptions[0] ?? 'Todas las modalidades')
-    setAppliedModality(modalityOptions[0] ?? 'Todas las modalidades')
     setSelectedMonth(monthOptions[0] ?? 'Cualquier fecha')
     setAppliedMonth(monthOptions[0] ?? 'Cualquier fecha')
-    setDurationFilters([])
-    setCertificationFilters([])
-    setOnlyAvailable(false)
-    setSortBy('Más próximas')
     setPage(1)
     setFiltersOpen(false)
-  }
-
-  const toggleCheckboxFilter = (
-    value: string,
-    current: string[],
-    setter: (items: string[]) => void,
-  ) => {
-    setter(current.includes(value) ? current.filter((item) => item !== value) : [...current, value])
-    setPage(1)
   }
 
   return (
@@ -383,46 +266,11 @@ export function RegistrationPage() {
           <h1 className="courses-hero-enter courses-hero-enter--1">
             Inscripciones <span>abiertas</span>
           </h1>
-          <p className="courses-hero-enter courses-hero-enter--2">
-            Formación práctica, certificada y enfocada a tu seguridad y a tu futuro profesional.
-          </p>
-          <div className="courses-hero-actions courses-hero-enter courses-hero-enter--3">
-            <a href="#registration-catalog" className="hero-search-link">
-              Buscar curso <Search size={18} />
-            </a>
-            <a
-              className="hero-calendar-link"
-              href="https://drive.google.com/file/d/0B7Ghcuo4WDYtYTlrWGxtXzhnNTg/view?resourcekey=0-M3q-VqD92HG26e_bJn9KTw"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Calendario cursos <Download size={18} />
-            </a>
-          </div>
-          <div className="courses-hero-metrics">
-            <span className="courses-hero-enter courses-hero-enter--4">
-              <Award /> <strong>+20 años</strong> de experiencia
-            </span>
-            <span className="courses-hero-enter courses-hero-enter--5">
-              <Users /> <strong>+250.000</strong> alumnos formados
-            </span>
-            <span className="courses-hero-enter courses-hero-enter--6">
-              <MapPin /> <strong>Cobertura</strong> nacional
-            </span>
-            <span className="courses-hero-enter courses-hero-enter--7">
-              <BriefcaseBusiness /> <strong>Formación abierta</strong> a tu empresa
-            </span>
-          </div>
-        </div>
-        <div className="courses-hero-claim courses-hero-enter courses-hero-enter--4">
-          <strong>
-            Por tu seguridad, escoge <span>Trekform</span>
-          </strong>
         </div>
       </section>
 
       <section className="registration-toolbar-wrap" id="registration-catalog">
-        <div className="registration-toolbar">
+        <div className="registration-toolbar calendar-toolbar">
           <div className="registration-toolbar-primary">
             <label className="registration-search-field" htmlFor="registration-search">
               <span>¿Qué curso buscas?</span>
@@ -464,12 +312,6 @@ export function RegistrationPage() {
               value={selectedCategory}
               options={categoryOptions}
               onChange={updateCategory}
-            />
-            <ToolbarSelect
-              label="Modalidad"
-              value={selectedModality}
-              options={modalityOptions}
-              onChange={updateModality}
             />
             <ToolbarSelect
               label="Fecha / Mes"
@@ -534,115 +376,7 @@ export function RegistrationPage() {
 
       <section className="registration-results-area">
         <div className="registration-results-layout">
-          <aside className="registration-sidebar">
-            <h2>Filtrar resultados</h2>
-
-            <SidebarGroup title="Categoría">
-              {categoryOptions.slice(1).map((item) => (
-                <SidebarCheckbox
-                  key={item}
-                  label={item}
-                  checked={selectedCategory === item}
-                  onChange={() =>
-                    updateCategory(selectedCategory === item ? categoryOptions[0] : item)
-                  }
-                />
-              ))}
-              <button
-                type="button"
-                className="sidebar-link-button"
-                onClick={() => updateCategory(categoryOptions[0])}
-              >
-                Ver todas las categorías
-              </button>
-            </SidebarGroup>
-
-            <SidebarGroup title="Modalidad">
-              {modalityOptions.slice(1).map((item) => (
-                <SidebarCheckbox
-                  key={item}
-                  label={item}
-                  checked={selectedModality === item}
-                  onChange={() =>
-                    updateModality(selectedModality === item ? modalityOptions[0] : item)
-                  }
-                />
-              ))}
-            </SidebarGroup>
-
-            <SidebarGroup title="Duración">
-              {durationOptions.map((item) => (
-                <SidebarCheckbox
-                  key={item}
-                  label={item}
-                  checked={durationFilters.includes(item)}
-                  onChange={() => toggleCheckboxFilter(item, durationFilters, setDurationFilters)}
-                />
-              ))}
-            </SidebarGroup>
-
-            <SidebarGroup title="Certificación">
-              {certificationOptions.map((item) => (
-                <SidebarCheckbox
-                  key={item}
-                  label={item}
-                  checked={certificationFilters.includes(item)}
-                  onChange={() =>
-                    toggleCheckboxFilter(item, certificationFilters, setCertificationFilters)
-                  }
-                />
-              ))}
-            </SidebarGroup>
-
-            <button type="button" className="registration-sidebar-reset" onClick={resetFilters}>
-              <RotateCcw size={16} /> Limpiar filtros
-            </button>
-          </aside>
-
           <div className="registration-results" id="registration-results">
-            <div className="registration-summary">
-              <div className="registration-summary-controls">
-                <label className="availability-toggle">
-                  <span>Solo plazas disponibles</span>
-                  <button
-                    type="button"
-                    className={onlyAvailable ? 'active' : ''}
-                    aria-pressed={onlyAvailable}
-                    onClick={() => {
-                      setOnlyAvailable((value) => !value)
-                      setPage(1)
-                    }}
-                  >
-                    <i />
-                  </button>
-                </label>
-                <label className="sort-select">
-                  <span>Ordenar por:</span>
-                  <div>
-                    <select
-                      value={sortBy}
-                      onChange={(event) => {
-                        setSortBy(event.target.value)
-                        setPage(1)
-                      }}
-                    >
-                      <option>Más próximas</option>
-                      <option>Curso A-Z</option>
-                    </select>
-                    <ChevronDown size={16} />
-                  </div>
-                </label>
-                <div className="registration-view-switch">
-                  <button type="button">
-                    <Grid3X3 size={15} /> Catálogo
-                  </button>
-                  <button type="button" className="active">
-                    <CalendarDays size={15} /> Próximas convocatorias
-                  </button>
-                </div>
-              </div>
-            </div>
-
             {showAlertBanner && alertCourse ? (
               <div className="registration-alert-banner">
                 <BellRing size={22} aria-hidden="true" />
@@ -875,35 +609,6 @@ function ToolbarSelect({
         </select>
         <ChevronDown size={16} />
       </div>
-    </label>
-  )
-}
-
-function SidebarGroup({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="registration-sidebar-group">
-      <h3>
-        {title}
-        <ChevronDown size={15} />
-      </h3>
-      <div>{children}</div>
-    </section>
-  )
-}
-
-function SidebarCheckbox({
-  label,
-  checked,
-  onChange,
-}: {
-  label: string
-  checked: boolean
-  onChange: () => void
-}) {
-  return (
-    <label className="registration-sidebar-checkbox">
-      <input type="checkbox" checked={checked} onChange={onChange} />
-      <span>{label}</span>
     </label>
   )
 }

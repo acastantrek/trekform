@@ -1,21 +1,11 @@
-import {
-  ArrowRight,
-  ArrowUpRight,
-  BriefcaseBusiness,
-  Check,
-  ChevronDown,
-  RotateCcw,
-  Search,
-  SlidersHorizontal,
-  Star,
-} from 'lucide-react'
+import { ArrowRight, ArrowUpRight, BriefcaseBusiness, Check, Search, Star } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { CategoryChips } from '../components/courses/CategoryChips'
 import { ProvincePickerModal } from '../components/registrations/ProvincePickerModal'
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
-import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useUserLocation } from '../hooks/useUserLocation'
 import { coordinatesForPlace, distanceKm, type Coordinates } from '../lib/geo'
 import { getRegistrationSessions } from '../services/registrations'
@@ -71,12 +61,10 @@ function getCourseMeta(course: Course) {
 
 export function CoursesPage() {
   const { courses: allCourses, loading, error } = useCourses()
-  const isMobileFilters = useMediaQuery('(max-width: 680px)')
   // `?categoria=` (e.g. from a category card on the home) pre-applies the category filter.
   const [searchParams] = useSearchParams()
   const categoryQuery = searchParams.get('categoria')
   const [syncedCategoryQuery, setSyncedCategoryQuery] = useState(categoryQuery)
-  const [category, setCategoryDraft] = useState(categoryQuery ?? 'Todos')
   const [search, setSearch] = useState('')
   const [appliedCategory, setAppliedCategory] = useState(categoryQuery ?? 'Todos')
   const [page, setPage] = useState(1)
@@ -90,11 +78,9 @@ export function CoursesPage() {
   /** The image shown on the card that opened the picker, reused as the modal's banner. */
   const [pickerImage, setPickerImage] = useState('')
   const navigate = useNavigate()
-  const [filtersOpen, setFiltersOpen] = useState(false)
 
   if (categoryQuery && categoryQuery !== syncedCategoryQuery) {
     setSyncedCategoryQuery(categoryQuery)
-    setCategoryDraft(categoryQuery)
     setAppliedCategory(categoryQuery)
     setPage(1)
   }
@@ -271,29 +257,15 @@ export function CoursesPage() {
     })
   }
 
-  const selectCategory = (value: string) => {
-    setCategoryDraft(value)
-    if (!isMobileFilters) setAppliedCategory(value)
+  // The category chips under the toolbar filter the catalog straight away.
+  const applyCategoryChip = (value: string) => {
+    setAppliedCategory(value)
     setPage(1)
-  }
-
-  const applyFilters = () => {
-    setAppliedCategory(category)
-    setPage(1)
-    setFiltersOpen(false)
-  }
-
-  const clearFilters = () => {
-    setCategoryDraft('Todos')
-    setAppliedCategory('Todos')
-    setSearch('')
-    setPage(1)
-    setFiltersOpen(false)
   }
 
   return (
     <>
-      <section className="courses-page-hero courses-page-hero--title-top">
+      <section className="courses-page-hero">
         <div className="courses-hero-content courses-hero-animate">
           <h1 className="courses-hero-enter courses-hero-enter--1">
             Cursos abiertos <span>Trekform</span>
@@ -321,38 +293,14 @@ export function CoursesPage() {
                 <Search />
               </div>
             </label>
-            <button
-              type="button"
-              className="registration-filters-toggle"
-              aria-expanded={filtersOpen}
-              onClick={() => setFiltersOpen((open) => !open)}
-            >
-              <SlidersHorizontal size={16} /> Filtros
-              <ChevronDown size={16} className={filtersOpen ? 'is-rotated' : ''} />
-            </button>
-          </div>
-
-          <div className={`registration-toolbar-fields${filtersOpen ? ' is-open' : ''}`}>
-            <CatalogSelect
-              label="Categoría"
-              value={category}
-              options={catalogCategories}
-              onChange={selectCategory}
-            />
-            <div className="registration-toolbar-actions registration-toolbar-actions-wide">
-              <button type="button" className="registration-toolbar-reset" onClick={clearFilters}>
-                <RotateCcw size={15} /> Limpiar filtros
-              </button>
-              <a
-                href="#catalog-results"
-                className="registration-toolbar-submit"
-                onClick={applyFilters}
-              >
-                Buscar cursos
-              </a>
-            </div>
           </div>
         </div>
+        <CategoryChips
+          categories={catalogCategories}
+          active={appliedCategory}
+          onSelect={applyCategoryChip}
+          labelFor={(item) => (item === 'Todos' ? 'Todas' : item)}
+        />
       </section>
 
       <section className="catalog-section">
@@ -527,34 +475,6 @@ export function CoursesPage() {
         <SessionAlertModal {...alertTarget} onClose={() => setAlertTarget(null)} />
       ) : null}
     </>
-  )
-}
-
-function CatalogSelect({
-  label,
-  value,
-  options,
-  onChange,
-}: {
-  label: string
-  value: string
-  options: string[]
-  onChange: (value: string) => void
-}) {
-  return (
-    <label className="registration-toolbar-select">
-      <span>{label}</span>
-      <div>
-        <select value={value} onChange={(event) => onChange(event.target.value)}>
-          {options.map((item) => (
-            <option key={item} value={item}>
-              {item === 'Todos' ? 'Todas las categorías' : item}
-            </option>
-          ))}
-        </select>
-        <ChevronDown />
-      </div>
-    </label>
   )
 }
 
