@@ -193,7 +193,7 @@
   max-width: 1500px;
   margin: 0 auto;
   /* Breathing room between the search toolbar and the first row of cards. */
-  padding-top: 24px;
+  padding-top: 18px;
   display: grid;
   gap: 18px;
 }
@@ -282,7 +282,7 @@
 
 .catalog-image {
   position: relative;
-  height: 132px;
+  height: 148px;
   margin: 8px 8px 0;
   overflow: hidden;
   border-radius: calc(var(--card-radius) - 6px);
@@ -917,7 +917,7 @@
     min-height: 0;
     align-items: start;
     padding-top: 49px;
-    padding-bottom: 52px;
+    padding-bottom: 46px;
   }
   .courses-page-hero--title-top .courses-hero-content h1 {
     margin-bottom: 0;
