@@ -13,6 +13,7 @@
 } from 'lucide-react'
 import { useEffect, useState, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
+import { trekformStats } from '../components/home/trekformStats'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { getGeneralFaqs, type Faq } from '../services/faqs'
@@ -49,6 +50,9 @@ const strengths = [
     text: 'Planes a medida para pymes, organizaciones y grandes cuentas.',
   },
 ]
+
+/** One icon per figure in `trekformStats`, in the same order (years, students, companies, courses). */
+const proofStripIcons = [Award, HardHat, Building2, ShieldCheck]
 
 export function AboutPage() {
   useScrollReveal()
@@ -95,26 +99,16 @@ export function AboutPage() {
       </section>
 
       <section className="about-proof-strip" data-reveal>
-        <article data-reveal data-reveal-delay="0.04">
-          <Award />
-          <strong>20+</strong>
-          <span>Años de experiencia</span>
-        </article>
-        <article data-reveal data-reveal-delay="0.08">
-          <HardHat />
-          <strong>250.000+</strong>
-          <span>Alumnos formados</span>
-        </article>
-        <article data-reveal data-reveal-delay="0.12">
-          <Building2 />
-          <strong>4.000+</strong>
-          <span>Empresas cliente</span>
-        </article>
-        <article data-reveal data-reveal-delay="0.16">
-          <ShieldCheck />
-          <strong>18.000+</strong>
-          <span>Cursos impartidos</span>
-        </article>
+        {trekformStats.map((stat, index) => {
+          const Icon = proofStripIcons[index]
+          return (
+            <article key={stat.label} data-reveal data-reveal-delay={0.04 * (index + 1)}>
+              <Icon />
+              <strong>{stat.value}</strong>
+              <span>{stat.label}</span>
+            </article>
+          )
+        })}
       </section>
 
       <section className="who-section" data-reveal>

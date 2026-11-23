@@ -1,6 +1,5 @@
 ﻿import { ArrowRight, CheckCircle2, Clock3, ShieldCheck, UserCheck } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
 import { submitContactRequest } from '../../services/contact'
 
 type SubmitState = 'idle' | 'sending' | 'success' | 'error'
@@ -57,14 +56,6 @@ export function TrekformHeroSection() {
           Formación teórico-práctica y certificada para particulares, profesionales y empresas, con
           convocatorias en toda España.
         </p>
-        <div className="hero-actions" data-reveal data-reveal-delay="0.2">
-          <a href="#hero-form" className="primary">
-            Solicitar información <ArrowRight size={20} />
-          </a>
-          <Link to="/cursos-trekform" className="hero-secondary">
-            Ver cursos <UserCheck size={18} />
-          </Link>
-        </div>
         <div className="hero-proof-row" data-reveal data-reveal-delay="0.26">
           <article data-reveal data-reveal-delay="0.06">
             <ShieldCheck />

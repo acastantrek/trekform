@@ -33,11 +33,11 @@
   z-index: 1;
 }
 .slider-content {
-  /* As tall as the form: the buttons and the proof row sit at its bottom, so the proof row ends
-     level with the bottom of the form. */
+  /* As tall as the form: the proof row sits near its bottom, raised a little above the bottom of
+     the form by the bottom padding. */
   align-self: stretch;
   max-width: 800px;
-  padding: 2px 0 0;
+  padding: 2px 0 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,47 +81,13 @@
   font-weight: 500;
   line-height: 1.35;
 }
-.hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  /* Centred in the free space between the intro text and the proof row. */
-  margin-block: auto;
-  padding-block: 20px;
-}
-.home-slider .primary,
-.hero-secondary {
-  min-height: 50px;
-  border-radius: 6px;
-  padding: 0 22px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 14px;
-  font-weight: 900;
-}
-.home-slider .primary {
-  background: var(--accent);
-  color: var(--navy);
-  box-shadow: 0 14px 28px rgba(255, 182, 6, 0.22);
-}
-.home-slider .primary:hover {
-  background: var(--accent-soft);
-  transform: translateY(-2px);
-}
-.hero-secondary {
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  color: #fff;
-  background: rgba(46, 46, 46, 0.28);
-  backdrop-filter: blur(12px);
-}
 .hero-proof-row {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 12px;
+  /* Pinned to the bottom of the column, with the intro text at the top; never closer than 28px. */
+  margin-top: auto;
+  padding-top: 28px;
 }
 .hero-proof-row article {
   display: grid;
@@ -359,14 +325,12 @@
   .home-hero-form-grid label {
     grid-template-columns: 1fr;
   }
-  .home-slider .primary,
-  .hero-secondary,
   .home-hero-submit {
     width: 100%;
   }
 }
 
-/* Hero form: frosted card with a glowing golden ring, gently floating (from the home redesign). */
+/* Hero form: frosted card with a soft golden glow, gently floating (from the home redesign). */
 @keyframes home-hero-form-float {
   0%,
   100% {
@@ -385,25 +349,9 @@
   padding: 26px 26px 24px;
   border-radius: 24px;
   background: rgba(255, 255, 255, 0.92);
-  box-shadow:
-    0 40px 80px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
-}
-.home-hero-form::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  padding: 2px;
-  border-radius: 25px;
-  background: linear-gradient(140deg, var(--accent), var(--accent-soft) 40%, transparent 72%);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
 }
 .home-hero-form::after {
   content: '';

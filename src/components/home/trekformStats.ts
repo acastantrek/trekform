@@ -1,4 +1,4 @@
-/** Key figures shown on the home (above the featured courses and in "Nuestros logros"). */
+/** Key figures shared by the home ("Nuestros logros") and the "Quiénes somos" proof strip. */
 export const trekformStats = [
   { value: '+20', label: 'Años de experiencia' },
   { value: '+250.000', label: 'Alumnos formados' },

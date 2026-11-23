@@ -5,9 +5,9 @@ import { TrekformLogo } from '../common/TrekformLogo'
 
 const links = [
   { label: 'Inicio', to: '/' },
-  { label: 'Quiénes somos', to: '/quienes-somos' },
   { label: 'Cursos', to: '/cursos-trekform' },
-  { label: 'Inscripciones', to: '/inscripciones' },
+  { label: 'Calendario', to: '/inscripciones' },
+  { label: 'Quiénes somos', to: '/quienes-somos' },
   { label: 'Blog', to: '/blog' },
   { label: 'Contacto', to: '/contacto' },
 ] as const

@@ -33,7 +33,7 @@ export function TrekformVideoSection() {
           rel="noreferrer"
           className="video-section__link"
         >
-          Descubre todos los vídeos de Trekform <ArrowRight size={18} />
+          Descubre cómo hacemos nuestros cursos <ArrowRight size={18} />
         </a>
       </section>
 

@@ -56,13 +56,13 @@ export function CategoriesShowcase() {
     <section className="category-section" data-reveal>
       <div className="section-heading" data-reveal data-reveal-delay="0.05">
         <div>
-          <span className="kicker">EXPLORA POR ÁREA</span>
+          <span className="kicker">ENCUENTRA TU FORMACIÓN IDEAL</span>
           <h2>
-            Encuentra tu <span>formación ideal</span>
+            Explora por <span>categoría</span>
           </h2>
         </div>
         <Link to="/cursos-trekform">
-          Ver todos los cursos <ArrowRight size={18} />
+          Ver todas las categorías <ArrowRight size={18} />
         </Link>
       </div>
       <div className="category-grid">

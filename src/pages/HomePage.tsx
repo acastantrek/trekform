@@ -3,13 +3,11 @@ import { Link } from 'react-router-dom'
 import { CourseCatalog } from '../components/courses/CourseCatalog'
 import { CategoriesShowcase } from '../components/home/CategoriesShowcase'
 import { ContactCtaBanner } from '../components/home/ContactCtaBanner'
-import { HomeFaqSection } from '../components/home/HomeFaqSection'
 import { LatestNews } from '../components/home/LatestNews'
 import { TestimonialsCarousel } from '../components/home/TestimonialsCarousel'
 import { TrekformHeroSection } from '../components/home/TrekformHeroSection'
 import { TrekformStatsSection } from '../components/home/TrekformStatsSection'
-import { trekformStats } from '../components/home/trekformStats'
-import { CountUp } from '../components/common/CountUp'
+import { QualitySection } from '../components/home/QualitySection'
 import { TrekformVideoSection } from '../components/home/TrekformVideoSection'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useScrollReveal } from '../hooks/useScrollReveal'
@@ -21,15 +19,8 @@ export function HomePage() {
   return (
     <>
       <TrekformHeroSection />
+      <TrekformStatsSection />
       <section className="course-section" data-reveal={isMobile ? undefined : true}>
-        <div className="home-key-stats" aria-label="Cifras destacadas de Trekform">
-          {trekformStats.map((stat) => (
-            <div key={stat.label}>
-              <CountUp value={stat.value} />
-              <span>{stat.label}</span>
-            </div>
-          ))}
-        </div>
         <div className="section-heading" data-reveal data-reveal-delay="0.05">
           <div>
             <span className="kicker">APRENDE. CERTIFÍCATE. AVANZA.</span>
@@ -44,8 +35,8 @@ export function HomePage() {
         <CourseCatalog />
       </section>
       <CategoriesShowcase />
-      <TrekformStatsSection />
       <TrekformVideoSection />
+      <QualitySection />
       <section className="home-info-grid" data-reveal>
         <article data-reveal data-reveal-delay="0.05">
           <span className="kicker">SOBRE TREKFORM</span>
@@ -64,7 +55,7 @@ export function HomePage() {
               <CheckCircle2 /> Instructores en activo y cualificados
             </li>
             <li>
-              <CheckCircle2 /> Instalaciones propias y equipos de última generación
+              <CheckCircle2 /> Instalaciones y equipos propios
             </li>
             <li>
               <CheckCircle2 /> Atención personalizada a empresas y particulares
@@ -83,7 +74,6 @@ export function HomePage() {
           <LatestNews />
         </article>
       </section>
-      <HomeFaqSection />
       <ContactCtaBanner />
     </>
   )

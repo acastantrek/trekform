@@ -29,9 +29,10 @@ const cities = [
   'G.CANARIA - 82 815 00 08',
 ]
 const links = [
-  { label: 'Quiénes somos', to: '/quienes-somos' },
+  { label: 'Inicio', to: '/' },
   { label: 'Cursos', to: '/cursos-trekform' },
-  { label: 'Inscripciones', to: '/inscripciones' },
+  { label: 'Calendario', to: '/inscripciones' },
+  { label: 'Quiénes somos', to: '/quienes-somos' },
   { label: 'Blog', to: '/blog' },
   { label: 'Contacto', to: '/contacto' },
 ] as const
