@@ -159,21 +159,25 @@
 
 /* Courses page: category chips in one horizontal row under the toolbar; clicking one filters the
    catalog. When they don't fit (mobile) the row scrolls sideways by swiping, with snap points so
-   it settles on a chip. A faded edge and an arrow appear on each side that still hides chips
-   (classes set from CategoryChips.tsx), so visitors know there is more to swipe to. */
+   it settles on a chip. An arrow button appears on each side that still hides chips (classes set
+   from CategoryChips.tsx). The arrows sit beside the scrolling list, never on top of it, so they
+   can't cover a category. */
 .courses-category-chips {
-  position: relative;
   max-width: 1480px;
   margin: 14px auto 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .courses-category-chips-list {
+  flex: 1;
+  min-width: 0;
   display: flex;
   gap: 8px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x proximity;
-  scroll-padding-inline: 16px;
   touch-action: pan-x pan-y;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -216,41 +220,12 @@
   outline-offset: 2px;
 }
 
-/* Faded edges over the row, matching the page background. */
-.courses-category-chips::before,
-.courses-category-chips::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 56px;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.courses-category-chips::before {
-  left: 0;
-  background: linear-gradient(90deg, #f5f5f4 30%, rgba(245, 245, 244, 0));
-}
-
-.courses-category-chips::after {
-  right: 0;
-  background: linear-gradient(270deg, #f5f5f4 30%, rgba(245, 245, 244, 0));
-}
-
-.courses-category-chips.can-scroll-left::before,
-.courses-category-chips.can-scroll-right::after {
-  opacity: 1;
-}
-
+/* Only shown on a side with hidden chips; when hidden they take no space at all. */
 .courses-category-chips-arrow {
-  position: absolute;
-  top: 50%;
-  z-index: 1;
+  flex: none;
   width: 30px;
   height: 30px;
-  display: grid;
+  display: none;
   place-items: center;
   padding: 0;
   border: 0;
@@ -259,35 +234,29 @@
   color: #fff;
   box-shadow: 0 4px 12px rgba(46, 46, 46, 0.25);
   cursor: pointer;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-50%);
-  transition: opacity 0.2s ease;
 }
 
 .courses-category-chips-arrow.is-left {
-  left: 0;
+  order: -1;
 }
 
 .courses-category-chips-arrow.is-right {
-  right: 0;
   animation: courses-chips-nudge 1.6s ease-in-out 3;
 }
 
 .courses-category-chips.can-scroll-left .courses-category-chips-arrow.is-left,
 .courses-category-chips.can-scroll-right .courses-category-chips-arrow.is-right {
-  opacity: 1;
-  pointer-events: auto;
+  display: grid;
 }
 
-/* A gentle nudge on arrival hints that the row can be swiped. */
+/* A gentle nudge on arrival hints that the row can be swiped (it moves away from the chips). */
 @keyframes courses-chips-nudge {
   0%,
   100% {
-    transform: translate(0, -50%);
+    transform: translateX(0);
   }
   50% {
-    transform: translate(4px, -50%);
+    transform: translateX(3px);
   }
 }
 

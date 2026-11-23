@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 /**
  * Horizontal row of category chips. When the chips don't fit (mobile) the row scrolls sideways —
- * by swiping, trackpad or the arrow buttons — and a faded edge plus an arrow show on each side
+ * by swiping, trackpad or the arrow buttons — and an arrow shows beside the row on each side
  * that still has hidden chips, so visitors know there is more to see.
  */
 export function CategoryChips({
@@ -23,7 +23,16 @@ export function CategoryChips({
 
   const updateEdges = useCallback(() => {
     const list = listRef.current
-    if (!list) return
+    const row = list?.parentElement
+    if (!list || !row) return
+    // The arrows take room from the list when shown, so whether the chips fit is checked against
+    // the whole row; otherwise the arrows could keep themselves visible on a row that has space.
+    if (list.scrollWidth <= row.clientWidth + 1) {
+      list.scrollLeft = 0
+      setCanScrollLeft(false)
+      setCanScrollRight(false)
+      return
+    }
     // 1px tolerance: scroll positions can be fractional on high-DPI screens.
     setCanScrollLeft(list.scrollLeft > 1)
     setCanScrollRight(list.scrollLeft + list.clientWidth < list.scrollWidth - 1)
@@ -31,9 +40,11 @@ export function CategoryChips({
 
   useEffect(() => {
     const list = listRef.current
-    if (!list) return
+    const row = list?.parentElement
+    if (!list || !row) return
     updateEdges()
     const observer = new ResizeObserver(updateEdges)
+    observer.observe(row)
     observer.observe(list)
     return () => observer.disconnect()
   }, [updateEdges, categories])
