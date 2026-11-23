@@ -192,11 +192,11 @@
 .catalog-layout {
   max-width: 1500px;
   margin: 0 auto;
+  /* Breathing room between the search toolbar and the first row of cards. */
+  padding-top: 24px;
   display: grid;
-  grid-template-columns: 260px 1fr;
   gap: 18px;
 }
-.catalog-sidebar,
 .catalog-card,
 .catalog-trust-row article,
 .catalog-empty {
@@ -205,144 +205,8 @@
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(46, 46, 46, 0.05);
 }
-.catalog-sidebar {
-  align-self: start;
-  padding: 18px 16px;
-}
-.catalog-sidebar h2 {
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 14px;
-  text-transform: uppercase;
-  letter-spacing: 0;
-  margin: 0 0 18px;
-}
-.filter-group {
-  padding: 15px 0;
-  border-top: 1px solid #e4e4e1;
-}
-.filter-group h3 {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: 'Inter Tight', sans-serif;
-  font-size: 13px;
-  margin: 0 0 12px;
-  letter-spacing: 0;
-}
-.filter-group > div {
-  display: grid;
-  gap: 8px;
-}
-.filter-group label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  color: #30302f;
-}
-.filter-group input {
-  width: 14px;
-  height: 14px;
-  accent-color: var(--accent);
-}
-.filter-group button {
-  justify-self: start;
-  border: 0;
-  background: transparent;
-  color: var(--navy);
-  padding: 4px 0 0;
-  font-size: 12px;
-  font-weight: 900;
-}
-.sidebar-reset {
-  width: 100%;
-  height: 50px;
-  border: 1px solid #d5d5d2;
-  background: #fff;
-  border-radius: 5px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  font-weight: 900;
-}
 .catalog-results {
   min-width: 0;
-}
-.catalog-summary {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 18px;
-  margin-bottom: 12px;
-}
-.catalog-summary p {
-  margin: 0;
-  font-size: 15px;
-  color: var(--navy);
-}
-.catalog-summary p strong {
-  font-size: 18px;
-  color: var(--navy);
-}
-.catalog-summary > div {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-.catalog-summary label {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #62625f;
-  font-size: 12px;
-}
-.catalog-sort-select > div {
-  position: relative;
-}
-.catalog-summary select {
-  width: 185px;
-  height: 38px;
-  border: 1px solid #d7d7d4;
-  border-radius: 4px;
-  background: #fff;
-  color: var(--navy);
-  padding: 0 42px 0 13px;
-  font-size: 13px;
-  outline: none;
-  appearance: none;
-  color-scheme: light;
-}
-.catalog-sort-select svg {
-  position: absolute;
-  top: 50%;
-  right: 14px;
-  color: #656565;
-  transform: translateY(-50%);
-  pointer-events: none;
-}
-.catalog-summary option {
-  background: #fff;
-  color: var(--navy);
-}
-.view-toggle {
-  height: 38px;
-  border: 1px solid #d8d8d5;
-  background: #fff;
-  color: #353535;
-  border-radius: 5px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 12px;
-  font-size: 12px;
-  font-weight: 800;
-}
-.view-toggle.active {
-  background: rgba(244, 194, 127, 0.2);
-  border-color: var(--accent);
 }
 .catalog-grid {
   display: grid;
@@ -418,7 +282,7 @@
 
 .catalog-image {
   position: relative;
-  height: 178px;
+  height: 132px;
   margin: 8px 8px 0;
   overflow: hidden;
   border-radius: calc(var(--card-radius) - 6px);
@@ -540,7 +404,7 @@
 }
 
 .catalog-card-body {
-  padding: 16px;
+  padding: 12px 14px 14px;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -550,8 +414,8 @@
 .catalog-card-body h2 {
   position: relative;
   min-height: 42px;
-  margin: 0 0 14px;
-  padding-top: 14px;
+  margin: 0 0 10px;
+  padding-top: 10px;
   font-family: 'Inter Tight', sans-serif;
   font-size: 18px;
   font-weight: 800;
@@ -597,7 +461,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
   color: #4a4a47;
   font-size: 12px;
   font-weight: 800;
@@ -658,56 +522,10 @@
   height: 14px;
   color: #464643;
 }
-.catalog-locate {
-  height: 38px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 0 12px;
-  border: 1px solid #d8d8d5;
-  border-radius: 5px;
-  background: #fff;
-  color: var(--navy);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease;
-}
-.catalog-locate:hover:not(:disabled) {
-  border-color: var(--accent);
-}
-.catalog-locate.is-active {
-  background: rgba(244, 194, 127, 0.2);
-  border-color: var(--accent);
-}
-.catalog-locate:disabled {
-  cursor: progress;
-  opacity: 0.75;
-}
-.catalog-locate:focus-visible {
-  outline: 2px solid var(--navy);
-  outline-offset: 2px;
-}
-.catalog-locate-spinner {
-  width: 13px;
-  height: 13px;
-  border: 2px solid #d8d8d5;
-  border-top-color: var(--navy);
-  border-radius: 50%;
-  animation: catalog-locate-spin 0.8s linear infinite;
-}
-@keyframes catalog-locate-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 .catalog-card-actions {
   display: grid;
   grid-template-columns: 1fr;
-  padding-top: 12px;
+  padding-top: 10px;
   border-top: 1px dashed rgba(46, 46, 46, 0.12);
 }
 /* Dark pill that fills with the brand yellow from the left on hover. */
@@ -998,12 +816,6 @@
     margin-top: 24px;
     padding: 18px 22px 18px 34px;
   }
-  .catalog-layout {
-    grid-template-columns: 1fr;
-  }
-  .catalog-sidebar {
-    display: none;
-  }
   .catalog-grid,
   .catalog-trust-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1034,24 +846,6 @@
   }
   .catalog-section {
     padding-inline: 14px;
-  }
-  .catalog-summary {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .catalog-summary > div {
-    display: block;
-  }
-  .catalog-summary label {
-    flex-direction: row;
-    align-items: center;
-  }
-  .catalog-summary select {
-    width: auto;
-  }
-  .catalog-summary .view-toggle {
-    display: none;
   }
   .catalog-pagination {
     align-items: stretch;
@@ -1094,7 +888,7 @@
     padding: 14px;
   }
   .catalog-image {
-    height: 168px;
+    height: 150px;
   }
   .catalog-pagination button {
     min-width: 32px;
@@ -1110,5 +904,22 @@
     opacity: 1;
     transform: none;
     animation: none;
+  }
+}
+
+/* Courses page: the title sits at the same height as the home hero title (49px below the top of
+   the hero) instead of being centred, and the hero ends just below it (the bottom padding is the
+   36px the search toolbar overlaps plus a little air), so the first row of course cards is
+   visible on arrival. Calendario keeps its taller centred hero. Smaller screens already align the
+   content to the top. */
+@media (min-width: 1021px) {
+  .courses-page-hero.courses-page-hero--title-top {
+    min-height: 0;
+    align-items: start;
+    padding-top: 49px;
+    padding-bottom: 52px;
+  }
+  .courses-page-hero--title-top .courses-hero-content h1 {
+    margin-bottom: 0;
   }
 }

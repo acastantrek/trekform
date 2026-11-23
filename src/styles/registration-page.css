@@ -118,12 +118,54 @@
   grid-column: span 3;
 }
 
+/* Courses page: search, category and the two buttons fit in a single row. */
 .courses-toolbar {
-  grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.3fr);
 }
 
 .courses-toolbar .registration-toolbar-actions-wide {
-  grid-column: span 2;
+  grid-column: auto;
+}
+
+/* Courses page: compact toolbar. The field titles are only kept for screen readers (the search
+   placeholder and the "Todas las categorías" option already say what each field is) and every
+   control is shorter, so the bar takes a single slim row overlapping the hero a little. */
+.courses-toolbar-wrap {
+  margin-top: -36px;
+}
+
+.courses-toolbar {
+  padding: 12px;
+  gap: 10px;
+  align-items: center;
+}
+
+.courses-toolbar .registration-search-field > span,
+.courses-toolbar .registration-toolbar-select > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.courses-toolbar .registration-search-field input,
+.courses-toolbar .registration-toolbar-select select {
+  height: 44px;
+}
+
+.courses-toolbar .registration-toolbar-actions {
+  align-items: center;
+  gap: 10px;
+}
+
+.courses-toolbar .registration-toolbar-reset,
+.courses-toolbar .registration-toolbar-submit {
+  min-height: 44px;
 }
 
 .registration-toolbar-reset {
@@ -174,10 +216,6 @@
 .registration-toolbar-primary,
 .registration-toolbar-fields {
   display: contents;
-}
-
-.registration-toolbar-mobile-filters {
-  display: none;
 }
 
 .registration-filters-toggle {
@@ -1080,24 +1118,6 @@
 
   .registration-toolbar-actions-wide {
     grid-column: auto;
-  }
-
-  .registration-toolbar-mobile-filters {
-    display: block;
-    padding: 4px 2px 0;
-  }
-
-  .registration-toolbar-mobile-filters .filter-group {
-    padding: 12px 0;
-    border-top: 1px solid rgba(255, 255, 255, 0.14);
-  }
-
-  .registration-toolbar-mobile-filters .filter-group h3 {
-    color: #fff;
-  }
-
-  .registration-toolbar-mobile-filters .filter-group label {
-    color: rgba(255, 255, 255, 0.86);
   }
 
   .registration-toolbar-actions {

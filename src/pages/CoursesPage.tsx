@@ -1,29 +1,22 @@
 import {
   ArrowRight,
   ArrowUpRight,
-  Award,
   BriefcaseBusiness,
-  CalendarDays,
   Check,
   ChevronDown,
-  Download,
-  Grid3X3,
-  LocateFixed,
-  MapPin,
   RotateCcw,
   Search,
   SlidersHorizontal,
   Star,
-  Users,
 } from 'lucide-react'
-import type { CSSProperties, Dispatch, ReactNode, SetStateAction } from 'react'
+import type { CSSProperties } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { ProvincePickerModal } from '../components/registrations/ProvincePickerModal'
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
 import { useMediaQuery } from '../hooks/useMediaQuery'
-import { useUserLocation, type UserLocationStatus } from '../hooks/useUserLocation'
+import { useUserLocation } from '../hooks/useUserLocation'
 import { coordinatesForPlace, distanceKm, type Coordinates } from '../lib/geo'
 import { getRegistrationSessions } from '../services/registrations'
 import type { Course } from '../types/course'
@@ -40,10 +33,7 @@ const categoryOrder = [
   'Logística',
   'Hostelería',
 ]
-const modalities = ['Todas las modalidades', 'Presencial', 'Online', 'Semipresencial']
 const modalityLabels = { presential: 'Presencial', online: 'Online', hybrid: 'Semipresencial' }
-const durations = ['Hasta 4 horas', '4 - 8 horas', '8 - 16 horas', '+16 horas']
-const certifications = ['Carnet / Diploma homologado', 'Bonificable FUNDAE', 'PRL']
 
 const fallbackImages = [
   '/imagenes/services-1-1a.jpg',
@@ -79,38 +69,6 @@ function getCourseMeta(course: Course) {
   return { duration, durationHours, modality, certificate, officialCertification, bonificable }
 }
 
-function matchesDurationFilter(filter: string, hours: number) {
-  switch (filter) {
-    case 'Hasta 4 horas':
-      return hours <= 4
-    case '4 - 8 horas':
-      return hours > 4 && hours <= 8
-    case '8 - 16 horas':
-      return hours > 8 && hours <= 16
-    case '+16 horas':
-      return hours > 16
-    default:
-      return true
-  }
-}
-
-function matchesCertificationFilter(
-  filter: string,
-  course: Course,
-  meta: ReturnType<typeof getCourseMeta>,
-) {
-  switch (filter) {
-    case 'Carnet / Diploma homologado':
-      return meta.officialCertification
-    case 'Bonificable FUNDAE':
-      return meta.bonificable
-    case 'PRL':
-      return course.categories.some((item) => normalize(item).includes('prevencion'))
-    default:
-      return true
-  }
-}
-
 export function CoursesPage() {
   const { courses: allCourses, loading, error } = useCourses()
   const isMobileFilters = useMediaQuery('(max-width: 680px)')
@@ -120,11 +78,7 @@ export function CoursesPage() {
   const [syncedCategoryQuery, setSyncedCategoryQuery] = useState(categoryQuery)
   const [category, setCategoryDraft] = useState(categoryQuery ?? 'Todos')
   const [search, setSearch] = useState('')
-  const [modality, setModalityDraft] = useState(modalities[0])
-  const [durationFilters, setDurationFilters] = useState<string[]>([])
-  const [certificationFilters, setCertificationFilters] = useState<string[]>([])
   const [appliedCategory, setAppliedCategory] = useState(categoryQuery ?? 'Todos')
-  const [appliedModality, setAppliedModality] = useState(modalities[0])
   const [page, setPage] = useState(1)
   const [provincesByCourseSlug, setProvincesByCourseSlug] = useState<Map<string, CourseProvince[]>>(
     new Map(),
@@ -152,11 +106,6 @@ export function CoursesPage() {
         ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [searchParams])
-
-  const setModality = (value: string) => {
-    setModalityDraft(value)
-    if (!isMobileFilters) setAppliedModality(value)
-  }
 
   useEffect(() => {
     getRegistrationSessions()
@@ -282,13 +231,6 @@ export function CoursesPage() {
     navigate(registrationsLink(course, province))
   }
 
-  const toggleFilterValue = (setter: Dispatch<SetStateAction<string[]>>, value: string) => {
-    setter((current) =>
-      current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
-    )
-    setPage(1)
-  }
-
   const filteredCourses = useMemo(() => {
     const query = normalize(search.trim())
 
@@ -296,16 +238,8 @@ export function CoursesPage() {
       const meta = courseMetaById.get(course.id)!
       const matchesCategory =
         appliedCategory === 'Todos' || course.categories.includes(appliedCategory)
-      const matchesModality = appliedModality === modalities[0] || meta.modality === appliedModality
-      const matchesDuration =
-        durationFilters.length === 0 ||
-        durationFilters.some((filter) => matchesDurationFilter(filter, meta.durationHours))
-      const matchesCertification =
-        certificationFilters.length === 0 ||
-        certificationFilters.some((filter) => matchesCertificationFilter(filter, course, meta))
 
-      if (!matchesCategory || !matchesModality || !matchesDuration || !matchesCertification)
-        return false
+      if (!matchesCategory) return false
       if (!query) return true
 
       const haystack = normalize(
@@ -323,15 +257,7 @@ export function CoursesPage() {
 
       return haystack.includes(query)
     })
-  }, [
-    allCourses,
-    courseMetaById,
-    appliedCategory,
-    appliedModality,
-    durationFilters,
-    certificationFilters,
-    search,
-  ])
+  }, [allCourses, courseMetaById, appliedCategory, search])
 
   const totalPages = Math.max(1, Math.ceil(filteredCourses.length / pageSize))
   const visibleCourses = filteredCourses.slice((page - 1) * pageSize, page * pageSize)
@@ -353,7 +279,6 @@ export function CoursesPage() {
 
   const applyFilters = () => {
     setAppliedCategory(category)
-    setAppliedModality(modality)
     setPage(1)
     setFiltersOpen(false)
   }
@@ -362,60 +287,21 @@ export function CoursesPage() {
     setCategoryDraft('Todos')
     setAppliedCategory('Todos')
     setSearch('')
-    setModalityDraft(modalities[0])
-    setAppliedModality(modalities[0])
-    setDurationFilters([])
-    setCertificationFilters([])
     setPage(1)
     setFiltersOpen(false)
   }
 
   return (
     <>
-      <section className="courses-page-hero">
+      <section className="courses-page-hero courses-page-hero--title-top">
         <div className="courses-hero-content courses-hero-animate">
           <h1 className="courses-hero-enter courses-hero-enter--1">
             Cursos abiertos <span>Trekform</span>
           </h1>
-          <p className="courses-hero-enter courses-hero-enter--2">
-            Formación práctica, certificada y enfocada a tu seguridad y a tu futuro profesional.
-          </p>
-          <div className="courses-hero-actions courses-hero-enter courses-hero-enter--3">
-            <a href="#catalog-results" className="hero-search-link">
-              Buscar curso <Search size={18} />
-            </a>
-            <a
-              className="hero-calendar-link"
-              href="https://drive.google.com/file/d/0B7Ghcuo4WDYtYTlrWGxtXzhnNTg/view?resourcekey=0-M3q-VqD92HG26e_bJn9KTw"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Calendario cursos <Download size={18} />
-            </a>
-          </div>
-          <div className="courses-hero-metrics">
-            <span className="courses-hero-enter courses-hero-enter--4">
-              <Award /> <strong>+20 años</strong> de experiencia
-            </span>
-            <span className="courses-hero-enter courses-hero-enter--5">
-              <Users /> <strong>+250.000</strong> alumnos formados
-            </span>
-            <span className="courses-hero-enter courses-hero-enter--6">
-              <MapPin /> <strong>Cobertura</strong> nacional
-            </span>
-            <span className="courses-hero-enter courses-hero-enter--7">
-              <BriefcaseBusiness /> <strong>Formación abierta</strong> e in-company
-            </span>
-          </div>
-        </div>
-        <div className="courses-hero-claim courses-hero-enter courses-hero-enter--4">
-          <strong>
-            Por tu seguridad, escoge <span>Trekform</span>
-          </strong>
         </div>
       </section>
 
-      <section className="registration-toolbar-wrap">
+      <section className="registration-toolbar-wrap courses-toolbar-wrap">
         <div className="registration-toolbar courses-toolbar">
           <div className="registration-toolbar-primary">
             <label className="registration-search-field" htmlFor="course-search">
@@ -429,7 +315,7 @@ export function CoursesPage() {
                     setSearch(event.target.value)
                     setPage(1)
                   }}
-                  placeholder="Ej: Carretillas, Altura, PRL, PEMP..."
+                  placeholder="¿Qué curso buscas? Ej: carretillas, PRL, PEMP..."
                   aria-label="Buscar cursos"
                 />
                 <Search />
@@ -453,38 +339,6 @@ export function CoursesPage() {
               options={catalogCategories}
               onChange={selectCategory}
             />
-            <CatalogSelect
-              label="Modalidad"
-              value={modality}
-              options={modalities}
-              onChange={setModality}
-            />
-            <div className="registration-toolbar-mobile-filters">
-              <FilterGroup title="Duración">
-                {durations.map((item) => (
-                  <label key={item}>
-                    <input
-                      type="checkbox"
-                      checked={durationFilters.includes(item)}
-                      onChange={() => toggleFilterValue(setDurationFilters, item)}
-                    />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </FilterGroup>
-              <FilterGroup title="Certificación">
-                {certifications.map((item) => (
-                  <label key={item}>
-                    <input
-                      type="checkbox"
-                      checked={certificationFilters.includes(item)}
-                      onChange={() => toggleFilterValue(setCertificationFilters, item)}
-                    />
-                    <span>{item}</span>
-                  </label>
-                ))}
-              </FilterGroup>
-            </div>
             <div className="registration-toolbar-actions registration-toolbar-actions-wide">
               <button type="button" className="registration-toolbar-reset" onClick={clearFilters}>
                 <RotateCcw size={15} /> Limpiar filtros
@@ -497,108 +351,13 @@ export function CoursesPage() {
                 Buscar cursos
               </a>
             </div>
-            <div className="registration-active-chips">
-              {appliedCategory !== 'Todos' ? (
-                <button
-                  onClick={() => {
-                    setCategoryDraft('Todos')
-                    setAppliedCategory('Todos')
-                  }}
-                >
-                  {appliedCategory} ×
-                </button>
-              ) : null}
-            </div>
           </div>
         </div>
       </section>
 
       <section className="catalog-section">
         <div className="catalog-layout" id="catalog-results">
-          <aside className="catalog-sidebar">
-            <h2>Filtrar resultados</h2>
-            <FilterGroup title="Categoría">
-              {catalogCategories.slice(1).map((item) => (
-                <label key={item}>
-                  <input
-                    type="checkbox"
-                    checked={category === item}
-                    onChange={() => selectCategory(category === item ? 'Todos' : item)}
-                  />
-                  <span>{item}</span>
-                </label>
-              ))}
-              <button type="button" onClick={() => selectCategory('Todos')}>
-                Ver todas las categorías
-              </button>
-            </FilterGroup>
-            <FilterGroup title="Modalidad">
-              {modalities.slice(1).map((item) => (
-                <label key={item}>
-                  <input
-                    type="checkbox"
-                    checked={modality === item}
-                    onChange={() => {
-                      setModality(modality === item ? modalities[0] : item)
-                      setPage(1)
-                    }}
-                  />
-                  <span>{item}</span>
-                </label>
-              ))}
-            </FilterGroup>
-            <FilterGroup title="Duración">
-              {durations.map((item) => (
-                <label key={item}>
-                  <input
-                    type="checkbox"
-                    checked={durationFilters.includes(item)}
-                    onChange={() => toggleFilterValue(setDurationFilters, item)}
-                  />
-                  <span>{item}</span>
-                </label>
-              ))}
-            </FilterGroup>
-            <FilterGroup title="Certificación">
-              {certifications.map((item) => (
-                <label key={item}>
-                  <input
-                    type="checkbox"
-                    checked={certificationFilters.includes(item)}
-                    onChange={() => toggleFilterValue(setCertificationFilters, item)}
-                  />
-                  <span>{item}</span>
-                </label>
-              ))}
-            </FilterGroup>
-            <button type="button" className="sidebar-reset" onClick={clearFilters}>
-              <RotateCcw size={16} /> Limpiar filtros
-            </button>
-          </aside>
-
           <div className="catalog-results">
-            <div className="catalog-summary">
-              <div>
-                <label className="catalog-sort-select">
-                  <span>Ordenar por:</span>
-                  <div>
-                    <select defaultValue="Más relevantes">
-                      <option>Más relevantes</option>
-                      <option>Próximas fechas</option>
-                    </select>
-                    <ChevronDown size={15} />
-                  </div>
-                </label>
-                <button type="button" className="view-toggle active">
-                  <Grid3X3 size={15} /> Catálogo
-                </button>
-                <button type="button" className="view-toggle">
-                  <CalendarDays size={15} /> Próximas convocatorias
-                </button>
-              </div>
-              <LocateButton status={userLocation.status} onLocate={userLocation.locate} />
-            </div>
-
             {loading ? (
               <div className="catalog-empty catalog-loading" role="status">
                 <span className="catalog-spinner" />
@@ -788,7 +547,9 @@ function CatalogSelect({
       <div>
         <select value={value} onChange={(event) => onChange(event.target.value)}>
           {options.map((item) => (
-            <option key={item}>{item}</option>
+            <option key={item} value={item}>
+              {item === 'Todos' ? 'Todas las categorías' : item}
+            </option>
           ))}
         </select>
         <ChevronDown />
@@ -814,51 +575,4 @@ interface SessionAlertTarget {
 
 interface ProvinceOption extends CourseProvince {
   distanceKm: number | null
-}
-
-const locateLabels: Record<UserLocationStatus, string> = {
-  idle: 'Cerca de mí',
-  locating: 'Buscando…',
-  ready: 'Ordenado por cercanía',
-  denied: 'Ubicación bloqueada',
-  unavailable: 'Reintentar ubicación',
-}
-
-function LocateButton({ status, onLocate }: { status: UserLocationStatus; onLocate: () => void }) {
-  const hint =
-    status === 'denied'
-      ? 'Activa el permiso de ubicación del navegador para ver las convocatorias más cercanas'
-      : status === 'ready'
-        ? 'Las provincias de cada convocatoria aparecen ordenadas de más cercana a más lejana'
-        : 'Usa tu ubicación para ordenar las convocatorias de cada curso por cercanía'
-
-  return (
-    <button
-      type="button"
-      className={`catalog-locate${status === 'ready' ? ' is-active' : ''}`}
-      onClick={onLocate}
-      disabled={status === 'locating'}
-      title={hint}
-      aria-live="polite"
-    >
-      {status === 'locating' ? (
-        <span className="catalog-locate-spinner" aria-hidden="true" />
-      ) : (
-        <LocateFixed size={15} aria-hidden="true" />
-      )}
-      {locateLabels[status]}
-    </button>
-  )
-}
-
-function FilterGroup({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="filter-group">
-      <h3>
-        {title}
-        <ChevronDown size={15} />
-      </h3>
-      <div>{children}</div>
-    </section>
-  )
 }
