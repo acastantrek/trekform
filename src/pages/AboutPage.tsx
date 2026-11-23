@@ -5,18 +5,16 @@
   Building2,
   CalendarClock,
   CheckCircle2,
-  ChevronDown,
   HardHat,
   MapPinned,
   ShieldCheck,
   Zap,
 } from 'lucide-react'
-import { useEffect, useState, type CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { trekformStats } from '../components/home/trekformStats'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useScrollReveal } from '../hooks/useScrollReveal'
-import { getGeneralFaqs, type Faq } from '../services/faqs'
 
 const strengths = [
   {
@@ -57,13 +55,6 @@ const proofStripIcons = [Award, HardHat, Building2, ShieldCheck]
 export function AboutPage() {
   useScrollReveal()
   const isMobile = useMediaQuery('(max-width: 640px)')
-  const [faqs, setFaqs] = useState<Faq[]>([])
-
-  useEffect(() => {
-    getGeneralFaqs()
-      .then(setFaqs)
-      .catch(() => setFaqs([]))
-  }, [])
 
   return (
     <>
@@ -189,44 +180,14 @@ export function AboutPage() {
         </div>
         <div className="team-image" data-reveal data-reveal-delay="0.14">
           <img
-            src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1200&q=85"
-            alt="Equipo de instructores"
+            src="/imagenes/seguridad_laboral_indusrial_trekform.jpg"
+            alt="Técnicos de Trekform con casco y chaleco de seguridad en un almacén"
           />
           <span>
             <ShieldCheck /> Especialistas en seguridad
           </span>
         </div>
       </section>
-
-      {faqs.length > 0 ? (
-        <section className="faq-section" data-reveal>
-          <div className="faq-heading" data-reveal data-reveal-delay="0.05">
-            <span className="kicker">PREGUNTAS FRECUENTES</span>
-            <h2>
-              Trekform <span>responde</span>
-            </h2>
-            <p>
-              Resolvemos las dudas habituales sobre cursos, acreditaciones y formación para
-              empresas.
-            </p>
-          </div>
-          <div className="faq-list">
-            {faqs.map((faq, index) => (
-              <details
-                key={faq.id}
-                data-reveal
-                style={{ '--reveal-delay': `${0.06 + index * 0.04}s` } as CSSProperties}
-              >
-                <summary>
-                  {faq.question}
-                  <ChevronDown />
-                </summary>
-                <p>{faq.answer}</p>
-              </details>
-            ))}
-          </div>
-        </section>
-      ) : null}
 
       <section className="about-cta" data-reveal>
         <span data-reveal data-reveal-delay="0.04">
