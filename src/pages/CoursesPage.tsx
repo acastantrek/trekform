@@ -7,22 +7,12 @@ import { ProvincePickerModal } from '../components/registrations/ProvincePickerM
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
 import { useUserLocation } from '../hooks/useUserLocation'
+import { categoryOrder } from '../lib/courseCategories'
 import { coordinatesForPlace, distanceKm, type Coordinates } from '../lib/geo'
 import { getRegistrationSessions } from '../services/registrations'
 import type { Course } from '../types/course'
 
 const pageSize = 16
-const categoryOrder = [
-  'Maquinaria industrial',
-  'Trabajos en altura',
-  'Espacios confinados',
-  'Formación TELCO',
-  'Trekform online',
-  'Construcción (TPC) / Metal (TPM)',
-  'Prevención',
-  'Logística',
-  'Hostelería',
-]
 const modalityLabels = { presential: 'Presencial', online: 'Online', hybrid: 'Semipresencial' }
 
 const fallbackImages = [

@@ -1,7 +1,7 @@
 .courses-page-hero {
   position: relative;
-  min-height: 440px;
-  padding: 74px max(5vw, 28px) 150px;
+  min-height: 380px;
+  padding: 74px max(5vw, 28px) 100px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
@@ -684,7 +684,7 @@
 }
 @media (max-width: 1280px) {
   .courses-page-hero {
-    padding-bottom: 124px;
+    padding-bottom: 90px;
   }
   .catalog-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));

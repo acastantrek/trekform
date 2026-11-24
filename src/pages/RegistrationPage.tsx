@@ -14,11 +14,12 @@ import {
 } from 'lucide-react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
+import { CategoryChips } from '../components/courses/CategoryChips'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
-import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useRegistrationSessions } from '../hooks/useRegistrationSessions'
+import { categoryOrder } from '../lib/courseCategories'
 import { spanishProvinces } from '../lib/provinces'
 import type { RegistrationSession } from '../services/registrations'
 
@@ -86,7 +87,6 @@ export function RegistrationPage() {
   const { sessions, loading, error } = useRegistrationSessions()
   const { courses } = useCourses()
   const [alertOpen, setAlertOpen] = useState(false)
-  const isMobileFilters = useMediaQuery('(max-width: 680px)')
   const [searchParams] = useSearchParams()
   const courseQuery = searchParams.get('curso')
   // `?provincia=` (e.g. from a province chip on the catalog) pre-applies the province filter.
@@ -95,7 +95,6 @@ export function RegistrationPage() {
   const [syncedCourseQuery, setSyncedCourseQuery] = useState(courseQuery)
   const [syncedProvinceQuery, setSyncedProvinceQuery] = useState(provinceQuery)
   const [selectedProvince, setSelectedProvince] = useState(provinceQuery ?? provinceOptions[0])
-  const [selectedCategory, setSelectedCategory] = useState('Todas las categorías')
   const [selectedMonth, setSelectedMonth] = useState('Cualquier fecha')
   const [appliedProvince, setAppliedProvince] = useState(provinceQuery ?? provinceOptions[0])
   const [appliedCategory, setAppliedCategory] = useState('Todas las categorías')
@@ -132,24 +131,28 @@ export function RegistrationPage() {
 
   const updateProvince = (value: string) => {
     setSelectedProvince(value)
-    if (!isMobileFilters) setAppliedProvince(value)
+    setAppliedProvince(value)
     setPage(1)
   }
   const updateCategory = (value: string) => {
-    setSelectedCategory(value)
-    if (!isMobileFilters) setAppliedCategory(value)
+    setAppliedCategory(value)
     setPage(1)
   }
   const updateMonth = (value: string) => {
     setSelectedMonth(value)
-    if (!isMobileFilters) setAppliedMonth(value)
+    setAppliedMonth(value)
     setPage(1)
   }
 
-  const categoryOptions = useMemo(
-    () => ['Todas las categorías', ...new Set(sessions.map((session) => session.category))],
-    [sessions],
-  )
+  // Same chips as Cursos: every category with a published course, even when none of its courses
+  // has an upcoming session right now (picking it then shows the empty state).
+  const categoryOptions = useMemo(() => {
+    const available = new Set([
+      ...courses.flatMap((course) => course.categories),
+      ...sessions.flatMap((session) => session.categories),
+    ])
+    return ['Todas las categorías', ...categoryOrder.filter((item) => available.has(item))]
+  }, [courses, sessions])
   const monthOptions = useMemo(
     () => [
       'Cualquier fecha',
@@ -167,7 +170,7 @@ export function RegistrationPage() {
         normalize(
           [
             session.courseTitle,
-            session.category,
+            session.categories.join(' '),
             session.city,
             session.province,
             session.venue,
@@ -178,7 +181,7 @@ export function RegistrationPage() {
       const matchesProvince =
         appliedProvince === provinceOptions[0] || session.province === appliedProvince
       const matchesCategory =
-        appliedCategory === categoryOptions[0] || session.category === appliedCategory
+        appliedCategory === categoryOptions[0] || session.categories.includes(appliedCategory)
       const matchesMonth =
         appliedMonth === monthOptions[0] || getMonthLabel(session.startsAt) === appliedMonth
 
@@ -208,14 +211,6 @@ export function RegistrationPage() {
         .getElementById('registration-results')
         ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
-  }
-
-  const applyFilters = () => {
-    setAppliedProvince(selectedProvince)
-    setAppliedCategory(selectedCategory)
-    setAppliedMonth(selectedMonth)
-    setPage(1)
-    setFiltersOpen(false)
   }
 
   // When the search is exactly one course's title (e.g. arriving from a catalog card) and that
@@ -251,7 +246,6 @@ export function RegistrationPage() {
     setSearch('')
     setSelectedProvince(provinceOptions[0])
     setAppliedProvince(provinceOptions[0])
-    setSelectedCategory(categoryOptions[0] ?? 'Todas las categorías')
     setAppliedCategory(categoryOptions[0] ?? 'Todas las categorías')
     setSelectedMonth(monthOptions[0] ?? 'Cualquier fecha')
     setAppliedMonth(monthOptions[0] ?? 'Cualquier fecha')
@@ -269,7 +263,7 @@ export function RegistrationPage() {
         </div>
       </section>
 
-      <section className="registration-toolbar-wrap" id="registration-catalog">
+      <section className="registration-toolbar-wrap courses-toolbar-wrap" id="registration-catalog">
         <div className="registration-toolbar calendar-toolbar">
           <div className="registration-toolbar-primary">
             <label className="registration-search-field" htmlFor="registration-search">
@@ -283,7 +277,7 @@ export function RegistrationPage() {
                     setSearch(event.target.value)
                     setPage(1)
                   }}
-                  placeholder="Ej: Carretillas, Altura, PRL, PEMP..."
+                  placeholder="¿Qué curso buscas? Ej: carretillas, PRL, PEMP..."
                   aria-label="Buscar convocatorias"
                 />
                 <Search size={18} />
@@ -308,12 +302,6 @@ export function RegistrationPage() {
               onChange={updateProvince}
             />
             <ToolbarSelect
-              label="Categoría"
-              value={selectedCategory}
-              options={categoryOptions}
-              onChange={updateCategory}
-            />
-            <ToolbarSelect
               label="Fecha / Mes"
               value={selectedMonth}
               options={monthOptions}
@@ -323,13 +311,6 @@ export function RegistrationPage() {
               <button type="button" className="registration-toolbar-reset" onClick={resetFilters}>
                 <RotateCcw size={15} /> Limpiar filtros
               </button>
-              <a
-                href="#registration-results"
-                className="registration-toolbar-submit"
-                onClick={applyFilters}
-              >
-                Buscar cursos
-              </a>
             </div>
 
             <div className="registration-active-chips">
@@ -357,21 +338,15 @@ export function RegistrationPage() {
                   {appliedMonth} ×
                 </button>
               ) : null}
-              {appliedCategory !== categoryOptions[0] ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedCategory(categoryOptions[0])
-                    setAppliedCategory(categoryOptions[0])
-                    setPage(1)
-                  }}
-                >
-                  {appliedCategory} ×
-                </button>
-              ) : null}
             </div>
           </div>
         </div>
+        <CategoryChips
+          categories={categoryOptions}
+          active={appliedCategory}
+          onSelect={updateCategory}
+          labelFor={(item) => (item === categoryOptions[0] ? 'Todas' : item)}
+        />
       </section>
 
       <section className="registration-results-area">
@@ -411,11 +386,6 @@ export function RegistrationPage() {
               </div>
             ) : visibleSessions.length > 0 ? (
               <>
-                <div className="registration-results-headers">
-                  <span>Curso</span>
-                  <span>Ubicación</span>
-                  <span>Fecha y horario</span>
-                </div>
                 <div className="registration-session-list">
                   {visibleSessions.map((session) => {
                     const urgency = getSessionUrgency(session)

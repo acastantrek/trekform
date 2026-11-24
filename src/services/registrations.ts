@@ -7,7 +7,10 @@ export interface RegistrationSession {
   slug: string
   courseSlug: string
   courseTitle: string
+  /** Primary category of the course. */
   category: string
+  /** Primary plus any extra categories the course is assigned to (same as on Cursos). */
+  categories: string[]
   excerpt: string
   objectives: string
   accreditationTitle: string | null
@@ -61,6 +64,7 @@ interface CourseRow {
   duration_hours: number | null
   image_url: string | null
   category_id: string | null
+  course_category_assignments: Array<{ course_categories: { name: string } | null }> | null
 }
 
 interface CategoryRow {
@@ -124,7 +128,7 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
       client
         .from('courses')
         .select(
-          'id, slug, title, excerpt, objectives, accreditation_title, accreditation_items, benefits_items, is_official_certification, is_fundae_eligible, is_featured, modality, duration_hours, image_url, category_id',
+          'id, slug, title, excerpt, objectives, accreditation_title, accreditation_items, benefits_items, is_official_certification, is_fundae_eligible, is_featured, modality, duration_hours, image_url, category_id, course_category_assignments(course_categories(name))',
         )
         .eq('status', 'published')
         .order('title', { ascending: true }),
@@ -147,7 +151,7 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
   }
 
   const courseById = new Map<string, CourseRow>(
-    ((coursesResult.data as CourseRow[]) ?? []).map((course) => [course.id, course]),
+    ((coursesResult.data as unknown as CourseRow[]) ?? []).map((course) => [course.id, course]),
   )
   const categoryById = new Map<string, string>(
     ((categoriesResult.data as CategoryRow[]) ?? []).map((category) => [
@@ -178,13 +182,23 @@ export async function getRegistrationSessions(): Promise<RegistrationSession[]> 
       const city = venue?.locations?.city ?? 'Online'
       const province = venue?.locations?.province ?? 'Online'
       const seatsRemaining = seatsBySession.get(session.id) ?? null
+      const category = (course.category_id && categoryById.get(course.category_id)) || 'Formación'
+      const categories = [
+        ...new Set([
+          category,
+          ...(course.course_category_assignments ?? []).flatMap((assignment) =>
+            assignment.course_categories?.name ? [assignment.course_categories.name] : [],
+          ),
+        ]),
+      ]
 
       return {
         id: session.id,
         slug: session.slug,
         courseSlug: course.slug,
         courseTitle: course.title,
-        category: (course.category_id && categoryById.get(course.category_id)) || 'Formación',
+        category,
+        categories,
         excerpt: course.excerpt ?? 'Formación práctica y orientada a la seguridad laboral.',
         objectives: course.objectives ?? '',
         accreditationTitle: course.accreditation_title,

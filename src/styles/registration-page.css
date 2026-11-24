@@ -119,8 +119,26 @@
    their text and as tall as the fields instead of filling a whole row. */
 @media (min-width: 861px) {
   .calendar-toolbar {
-    grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr)) auto;
-    align-items: end;
+    grid-template-columns: minmax(0, 1.4fr) repeat(2, minmax(0, 1fr)) auto;
+    align-items: center;
+  }
+
+  /* The selects show their value ("Todas las provincias", "Cualquier fecha"), so their titles
+     are only kept for screen readers, as on the Cursos search, to keep the bar as low. */
+  .calendar-toolbar .registration-toolbar-select > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .calendar-toolbar .registration-toolbar-select select {
+    height: 44px;
   }
 
   .calendar-toolbar .registration-toolbar-actions-wide {
@@ -131,7 +149,7 @@
   .calendar-toolbar .registration-toolbar-reset,
   .calendar-toolbar .registration-toolbar-submit {
     flex: none;
-    min-height: 50px;
+    min-height: 44px;
     padding: 0 18px;
     font-size: 13px;
   }
@@ -152,6 +170,12 @@
 .courses-toolbar {
   max-width: 1100px;
   grid-template-columns: minmax(0, 1fr);
+}
+
+/* Cursos and Calendario (Inscripciones) bars share the same height: 12px padding around 44px
+   fields, with the search title only kept for screen readers. */
+.courses-toolbar,
+.calendar-toolbar {
   padding: 12px;
   gap: 10px;
   align-items: center;
@@ -193,7 +217,7 @@
   min-height: 36px;
   padding: 0 16px;
   border: 1px solid #dededb;
-  border-radius: 999px;
+  border-radius: 0;
   background: #fff;
   color: var(--navy);
   font-size: 13px;
@@ -266,7 +290,8 @@
   }
 }
 
-.courses-toolbar .registration-search-field > span {
+.courses-toolbar .registration-search-field > span,
+.calendar-toolbar .registration-search-field > span {
   position: absolute;
   width: 1px;
   height: 1px;
@@ -278,7 +303,9 @@
   border: 0;
 }
 
-.courses-toolbar .registration-search-field input {
+.courses-toolbar .registration-search-field input,
+.calendar-toolbar .registration-search-field input,
+.calendar-toolbar .registration-filters-toggle {
   height: 44px;
 }
 
@@ -434,16 +461,6 @@
   .registration-alert-banner-actions button {
     flex: 1;
   }
-}
-
-.registration-results-headers {
-  margin-top: 22px;
-  padding: 0 16px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 190px 150px;
-  gap: 16px;
-  color: #8a8a85;
-  font-size: 13px;
 }
 
 .registration-session-list {
@@ -792,10 +809,9 @@
   line-height: 1;
 }
 
-/* Wide screens: each session is a single compact row, aligned with the column headers:
+/* Wide screens: each session is a single compact row:
    course | location | date + time | button. */
 @media (min-width: 1121px) {
-  .registration-results-headers,
   .registration-session-card {
     grid-template-columns: minmax(0, 1fr) 190px 250px 150px;
   }
@@ -886,10 +902,6 @@
 }
 
 @media (max-width: 1120px) {
-  .registration-results-headers {
-    display: none;
-  }
-
   .registration-session-card {
     grid-template-columns: minmax(0, 1fr);
   }
