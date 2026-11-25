@@ -1,4 +1,14 @@
-import { ArrowRight, ArrowUpRight, BriefcaseBusiness, Check, Search, Star } from 'lucide-react'
+import {
+  ArrowRight,
+  ArrowUpRight,
+  BriefcaseBusiness,
+  Check,
+  ChevronDown,
+  RotateCcw,
+  Search,
+  SlidersHorizontal,
+  Star,
+} from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
@@ -59,6 +69,7 @@ export function CoursesPage() {
   const categoryQuery = searchParams.get('categoria')
   const [syncedCategoryQuery, setSyncedCategoryQuery] = useState(categoryQuery)
   const [search, setSearch] = useState('')
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const [appliedCategory, setAppliedCategory] = useState(categoryQuery ?? 'Todos')
   const [page, setPage] = useState(1)
   const [provincesByCourseSlug, setProvincesByCourseSlug] = useState<Map<string, CourseProvince[]>>(
@@ -256,6 +267,13 @@ export function CoursesPage() {
     setPage(1)
   }
 
+  const resetFilters = () => {
+    setSearch('')
+    setAppliedCategory('Todos')
+    setPage(1)
+    setFiltersOpen(false)
+  }
+
   return (
     <>
       <section className="courses-page-hero">
@@ -290,14 +308,61 @@ export function CoursesPage() {
                 <Search />
               </div>
             </label>
+            {isMobile ? (
+              <button
+                type="button"
+                className="registration-filters-toggle"
+                aria-expanded={filtersOpen}
+                onClick={() => setFiltersOpen((open) => !open)}
+              >
+                <SlidersHorizontal size={16} /> Filtros
+                <ChevronDown size={16} className={filtersOpen ? 'is-rotated' : ''} />
+              </button>
+            ) : null}
           </div>
+
+          {/* On mobile the category row is folded into the Filtros dropdown, as on Inscripciones. */}
+          {isMobile ? (
+            <div className={`registration-toolbar-fields${filtersOpen ? ' is-open' : ''}`}>
+              <label className="registration-toolbar-select">
+                <span>Categoría</span>
+                <div>
+                  <select
+                    value={appliedCategory}
+                    onChange={(event) => applyCategoryChip(event.target.value)}
+                  >
+                    {catalogCategories.map((item) => (
+                      <option key={item} value={item}>
+                        {item === 'Todos' ? 'Todas las categorías' : item}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown size={16} />
+                </div>
+              </label>
+              <div className="registration-toolbar-actions registration-toolbar-actions-wide">
+                <button type="button" className="registration-toolbar-reset" onClick={resetFilters}>
+                  <RotateCcw size={15} /> Limpiar filtros
+                </button>
+              </div>
+              {appliedCategory !== 'Todos' ? (
+                <div className="registration-active-chips">
+                  <button type="button" onClick={() => applyCategoryChip('Todos')}>
+                    {appliedCategory} ×
+                  </button>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
-        <CategoryChips
-          categories={catalogCategories}
-          active={appliedCategory}
-          onSelect={applyCategoryChip}
-          labelFor={(item) => (item === 'Todos' ? 'Todas' : item)}
-        />
+        {isMobile ? null : (
+          <CategoryChips
+            categories={catalogCategories}
+            active={appliedCategory}
+            onSelect={applyCategoryChip}
+            labelFor={(item) => (item === 'Todos' ? 'Todas' : item)}
+          />
+        )}
       </section>
 
       <section className="catalog-section">

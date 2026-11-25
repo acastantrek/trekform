@@ -305,6 +305,7 @@
 
 .courses-toolbar .registration-search-field input,
 .calendar-toolbar .registration-search-field input,
+.courses-toolbar .registration-filters-toggle,
 .calendar-toolbar .registration-filters-toggle {
   height: 44px;
 }
