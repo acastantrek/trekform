@@ -684,21 +684,6 @@
   justify-content: center;
 }
 
-.registration-spinner {
-  width: 42px;
-  height: 42px;
-  border: 3px solid #e8e1d5;
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: registration-spin 0.8s linear infinite;
-}
-
-@keyframes registration-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .registration-company-cta {
   margin-top: 26px;
   overflow: hidden;

@@ -284,22 +284,6 @@
   text-align: center;
   background: #fff;
 }
-.course-detail-loading > span {
-  width: 42px;
-  height: 42px;
-  border: 3px solid #d8d9d5;
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: course-detail-spin 0.8s linear infinite;
-}
-@keyframes course-detail-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.course-detail-loading p {
-  color: #75756f;
-}
 .course-detail-missing > span {
   color: var(--navy);
   font-size: 10px;

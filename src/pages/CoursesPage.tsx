@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { CategoryChips } from '../components/courses/CategoryChips'
+import { TrekformLoader } from '../components/common/TrekformLoader'
 import { ProvincePickerModal } from '../components/registrations/ProvincePickerModal'
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
@@ -297,8 +298,8 @@ export function CoursesPage() {
         <div className="catalog-layout" id="catalog-results">
           <div className="catalog-results">
             {loading ? (
-              <div className="catalog-empty catalog-loading" role="status">
-                <span className="catalog-spinner" />
+              <div className="catalog-empty catalog-loading">
+                <TrekformLoader label="Cargando cursos" />
               </div>
             ) : error ? (
               <div className="catalog-empty" role="alert">

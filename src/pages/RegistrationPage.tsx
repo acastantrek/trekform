@@ -15,6 +15,7 @@ import {
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CategoryChips } from '../components/courses/CategoryChips'
+import { TrekformLoader } from '../components/common/TrekformLoader'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
@@ -376,8 +377,8 @@ export function RegistrationPage() {
             ) : null}
 
             {loading ? (
-              <div className="registration-empty registration-loading" role="status">
-                <span className="registration-spinner" />
+              <div className="registration-empty registration-loading">
+                <TrekformLoader label="Cargando convocatorias" />
               </div>
             ) : error ? (
               <div className="registration-empty" role="alert">

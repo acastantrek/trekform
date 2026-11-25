@@ -1,11 +1,16 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuth } from '../contexts/useAuth'
+import { TrekformLoader } from '../../components/common/TrekformLoader'
 
 export function ProtectedRoute() {
   const { loading, session, isAdmin, signOut } = useAuth()
 
   if (loading) {
-    return <div className="page-loading">Cargando…</div>
+    return (
+      <div className="page-loading">
+        <TrekformLoader label="Cargando…" />
+      </div>
+    )
   }
 
   if (!session) {

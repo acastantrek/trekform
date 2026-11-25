@@ -25,6 +25,7 @@ import {
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { getCourseDetail, type CourseDetail, type CourseTypology } from '../services/courses'
 import { getTestimonialsByCourse, type Testimonial } from '../services/testimonials'
+import { TrekformLoader } from '../components/common/TrekformLoader'
 
 const DEFAULT_TYPOLOGY: CourseTypology = {
   cards: [
@@ -158,9 +159,8 @@ export function CourseDetailPage() {
 
   if (loading) {
     return (
-      <div className="course-detail-loading" role="status">
-        <span />
-        <p>Cargando información del curso…</p>
+      <div className="course-detail-loading">
+        <TrekformLoader label="Cargando información del curso…" />
       </div>
     )
   }

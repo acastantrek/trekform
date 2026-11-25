@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { Outlet, Route, Routes } from 'react-router-dom'
 import { CookieBanner } from './components/common/CookieBanner'
 import { RouteScrollToTop } from './components/common/RouteScrollToTop'
+import { TrekformLoader } from './components/common/TrekformLoader'
 import { StaticFooter } from './components/layout/StaticFooter'
 import { StaticHeader } from './components/layout/StaticHeader'
 import { HomePage } from './pages/HomePage'
@@ -41,9 +42,8 @@ const PanelApp = lazy(() =>
 
 function PageLoading({ label }: { label: string }) {
   return (
-    <div className="course-detail-loading" role="status">
-      <span />
-      <p>{label}</p>
+    <div className="course-detail-loading">
+      <TrekformLoader label={label} />
     </div>
   )
 }

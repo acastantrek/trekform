@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Markdown } from '../components/common/Markdown'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { getBlogPost, getBlogPosts, type BlogPost } from '../services/blog'
+import { TrekformLoader } from '../components/common/TrekformLoader'
 
 const pageSize = 8
 const dateFormatter = new Intl.DateTimeFormat('es-ES', {
@@ -205,9 +206,8 @@ export function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="blog-article-loading" role="status">
-        <span />
-        <p>Cargando artículo…</p>
+      <div className="blog-article-loading">
+        <TrekformLoader label="Cargando artículo…" />
       </div>
     )
   }

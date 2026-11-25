@@ -1,7 +1,7 @@
 .courses-page-hero {
   position: relative;
-  min-height: 380px;
-  padding: 74px max(5vw, 28px) 100px;
+  min-height: 300px;
+  padding: 56px max(5vw, 28px) 76px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
@@ -74,13 +74,12 @@
 .courses-hero-content {
   position: relative;
   z-index: 1;
-  max-width: 760px;
   min-width: 0;
 }
 .courses-hero-content h1 {
-  max-width: 790px;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(39px, 4.51vw, 70px);
+  font-size: clamp(34px, 4.2vw, 62px);
+  white-space: nowrap;
   line-height: 0.92;
   margin: 0 0 18px;
   text-transform: uppercase;
@@ -535,19 +534,6 @@
   align-items: center;
   justify-content: center;
 }
-.catalog-spinner {
-  width: 42px;
-  height: 42px;
-  border: 3px solid #dededb;
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: catalog-spin 0.8s linear infinite;
-}
-@keyframes catalog-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 .catalog-company-cta {
   margin-top: 16px;
   min-height: 132px;
@@ -684,7 +670,7 @@
 }
 @media (max-width: 1280px) {
   .courses-page-hero {
-    padding-bottom: 90px;
+    padding-bottom: 68px;
   }
   .catalog-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -700,8 +686,8 @@
 }
 @media (max-width: 1020px) {
   .courses-page-hero {
-    min-height: 520px;
-    padding: 62px 24px 40px;
+    min-height: 380px;
+    padding: 48px 24px 36px;
     align-items: start;
   }
   .catalog-grid,
@@ -716,7 +702,7 @@
     align-items: flex-start;
   }
   .courses-hero-content h1 {
-    font-size: 34px;
+    font-size: min(34px, 5.6vw);
   }
   .catalog-grid,
   .catalog-trust-row,
@@ -758,7 +744,7 @@
     padding: 34px 16px 56px;
   }
   .courses-hero-content h1 {
-    font-size: 29px;
+    font-size: min(29px, 5.6vw);
   }
   .catalog-section {
     padding-inline: 10px;
