@@ -1,8 +1,20 @@
 ﻿import { ArrowRight, CheckCircle2, Clock3, ShieldCheck, UserCheck } from 'lucide-react'
-import { useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { submitContactRequest } from '../../services/contact'
 
 type SubmitState = 'idle' | 'sending' | 'success' | 'error'
+
+// Background photos the hero rotates through, one every HERO_SLIDE_MS. Each change is a diagonal
+// wipe led by three bars in the logo's cube colours (see .home-hero-slides in trekform-home.css).
+const HERO_SLIDES = [
+  { src: '/imagenes/home_espacios_confinados_trekform.jpg', position: '58% center' },
+  { src: '/imagenes/carretillero_trekform_en_baleares.jpg', position: '45% center' },
+  {
+    src: '/imagenes/conoce_un_poco_mejor_los_trabajos_en_altura_trekform.jpg',
+    position: '65% center',
+  },
+]
+const HERO_SLIDE_MS = 5000
 
 export function TrekformHeroSection() {
   const [formState, setFormState] = useState({
@@ -15,6 +27,21 @@ export function TrekformHeroSection() {
   })
   const [submitState, setSubmitState] = useState<SubmitState>('idle')
   const [error, setError] = useState('')
+  // `cycle` counts changes so the sweep bars remount (and replay) on each one, never on first load.
+  const [slides, setSlides] = useState({ active: 0, previous: -1, cycle: 0 })
+
+  useEffect(() => {
+    const timer = window.setInterval(
+      () =>
+        setSlides(({ active, cycle }) => ({
+          active: (active + 1) % HERO_SLIDES.length,
+          previous: active,
+          cycle: cycle + 1,
+        })),
+      HERO_SLIDE_MS,
+    )
+    return () => window.clearInterval(timer)
+  }, [])
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -45,6 +72,33 @@ export function TrekformHeroSection() {
 
   return (
     <section className="home-slider">
+      <div className="home-hero-slides" aria-hidden="true">
+        {HERO_SLIDES.map((slide, index) => (
+          <img
+            key={slide.src}
+            src={slide.src}
+            alt=""
+            className={
+              index === slides.active
+                ? slides.cycle > 0
+                  ? 'is-active is-entering'
+                  : 'is-active'
+                : index === slides.previous
+                  ? 'is-leaving'
+                  : ''
+            }
+            style={{ objectPosition: slide.position }}
+            fetchPriority={index === 0 ? 'high' : 'low'}
+          />
+        ))}
+        {slides.cycle > 0 ? (
+          <div key={slides.cycle} className="home-hero-sweep">
+            <i />
+            <i />
+            <i />
+          </div>
+        ) : null}
+      </div>
       <div className="slider-content" data-reveal>
         <span className="eyebrow" data-reveal data-reveal-delay="0.02">
           <i /> LÍDERES EN FORMACIÓN A NIVEL NACIONAL
