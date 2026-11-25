@@ -21,7 +21,7 @@
 .contact-v2-hero-copy > span,
 .contact-v2-kicker,
 .contact-v2-form-heading > div > span,
-.contact-v2-company span,
+.contact-v2-company > div > span,
 .contact-v2-success > span {
   color: var(--navy);
   font-family: 'Inter Tight', sans-serif;
