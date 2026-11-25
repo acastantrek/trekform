@@ -188,3 +188,44 @@
     flex: 1 1 0;
   }
 }
+
+/* Always-visible cookie button (bottom-left) that reopens the cookie banner. */
+.cookie-launcher {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 890;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--accent);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cookie-launcher:hover {
+  transform: translateY(-2px) rotate(-12deg);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+}
+
+.cookie-launcher:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .cookie-launcher {
+    left: 14px;
+    bottom: 14px;
+    width: 42px;
+    height: 42px;
+  }
+}

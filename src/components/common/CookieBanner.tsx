@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   getCookieConsent,
+  openCookieSettings,
   OPEN_SETTINGS_EVENT,
   saveCookieConsent,
   type ConsentCategory,
@@ -45,89 +46,104 @@ export function CookieBanner() {
     return () => window.removeEventListener(OPEN_SETTINGS_EVENT, open)
   }, [])
 
-  if (!visible) return null
-
   const save = (next: { analytics: boolean; marketing: boolean }) => {
     saveCookieConsent(next)
     setVisible(false)
     setShowSettings(false)
   }
 
+  const launcher = (
+    <button
+      type="button"
+      className="cookie-launcher"
+      onClick={openCookieSettings}
+      aria-label="Configurar cookies"
+      title="Configurar cookies"
+    >
+      <Cookie size={22} aria-hidden="true" />
+    </button>
+  )
+
+  if (!visible) return launcher
+
   return (
-    <section className="cookie-banner" role="dialog" aria-labelledby="cookie-banner-title">
-      <div className="cookie-banner__body">
-        <h2 id="cookie-banner-title">
-          <Cookie size={18} aria-hidden="true" /> Usamos cookies
-        </h2>
-        <p>
-          Utilizamos cookies técnicas para que la web funcione y, solo si nos lo permites, cookies
-          de análisis y publicidad. Puedes aceptarlas, rechazarlas o elegir cuáles. Más información
-          en nuestra <Link to="/politica-de-cookies">política de cookies</Link>.
-        </p>
+    <>
+      {launcher}
+      <section className="cookie-banner" role="dialog" aria-labelledby="cookie-banner-title">
+        <div className="cookie-banner__body">
+          <h2 id="cookie-banner-title">
+            <Cookie size={18} aria-hidden="true" /> Usamos cookies
+          </h2>
+          <p>
+            Utilizamos cookies técnicas para que la web funcione y, solo si nos lo permites, cookies
+            de análisis y publicidad. Puedes aceptarlas, rechazarlas o elegir cuáles. Más
+            información en nuestra <Link to="/politica-de-cookies">política de cookies</Link>.
+          </p>
 
-        {showSettings && (
-          <ul className="cookie-banner__categories">
-            {CATEGORIES.map((category) => {
-              const locked = category.id === 'technical'
-              const checked = locked || choice[category.id as ConsentCategory]
-              return (
-                <li key={category.id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={checked}
-                      disabled={locked}
-                      onChange={(event) =>
-                        setChoice((current) => ({
-                          ...current,
-                          [category.id]: event.target.checked,
-                        }))
-                      }
-                    />
-                    <span>
-                      <strong>
-                        {category.title}
-                        {locked && <em> · Siempre activas</em>}
-                      </strong>
-                      {category.text}
-                    </span>
-                  </label>
-                </li>
-              )
-            })}
-          </ul>
-        )}
-      </div>
+          {showSettings && (
+            <ul className="cookie-banner__categories">
+              {CATEGORIES.map((category) => {
+                const locked = category.id === 'technical'
+                const checked = locked || choice[category.id as ConsentCategory]
+                return (
+                  <li key={category.id}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={checked}
+                        disabled={locked}
+                        onChange={(event) =>
+                          setChoice((current) => ({
+                            ...current,
+                            [category.id]: event.target.checked,
+                          }))
+                        }
+                      />
+                      <span>
+                        <strong>
+                          {category.title}
+                          {locked && <em> · Siempre activas</em>}
+                        </strong>
+                        {category.text}
+                      </span>
+                    </label>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </div>
 
-      <div className="cookie-banner__actions">
-        {showSettings ? (
-          <button type="button" className="cookie-banner__btn" onClick={() => save(choice)}>
-            Guardar preferencias
-          </button>
-        ) : (
+        <div className="cookie-banner__actions">
+          {showSettings ? (
+            <button type="button" className="cookie-banner__btn" onClick={() => save(choice)}>
+              Guardar preferencias
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="cookie-banner__btn cookie-banner__btn--ghost"
+              onClick={() => setShowSettings(true)}
+            >
+              Configurar
+            </button>
+          )}
           <button
             type="button"
-            className="cookie-banner__btn cookie-banner__btn--ghost"
-            onClick={() => setShowSettings(true)}
+            className="cookie-banner__btn"
+            onClick={() => save({ analytics: false, marketing: false })}
           >
-            Configurar
+            Rechazar
           </button>
-        )}
-        <button
-          type="button"
-          className="cookie-banner__btn"
-          onClick={() => save({ analytics: false, marketing: false })}
-        >
-          Rechazar
-        </button>
-        <button
-          type="button"
-          className="cookie-banner__btn"
-          onClick={() => save({ analytics: true, marketing: true })}
-        >
-          Aceptar
-        </button>
-      </div>
-    </section>
+          <button
+            type="button"
+            className="cookie-banner__btn"
+            onClick={() => save({ analytics: true, marketing: true })}
+          >
+            Aceptar
+          </button>
+        </div>
+      </section>
+    </>
   )
 }
