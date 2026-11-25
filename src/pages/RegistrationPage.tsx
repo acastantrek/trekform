@@ -19,6 +19,7 @@ import { TrekformLoader } from '../components/common/TrekformLoader'
 import { EnrollmentModal } from '../components/registrations/EnrollmentModal'
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useRegistrationSessions } from '../hooks/useRegistrationSessions'
 import { categoryOrder } from '../lib/courseCategories'
 import { spanishProvinces } from '../lib/provinces'
@@ -85,6 +86,7 @@ function formatSchedule(start: string, end: string) {
 const provinceOptions = ['Todas las provincias', ...spanishProvinces]
 
 export function RegistrationPage() {
+  const isMobile = useMediaQuery('(max-width: 680px)')
   const { sessions, loading, error } = useRegistrationSessions()
   const { courses } = useCourses()
   const [alertOpen, setAlertOpen] = useState(false)
@@ -278,7 +280,11 @@ export function RegistrationPage() {
                     setSearch(event.target.value)
                     setPage(1)
                   }}
-                  placeholder="¿Qué curso buscas? Ej: carretillas, PRL, PEMP..."
+                  placeholder={
+                    isMobile
+                      ? '¿Qué curso buscas?'
+                      : '¿Qué curso buscas? Ej: carretillas, PRL, PEMP...'
+                  }
                   aria-label="Buscar convocatorias"
                 />
                 <Search size={18} />
@@ -296,6 +302,15 @@ export function RegistrationPage() {
           </div>
 
           <div className={`registration-toolbar-fields${filtersOpen ? ' is-open' : ''}`}>
+            {/* On mobile the category row is folded into this dropdown instead of the chips. */}
+            {isMobile ? (
+              <ToolbarSelect
+                label="Categoría"
+                value={appliedCategory}
+                options={categoryOptions}
+                onChange={updateCategory}
+              />
+            ) : null}
             <ToolbarSelect
               label="Provincia"
               value={selectedProvince}
@@ -315,6 +330,11 @@ export function RegistrationPage() {
             </div>
 
             <div className="registration-active-chips">
+              {isMobile && appliedCategory !== categoryOptions[0] ? (
+                <button type="button" onClick={() => updateCategory(categoryOptions[0])}>
+                  {appliedCategory} ×
+                </button>
+              ) : null}
               {appliedProvince !== provinceOptions[0] ? (
                 <button
                   type="button"
@@ -342,12 +362,14 @@ export function RegistrationPage() {
             </div>
           </div>
         </div>
-        <CategoryChips
-          categories={categoryOptions}
-          active={appliedCategory}
-          onSelect={updateCategory}
-          labelFor={(item) => (item === categoryOptions[0] ? 'Todas' : item)}
-        />
+        {isMobile ? null : (
+          <CategoryChips
+            categories={categoryOptions}
+            active={appliedCategory}
+            onSelect={updateCategory}
+            labelFor={(item) => (item === categoryOptions[0] ? 'Todas' : item)}
+          />
+        )}
       </section>
 
       <section className="registration-results-area">

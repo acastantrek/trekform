@@ -7,6 +7,7 @@ import { TrekformLoader } from '../components/common/TrekformLoader'
 import { ProvincePickerModal } from '../components/registrations/ProvincePickerModal'
 import { SessionAlertModal } from '../components/registrations/SessionAlertModal'
 import { useCourses } from '../hooks/useCourses'
+import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useUserLocation } from '../hooks/useUserLocation'
 import { categoryOrder } from '../lib/courseCategories'
 import { coordinatesForPlace, distanceKm, type Coordinates } from '../lib/geo'
@@ -51,6 +52,7 @@ function getCourseMeta(course: Course) {
 }
 
 export function CoursesPage() {
+  const isMobile = useMediaQuery('(max-width: 680px)')
   const { courses: allCourses, loading, error } = useCourses()
   // `?categoria=` (e.g. from a category card on the home) pre-applies the category filter.
   const [searchParams] = useSearchParams()
@@ -278,7 +280,11 @@ export function CoursesPage() {
                     setSearch(event.target.value)
                     setPage(1)
                   }}
-                  placeholder="¿Qué curso buscas? Ej: carretillas, PRL, PEMP..."
+                  placeholder={
+                    isMobile
+                      ? '¿Qué curso buscas?'
+                      : '¿Qué curso buscas? Ej: carretillas, PRL, PEMP...'
+                  }
                   aria-label="Buscar cursos"
                 />
                 <Search />
