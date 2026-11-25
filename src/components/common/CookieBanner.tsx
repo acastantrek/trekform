@@ -60,7 +60,7 @@ export function CookieBanner() {
       aria-label="Configurar cookies"
       title="Configurar cookies"
     >
-      <Cookie size={22} aria-hidden="true" />
+      <Cookie size={28} aria-hidden="true" />
     </button>
   )
 

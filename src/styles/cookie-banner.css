@@ -189,7 +189,9 @@
   }
 }
 
-/* Always-visible cookie button (bottom-left) that reopens the cookie banner. */
+/* Always-visible cookie button (bottom-left) that reopens the cookie banner. Filled in the brand
+   orange with a white ring, and every few seconds it sends out a pulse and gives a small wiggle so
+   it is easy to spot over any section. */
 .cookie-launcher {
   position: fixed;
   left: 20px;
@@ -197,35 +199,93 @@
   z-index: 890;
   display: grid;
   place-items: center;
-  width: 48px;
-  height: 48px;
+  width: 58px;
+  height: 58px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 3px solid #fff;
   border-radius: 50%;
-  background: var(--navy);
-  color: var(--accent);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  background: var(--accent);
+  color: var(--navy);
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease;
 }
 
+.cookie-launcher svg {
+  stroke-width: 2.4;
+  animation: cookie-launcher-wiggle 6s ease-in-out infinite;
+}
+
+.cookie-launcher::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  pointer-events: none;
+  animation: cookie-launcher-pulse 3s ease-out infinite;
+}
+
 .cookie-launcher:hover {
-  transform: translateY(-2px) rotate(-12deg);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+  transform: translateY(-3px) scale(1.08) rotate(-12deg);
+  box-shadow:
+    0 16px 34px rgba(0, 0, 0, 0.34),
+    0 0 0 6px rgba(255, 182, 6, 0.3);
 }
 
 .cookie-launcher:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 3px solid var(--navy);
   outline-offset: 3px;
+}
+
+@keyframes cookie-launcher-pulse {
+  0% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+@keyframes cookie-launcher-wiggle {
+  0%,
+  84%,
+  100% {
+    transform: rotate(0);
+  }
+  87% {
+    transform: rotate(-18deg);
+  }
+  90% {
+    transform: rotate(14deg);
+  }
+  93% {
+    transform: rotate(-8deg);
+  }
+  96% {
+    transform: rotate(4deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cookie-launcher svg,
+  .cookie-launcher::after {
+    animation: none;
+  }
 }
 
 @media (max-width: 760px) {
   .cookie-launcher {
     left: 14px;
     bottom: 14px;
-    width: 42px;
-    height: 42px;
+    width: 50px;
+    height: 50px;
   }
 }
