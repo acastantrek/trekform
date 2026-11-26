@@ -26,6 +26,7 @@ import { SessionAlertModal } from '../components/registrations/SessionAlertModal
 import { getCourseDetail, type CourseDetail, type CourseTypology } from '../services/courses'
 import { getTestimonialsByCourse, type Testimonial } from '../services/testimonials'
 import { TrekformLoader } from '../components/common/TrekformLoader'
+import { getYoutubeId } from '../lib/youtube'
 
 const DEFAULT_TYPOLOGY: CourseTypology = {
   cards: [
@@ -71,14 +72,6 @@ function formatDuration(minutes: number | null) {
   if (!hours) return `${remainder} min`
 
   return `${hours} h ${remainder} min`
-}
-
-function getYoutubeId(url: string | null) {
-  if (!url) return null
-  const match = url.match(
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{6,})/,
-  )
-  return match ? match[1] : null
 }
 
 function getModalityLabel(modality: string) {
