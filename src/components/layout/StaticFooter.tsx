@@ -2,21 +2,7 @@
 import { Link } from 'react-router-dom'
 import { openCookieSettings } from '../../lib/cookieConsent'
 import { TrekformLogo } from '../common/TrekformLogo'
-import {
-  FacebookIcon,
-  InstagramIcon,
-  LinkedinIcon,
-  XIcon,
-  YoutubeIcon,
-} from '../common/SocialIcons'
-
-const socialLinks = [
-  { label: 'X (Twitter)', href: 'https://twitter.com/Trekform2', Icon: XIcon },
-  { label: 'Facebook', href: 'https://www.facebook.com/trek.form', Icon: FacebookIcon },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/trekform/', Icon: LinkedinIcon },
-  { label: 'Instagram', href: 'https://www.instagram.com/trekform', Icon: InstagramIcon },
-  { label: 'YouTube', href: 'https://www.youtube.com/@trekform938', Icon: YoutubeIcon },
-] as const
+import { socialLinks } from '../../lib/socialLinks'
 
 const cities = [
   'BARCELONA - 93 264 05 32',

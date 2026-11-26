@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowRight, CalendarDays, Search } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { Markdown } from '../components/common/Markdown'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { socialLinks } from '../lib/socialLinks'
 import { getBlogPost, getBlogPosts, type BlogPost } from '../services/blog'
 import { TrekformLoader } from '../components/common/TrekformLoader'
 
@@ -240,16 +241,40 @@ export function BlogPostPage() {
       </header>
       <img className="blog-article-cover" src={post.image} alt="" />
       <div className="blog-article-body">
-        <Markdown content={post.content} className="blog-article-content" />
-        <aside>
-          <span>¿QUIERES FORMARTE?</span>
-          <h2>
-            Consulta las próximas <span>convocatorias.</span>
-          </h2>
-          <Link to="/inscripciones">
-            Ver inscripciones <ArrowRight size={17} />
-          </Link>
-        </aside>
+        <div className="blog-article-main">
+          <Markdown content={post.content} className="blog-article-content" />
+          <aside className="blog-article-cta">
+            <div>
+              <span>¿QUIERES FORMARTE?</span>
+              <h2>
+                Consulta las próximas <span>convocatorias.</span>
+              </h2>
+            </div>
+            <Link to="/inscripciones">
+              Ver inscripciones <ArrowRight size={17} />
+            </Link>
+          </aside>
+          <section className="blog-article-social" aria-label="Redes sociales de Trekform">
+            <p>
+              <strong>¿Te ha resultado útil?</strong> Síguenos para no perderte novedades,
+              convocatorias y consejos de seguridad.
+            </p>
+            <div>
+              {socialLinks.map(({ label, href, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Trekform en ${label}`}
+                  title={label}
+                >
+                  <Icon size={18} />
+                </a>
+              ))}
+            </div>
+          </section>
+        </div>
       </div>
     </article>
   )

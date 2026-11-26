@@ -1,10 +1,11 @@
 /* Rich blocks inside Markdown content (blog articles and the panel preview). */
 
+/* Images always span the full width of the article text, even small ones. */
 .md-image {
   display: block;
-  max-width: 100%;
+  width: 100%;
   height: auto;
-  margin: 28px auto;
+  margin: 28px 0;
   border-radius: 12px;
 }
 
