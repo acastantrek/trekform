@@ -39,9 +39,11 @@ function FormSection({
 }) {
   return (
     <fieldset className="form-section">
-      <legend>{title}</legend>
-      {description && <p className="form-section-description">{description}</p>}
-      {children}
+      <legend className="form-section-header">
+        <span className="form-section-title">{title}</span>
+        {description && <span className="form-section-description">{description}</span>}
+      </legend>
+      <div className="form-section-body">{children}</div>
     </fieldset>
   )
 }
@@ -232,7 +234,11 @@ export function CourseFormPage() {
         </div>
       </div>
 
-      <form className="form form-wide" onSubmit={handleSubmit} style={{ marginBottom: 32 }}>
+      <form
+        className="form form-wide form-sectioned"
+        onSubmit={handleSubmit}
+        style={{ marginBottom: 32 }}
+      >
         {error && <div className="alert alert-error">{error}</div>}
 
         <FormSection title="Datos básicos">

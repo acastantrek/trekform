@@ -707,26 +707,85 @@
   cursor: pointer;
 }
 
-.panel-app .form-section {
-  margin: 0 0 24px;
-  padding: 0 0 8px;
+/* Each part of a long form (Datos básicos, Formato…) is its own numbered card. */
+.panel-app .form-sectioned {
+  padding: 0;
   border: 0;
-  border-bottom: 1px solid var(--panel-border);
-  min-width: 0;
+  background: transparent;
+  counter-reset: form-section;
 }
 
-.panel-app .form-section legend {
+.panel-app .form-section {
+  counter-increment: form-section;
+  margin: 0 0 20px;
   padding: 0;
-  margin-bottom: 14px;
-  font-size: 15px;
-  font-weight: 700;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--panel-radius);
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(28, 34, 48, 0.05);
+}
+
+/* `float` lets the legend behave as a normal full-width header inside the fieldset. */
+.panel-app .form-section-header {
+  float: left;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: 12px;
+  align-items: center;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--panel-border);
+  border-left: 4px solid var(--accent);
+  background: #faf9f6;
+}
+
+.panel-app .form-section-header::before {
+  content: counter(form-section);
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--navy);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.panel-app .form-section-title {
+  font-size: 16px;
+  font-weight: 800;
   color: var(--panel-text);
 }
 
 .panel-app .form-section-description {
-  margin: -6px 0 14px;
+  grid-column: 2;
+  margin-top: 2px;
   font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
   color: var(--panel-text-muted);
+}
+
+.panel-app .form-section-body {
+  clear: both;
+  padding: 20px 20px 4px;
+}
+
+/* Save bar stays reachable while scrolling through the sections. */
+.panel-app .form-sectioned > .form-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  margin: 0;
+  padding: 14px 20px;
+  border: 1px solid var(--panel-border);
+  border-radius: var(--panel-radius);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 -6px 18px rgba(28, 34, 48, 0.08);
 }
 
 .panel-app .form-repeater-item {
