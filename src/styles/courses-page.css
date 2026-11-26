@@ -771,3 +771,29 @@
     animation: none;
   }
 }
+
+/* "¿Quisiste decir…?" line shown when the search looks misspelled. */
+.catalog-suggestion {
+  margin: 0 0 16px;
+  font-size: 16px;
+  color: #5b5b57;
+}
+.catalog-suggestion button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 800;
+  font-style: italic;
+  color: var(--navy);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.catalog-suggestion button:hover,
+.catalog-suggestion button:focus-visible {
+  color: #b37f00;
+}

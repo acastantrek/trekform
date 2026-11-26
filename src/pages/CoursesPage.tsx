@@ -20,6 +20,7 @@ import { useCourses } from '../hooks/useCourses'
 import { useMediaQuery } from '../hooks/useMediaQuery'
 import { useUserLocation } from '../hooks/useUserLocation'
 import { categoryOrder } from '../lib/courseCategories'
+import { createSearchIndex, searchIndex as runSearch } from '../lib/fuzzySearch'
 import { coordinatesForPlace, distanceKm, type Coordinates } from '../lib/geo'
 import { getRegistrationSessions } from '../services/registrations'
 import type { Course } from '../types/course'
@@ -37,13 +38,6 @@ const fallbackImages = [
   '/imagenes/services-1-10a.jpg',
   '/imagenes/carretillero_trekform_en_baleares.jpg',
 ]
-
-function normalize(value: string) {
-  return value
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-}
 
 function getCourseMeta(course: Course) {
   const durationHours = course.durationHours ?? 0
@@ -221,33 +215,35 @@ export function CoursesPage() {
     navigate(registrationsLink(course, province))
   }
 
-  const filteredCourses = useMemo(() => {
-    const query = normalize(search.trim())
+  // Typo-tolerant search: "carretiyas elevadorass" still finds "Carretillas elevadoras", and
+  // the corrected spelling is offered as "¿Quisiste decir…?". Title words weigh the most.
+  const searchIndex = useMemo(
+    () =>
+      createSearchIndex(allCourses, (course) => [
+        { text: course.title, weight: 3, suggest: true },
+        { text: course.slug.replace(/-/g, ' '), weight: 2 },
+        { text: course.categories.join(' '), weight: 2 },
+        { text: course.description, weight: 1 },
+        { text: courseMetaById.get(course.id)?.modality, weight: 1 },
+      ]),
+    [allCourses, courseMetaById],
+  )
 
-    return allCourses.filter((course) => {
-      const meta = courseMetaById.get(course.id)!
-      const matchesCategory =
-        appliedCategory === 'Todos' || course.categories.includes(appliedCategory)
+  const { filteredCourses, searchSuggestion } = useMemo(() => {
+    const result = runSearch(searchIndex, search)
+    return {
+      filteredCourses: result.items.filter(
+        (course) => appliedCategory === 'Todos' || course.categories.includes(appliedCategory),
+      ),
+      searchSuggestion: result.suggestion,
+    }
+  }, [searchIndex, search, appliedCategory])
 
-      if (!matchesCategory) return false
-      if (!query) return true
-
-      const haystack = normalize(
-        [
-          course.title,
-          course.slug,
-          course.category,
-          course.categories.join(' '),
-          course.description,
-          meta.modality,
-        ]
-          .filter(Boolean)
-          .join(' '),
-      )
-
-      return haystack.includes(query)
-    })
-  }, [allCourses, courseMetaById, appliedCategory, search])
+  const applySuggestion = () => {
+    if (!searchSuggestion) return
+    setSearch(searchSuggestion)
+    setPage(1)
+  }
 
   const totalPages = Math.max(1, Math.ceil(filteredCourses.length / pageSize))
   const visibleCourses = filteredCourses.slice((page - 1) * pageSize, page * pageSize)
@@ -368,6 +364,15 @@ export function CoursesPage() {
       <section className="catalog-section">
         <div className="catalog-layout" id="catalog-results">
           <div className="catalog-results">
+            {!loading && !error && searchSuggestion ? (
+              <p className="catalog-suggestion" role="status">
+                ¿Quisiste decir{' '}
+                <button type="button" onClick={applySuggestion}>
+                  {searchSuggestion}
+                </button>
+                ?
+              </p>
+            ) : null}
             {loading ? (
               <div className="catalog-empty catalog-loading">
                 <TrekformLoader label="Cargando cursos" />
