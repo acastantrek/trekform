@@ -309,7 +309,7 @@ export function RegistrationPage() {
                 <span className="registration-step-number">
                   {index + 1}
                   <span className="registration-step-icon" aria-hidden="true">
-                    <Icon size={12} strokeWidth={2.5} />
+                    <Icon size={14} strokeWidth={2.5} />
                   </span>
                 </span>
                 <p>{text}</p>

@@ -19,16 +19,6 @@ import { submitContactRequest } from '../../services/contact'
 import { submitSimulatedPayment } from '../../services/enrollments'
 import type { RegistrationSession } from '../../services/registrations'
 
-/** Street address plus city (e.g. "Carrer del Treball, 8, Reus"), without the venue's name. */
-function venueMapQuery(session: RegistrationSession) {
-  return encodeURIComponent([session.address, session.city].filter(Boolean).join(', '))
-}
-
-/** Keyless Google Maps embed (no API key needed) centred on the same search. */
-function googleMapsEmbedUrl(session: RegistrationSession) {
-  return `https://www.google.com/maps?q=${venueMapQuery(session)}&z=15&output=embed`
-}
-
 type Step = 'choose' | 'individual' | 'individual-success' | 'company' | 'company-success'
 
 const dateFormatter = new Intl.DateTimeFormat('es-ES', {
@@ -430,20 +420,11 @@ export function EnrollmentModal({
                     <MapPin size={14} /> {session.address || session.city}
                   </p>
                   {session.city !== 'Online' ? (
-                    <>
-                      <p>
-                        {[session.postalCode, session.city, session.province]
-                          .filter(Boolean)
-                          .join(', ')}
-                      </p>
-                      <iframe
-                        className="enrollment-modal-map"
-                        src={googleMapsEmbedUrl(session)}
-                        title={`Mapa de ${session.venue}`}
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                      />
-                    </>
+                    <p>
+                      {[session.postalCode, session.city, session.province]
+                        .filter(Boolean)
+                        .join(', ')}
+                    </p>
                   ) : null}
                 </div>
                 <Link
