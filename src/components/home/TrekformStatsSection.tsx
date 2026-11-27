@@ -1,40 +1,27 @@
-﻿import { ArrowRight } from 'lucide-react'
-import type { CSSProperties } from 'react'
+import { Download } from 'lucide-react'
 import { CountUp } from '../common/CountUp'
 import { trekformStats } from './trekformStats'
-
-const statsBg = '/imagenes/carretilla-trekform-2.jpg'
 
 const dossierUrl =
   'https://wteagitvzdlujwgqgwog.supabase.co/storage/v1/object/public/cms-media/dossier/dossier-trekform-2024.pdf'
 
+/** "Nuestros logros": same strip as on "Quiénes somos" (icon + figure + label), with the figures
+ *  counting up when they scroll into view. */
 export function TrekformStatsSection() {
   return (
-    <section
-      className="stats-section"
-      data-reveal
-      style={{
-        backgroundImage: `linear-gradient(135deg, rgba(46,46,46,.94), rgba(46,46,46,.88) 55%, rgba(46,46,46,.94)), url(${statsBg})`,
-      }}
-    >
-      <div className="stats-dossier">
-        <span className="kicker">NUESTROS LOGROS</span>
-        <a href={dossierUrl} target="_blank" rel="noreferrer">
-          Dossier corporativo <ArrowRight size={16} />
-        </a>
-      </div>
-      <div className="stats-grid">
-        {trekformStats.map((stat, index) => (
-          <div
-            key={stat.label}
-            data-reveal
-            style={{ '--reveal-delay': `${0.05 + index * 0.06}s` } as CSSProperties}
-          >
-            <CountUp value={stat.value} />
-            <span>{stat.label}</span>
-          </div>
+    <section className="home-proof" data-reveal>
+      <div className="about-proof-strip home-proof-strip">
+        {trekformStats.map(({ icon: Icon, value, label }, index) => (
+          <article key={label} data-reveal data-reveal-delay={0.04 * (index + 1)}>
+            <Icon />
+            <CountUp value={value} />
+            <span>{label}</span>
+          </article>
         ))}
       </div>
+      <a className="home-proof-dossier" href={dossierUrl} target="_blank" rel="noreferrer">
+        <Download size={17} /> Descargar dossier corporativo
+      </a>
     </section>
   )
 }

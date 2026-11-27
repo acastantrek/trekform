@@ -1,7 +1,7 @@
 ﻿.home-slider {
   position: relative;
-  min-height: calc(100vh - 126px);
-  padding: 16px max(4vw, 22px) 18px;
+  min-height: calc(calc(100vh / var(--zoom)) - 126px);
+  padding: 16px max(calc(4vw / var(--zoom)), 22px) 18px;
   display: grid;
   grid-template-columns: minmax(0, 1.12fr) minmax(min(420px, 100%), 0.88fr);
   gap: 28px;
@@ -55,9 +55,9 @@
   top: -10%;
   bottom: -10%;
   left: 0;
-  width: 2.2vw;
+  width: calc(2.2vw / var(--zoom));
   min-width: 14px;
-  transform: translateX(110vw) skewX(-12deg);
+  transform: translateX(calc(110vw / var(--zoom))) skewX(-12deg);
   animation: home-hero-sweep 1.35s cubic-bezier(0.77, 0, 0.18, 1) both;
 }
 .home-hero-sweep i:nth-child(1) {
@@ -70,7 +70,7 @@
   animation-delay: 0.07s;
 }
 .home-hero-sweep i:nth-child(3) {
-  width: 3.4vw;
+  width: calc(3.4vw / var(--zoom));
   background: linear-gradient(180deg, #fbd08a, #ec9a1f);
   box-shadow: 0 0 40px 8px rgba(245, 166, 35, 0.45);
   animation-delay: 0.14s;
@@ -113,10 +113,10 @@
 }
 @keyframes home-hero-sweep {
   from {
-    transform: translateX(110vw) skewX(-12deg);
+    transform: translateX(calc(110vw / var(--zoom))) skewX(-12deg);
   }
   to {
-    transform: translateX(-30vw) skewX(-12deg);
+    transform: translateX(calc(-30vw / var(--zoom))) skewX(-12deg);
   }
 }
 .home-hero-slides::after {
@@ -192,7 +192,7 @@
   max-width: 640px;
   margin: 0;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(39px, 4.25vw, 60px);
+  font-size: clamp(39px, calc(4.25vw / var(--zoom)), 60px);
   font-weight: 900;
   line-height: 0.92;
   letter-spacing: 0;
@@ -394,7 +394,7 @@
 }
 .home-hero-badge {
   position: absolute;
-  left: max(5vw, 28px);
+  left: max(calc(5vw / var(--zoom)), 28px);
   bottom: 100px;
   z-index: 2;
   display: inline-flex;
@@ -415,7 +415,7 @@
   .home-slider {
     grid-template-columns: 1fr;
     min-height: auto;
-    padding: 30px 5vw 46px;
+    padding: 30px calc(5vw / var(--zoom)) 46px;
   }
   .slider-content {
     padding: 8px 0 0;

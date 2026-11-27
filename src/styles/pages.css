@@ -13,13 +13,13 @@
   color: var(--accent);
 }
 .page-section {
-  min-height: 70vh;
+  min-height: calc(70vh / var(--zoom));
 }
 .page-hero {
   margin-bottom: 60px;
 }
 .page-hero h1 {
-  font-size: clamp(43px, 5.95vw, 82px);
+  font-size: clamp(43px, calc(5.95vw / var(--zoom)), 82px);
   margin: 14px 0;
 }
 .page-hero p {
@@ -27,7 +27,7 @@
   color: #75756f;
 }
 .page-hero.simple {
-  padding: 100px 8vw;
+  padding: 100px calc(8vw / var(--zoom));
   background:
     radial-gradient(circle at top right, rgba(244, 194, 127, 0.08), transparent 24%), #fff;
   border-bottom: 1px solid rgba(46, 46, 46, 0.08);
@@ -46,14 +46,14 @@
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.96)), #fff;
 }
 .detail-hero > div {
-  padding: 90px 7vw;
+  padding: 90px calc(7vw / var(--zoom));
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
 }
 .detail-hero h1 {
-  font-size: clamp(41px, 5.1vw, 75px);
+  font-size: clamp(41px, calc(5.1vw / var(--zoom)), 75px);
   margin: 15px 0 25px;
 }
 .detail-hero p {
@@ -90,14 +90,14 @@
   color: var(--accent);
 }
 .contact-page {
-  padding: 100px 8vw;
+  padding: 100px calc(8vw / var(--zoom));
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10vw;
+  gap: calc(10vw / var(--zoom));
   background: radial-gradient(circle at top left, rgba(255, 182, 6, 0.1), transparent 22%), #f8f3eb;
 }
 .contact-page h1 {
-  font-size: clamp(41px, 5.1vw, 68px);
+  font-size: clamp(41px, calc(5.1vw / var(--zoom)), 68px);
   margin: 15px 0;
 }
 .contact-page > div > p {
@@ -144,7 +144,7 @@
   justify-self: start;
 }
 .not-found {
-  min-height: 65vh;
+  min-height: calc(65vh / var(--zoom));
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -173,7 +173,7 @@
 .not-found h1 {
   max-width: 760px;
   margin: 0 0 16px;
-  font-size: clamp(27px, 4.25vw, 48px);
+  font-size: clamp(27px, calc(4.25vw / var(--zoom)), 48px);
   line-height: 1.05;
 }
 .not-found-text {
@@ -230,17 +230,17 @@
     grid-row: 1;
   }
   .detail-hero > div {
-    padding: 65px 6vw;
+    padding: 65px calc(6vw / var(--zoom));
   }
   .back-link {
     margin-bottom: 35px;
   }
   .contact-page {
     grid-template-columns: 1fr;
-    padding: 70px 5vw;
+    padding: 70px calc(5vw / var(--zoom));
   }
   .page-hero.simple {
-    padding: 70px 5vw;
+    padding: 70px calc(5vw / var(--zoom));
   }
 }
 @media (max-width: 520px) {

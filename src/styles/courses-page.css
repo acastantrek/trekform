@@ -1,7 +1,7 @@
 .courses-page-hero {
   position: relative;
   min-height: 300px;
-  padding: 56px max(5vw, 28px) 76px;
+  padding: 56px max(calc(5vw / var(--zoom)), 28px) 76px;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   align-items: center;
@@ -77,7 +77,7 @@
 }
 .courses-hero-content h1 {
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(34px, 4.2vw, 62px);
+  font-size: clamp(34px, calc(4.2vw / var(--zoom)), 62px);
   white-space: nowrap;
   line-height: 0.92;
   margin: 0 0 18px;
@@ -89,7 +89,7 @@
   color: var(--accent);
 }
 .catalog-section {
-  padding: 0 max(3vw, 24px) 18px;
+  padding: 0 max(calc(3vw / var(--zoom)), 24px) 18px;
   background: #f5f5f4;
 }
 .catalog-layout {
@@ -701,7 +701,7 @@
     align-items: flex-start;
   }
   .courses-hero-content h1 {
-    font-size: min(34px, 5.6vw);
+    font-size: min(34px, calc(5.6vw / var(--zoom)));
   }
   .catalog-grid,
   .catalog-trust-row,
@@ -743,7 +743,7 @@
     padding: 34px 16px 56px;
   }
   .courses-hero-content h1 {
-    font-size: min(29px, 5.6vw);
+    font-size: min(29px, calc(5.6vw / var(--zoom)));
   }
   .catalog-section {
     padding-inline: 10px;
@@ -818,5 +818,14 @@
   }
   .catalog-layout {
     padding-top: 12px;
+  }
+}
+
+/* Desktop: the Cursos / Inscripciones hero content lines up with the filters bar and the results
+   below it (centred, 1480px max, 32px from the edges), also on large screens. */
+@media (min-width: 1181px) {
+  .courses-page-hero {
+    padding-left: max(calc((100% - 1480px) / 2), 32px);
+    padding-right: max(calc((100% - 1480px) / 2), 32px);
   }
 }

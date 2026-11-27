@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Outlet, Route, Routes } from 'react-router-dom'
 import { CookieBanner } from './components/common/CookieBanner'
 import { RouteScrollToTop } from './components/common/RouteScrollToTop'
@@ -49,6 +49,12 @@ function PageLoading({ label }: { label: string }) {
 }
 
 function PublicLayout() {
+  // Enables the large-screen zoom (styles.css) on the public site only, not on /panel.
+  useEffect(() => {
+    document.documentElement.classList.add('site-zoom')
+    return () => document.documentElement.classList.remove('site-zoom')
+  }, [])
+
   return (
     <>
       <StaticHeader />

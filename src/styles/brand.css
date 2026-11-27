@@ -70,9 +70,6 @@
   background: linear-gradient(135deg, var(--accent), var(--accent-soft)) !important;
   color: var(--navy);
 }
-.stats-grid strong {
-  color: var(--accent);
-}
 .contact {
   background: linear-gradient(135deg, var(--accent), var(--accent-soft));
 }

@@ -34,7 +34,7 @@
 .blog-hero h1 {
   margin: 14px 0 6px;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(37px, 4.42vw, 63px);
+  font-size: clamp(37px, calc(4.42vw / var(--zoom)), 63px);
   font-weight: 900;
   line-height: 1.02;
   letter-spacing: -0.045em;
@@ -110,7 +110,7 @@
 .blog-content {
   max-width: 1430px;
   margin: 0 auto;
-  padding: 44px max(3vw, 22px) 62px;
+  padding: 44px max(calc(3vw / var(--zoom)), 22px) 62px;
 }
 .blog-search {
   height: 60px;
@@ -315,7 +315,7 @@
   color: var(--navy);
 }
 .blog-article > header {
-  padding: 64px max(10vw, 24px) 40px;
+  padding: 64px max(calc(10vw / var(--zoom)), 24px) 40px;
   text-align: center;
 }
 .blog-back {
@@ -343,7 +343,7 @@
   max-width: 900px;
   margin: 20px auto;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(31px, 3.91vw, 49px);
+  font-size: clamp(31px, calc(3.91vw / var(--zoom)), 49px);
   font-weight: 900;
   line-height: 1.06;
   letter-spacing: -0.04em;
@@ -357,7 +357,7 @@
 }
 .blog-article-cover {
   width: min(1200px, calc(100% - 48px));
-  height: clamp(240px, 40vw, 580px);
+  height: clamp(240px, calc(40vw / var(--zoom)), 580px);
   display: block;
   margin: 0 auto;
   object-fit: cover;
@@ -484,7 +484,7 @@
 }
 .blog-article-loading,
 .blog-article-missing {
-  min-height: 65vh;
+  min-height: calc(65vh / var(--zoom));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -496,7 +496,7 @@
 .blog-article-missing h1 {
   margin: 15px 0 30px;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(32px, 4.25vw, 55px);
+  font-size: clamp(32px, calc(4.25vw / var(--zoom)), 55px);
   letter-spacing: -0.04em;
 }
 .blog-article-missing a {
@@ -543,7 +543,7 @@
     min-height: 310px;
   }
   .blog-hero h1 {
-    font-size: clamp(32px, 13.6vw, 48px);
+    font-size: clamp(32px, calc(13.6vw / var(--zoom)), 48px);
   }
   .blog-hero-inner {
     padding: 88px 20px 108px;

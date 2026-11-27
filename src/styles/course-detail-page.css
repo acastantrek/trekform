@@ -13,7 +13,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 75px max(7vw, 28px);
+  padding: 75px max(calc(7vw / var(--zoom)), 28px);
 }
 .course-detail-categories {
   display: flex;
@@ -32,7 +32,7 @@
 .course-detail-copy h1 {
   max-width: 850px;
   margin: 18px 0 23px;
-  font-size: clamp(43px, 5.27vw, 75px);
+  font-size: clamp(43px, calc(5.27vw / var(--zoom)), 75px);
   line-height: 0.94;
   letter-spacing: -4px;
 }
@@ -80,7 +80,7 @@
 .course-detail-overview {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  padding: 0 max(6vw, 24px);
+  padding: 0 max(calc(6vw / var(--zoom)), 24px);
   background: #fff;
   border-bottom: 1px solid #dedfdb;
 }
@@ -119,9 +119,9 @@
   overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
-  gap: clamp(50px, 8vw, 120px);
+  gap: clamp(50px, calc(8vw / var(--zoom)), 120px);
   align-items: start;
-  padding: clamp(85px, 9vw, 135px) max(7vw, 24px);
+  padding: clamp(85px, calc(9vw / var(--zoom)), 135px) max(calc(7vw / var(--zoom)), 24px);
 }
 .course-detail-main::before {
   content: '';
@@ -147,7 +147,7 @@
 .course-detail-section-heading h2 {
   max-width: 760px;
   margin: 12px 0 27px;
-  font-size: clamp(33px, 4vw, 54px);
+  font-size: clamp(33px, calc(4vw / var(--zoom)), 54px);
   line-height: 1.03;
   letter-spacing: -2.3px;
 }
@@ -231,7 +231,7 @@
 .course-detail-section-heading {
   display: grid;
   grid-template-columns: 1.2fr 0.65fr;
-  gap: 7vw;
+  gap: calc(7vw / var(--zoom));
   align-items: end;
   margin-bottom: 45px;
 }
@@ -245,9 +245,9 @@
 .course-detail-final-cta {
   display: grid;
   grid-template-columns: 1fr 0.8fr auto;
-  gap: 6vw;
+  gap: calc(6vw / var(--zoom));
   align-items: center;
-  padding: clamp(70px, 8vw, 105px) max(7vw, 24px);
+  padding: clamp(70px, calc(8vw / var(--zoom)), 105px) max(calc(7vw / var(--zoom)), 24px);
   background: var(--accent);
   color: #fff;
 }
@@ -256,7 +256,7 @@
 }
 .course-detail-final-cta h2 {
   margin: 10px 0 0;
-  font-size: clamp(31px, 3.83vw, 51px);
+  font-size: clamp(31px, calc(3.83vw / var(--zoom)), 51px);
   letter-spacing: -2px;
 }
 .course-detail-final-cta p {
@@ -275,7 +275,7 @@
 }
 .course-detail-loading,
 .course-detail-missing {
-  min-height: 65vh;
+  min-height: calc(65vh / var(--zoom));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -293,7 +293,7 @@
 .course-detail-missing h1 {
   max-width: 700px;
   margin: 15px 0;
-  font-size: clamp(36px, 5.1vw, 61px);
+  font-size: clamp(36px, calc(5.1vw / var(--zoom)), 61px);
 }
 .course-detail-missing p {
   color: #69757e;
@@ -366,7 +366,7 @@
   position: relative;
   overflow: clip;
   min-height: auto;
-  padding: 42px max(5vw, 22px) 28px;
+  padding: 42px max(calc(5vw / var(--zoom)), 22px) 28px;
   background:
     radial-gradient(circle at 12% 18%, rgba(255, 182, 6, 0.18), transparent 18%),
     radial-gradient(circle at 90% 18%, rgba(255, 182, 6, 0.18), transparent 24%),
@@ -378,11 +378,11 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-  gap: clamp(28px, 4vw, 58px);
+  gap: clamp(28px, calc(4vw / var(--zoom)), 58px);
   align-items: center;
 }
 .course-detail-copy {
-  padding: clamp(20px, 2vw, 30px) 0;
+  padding: clamp(20px, calc(2vw / var(--zoom)), 30px) 0;
 }
 .course-detail-categories {
   gap: 10px;
@@ -398,7 +398,7 @@
 .course-detail-copy h1 {
   max-width: 860px;
   margin: 0;
-  font-size: clamp(44px, 5.1vw, 78px);
+  font-size: clamp(44px, calc(5.1vw / var(--zoom)), 78px);
   line-height: 0.94;
   letter-spacing: -0.065em;
   text-transform: uppercase;
@@ -410,7 +410,7 @@
   max-width: 720px;
   margin: 24px 0 0;
   color: #d6dde5;
-  font-size: clamp(18px, 1.7vw, 22px);
+  font-size: clamp(18px, calc(1.7vw / var(--zoom)), 22px);
   line-height: 1.65;
 }
 .course-detail-hero-actions {
@@ -468,9 +468,9 @@
 .course-detail-main {
   max-width: 1380px;
   margin: 0 auto;
-  padding: clamp(48px, 6vw, 88px) max(5vw, 22px);
+  padding: clamp(48px, calc(6vw / var(--zoom)), 88px) max(calc(5vw / var(--zoom)), 22px);
   grid-template-columns: minmax(0, 1fr) 390px;
-  gap: clamp(24px, 4vw, 48px);
+  gap: clamp(24px, calc(4vw / var(--zoom)), 48px);
   overflow: visible;
 }
 .course-detail-main::before {
@@ -481,7 +481,7 @@
   gap: 24px;
 }
 .course-detail-story-card {
-  padding: clamp(26px, 3vw, 40px);
+  padding: clamp(26px, calc(3vw / var(--zoom)), 40px);
   border: 1px solid rgba(46, 46, 46, 0.08);
   border-radius: 28px;
   background: rgba(255, 255, 255, 0.82);
@@ -498,7 +498,7 @@
 .course-detail-story-card h2,
 .course-detail-section-heading h2 {
   margin: 14px 0 22px;
-  font-size: clamp(31px, 3.4vw, 49px);
+  font-size: clamp(31px, calc(3.4vw / var(--zoom)), 49px);
   line-height: 1.02;
   letter-spacing: -0.05em;
 }
@@ -518,7 +518,7 @@
 }
 .course-detail-story-card h3 {
   margin: 12px 0 18px;
-  font-size: clamp(26px, 2.6vw, 36px);
+  font-size: clamp(26px, calc(2.6vw / var(--zoom)), 36px);
   line-height: 1.06;
   letter-spacing: -0.04em;
 }
@@ -587,8 +587,8 @@
 }
 .course-detail-final-cta {
   max-width: 1380px;
-  margin: 0 auto clamp(26px, 4vw, 42px);
-  padding: clamp(36px, 5vw, 54px);
+  margin: 0 auto clamp(26px, calc(4vw / var(--zoom)), 42px);
+  padding: clamp(36px, calc(5vw / var(--zoom)), 54px);
   border-radius: 34px;
   background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 28%),
@@ -597,7 +597,7 @@
 }
 .course-detail-final-cta h2 {
   margin: 10px 0 0;
-  font-size: clamp(29px, 3.4vw, 49px);
+  font-size: clamp(29px, calc(3.4vw / var(--zoom)), 49px);
   line-height: 1.02;
   letter-spacing: -0.05em;
 }
@@ -633,7 +633,7 @@
     padding-top: 12px;
   }
   .course-detail-copy h1 {
-    font-size: clamp(36px, 12.75vw, 54px);
+    font-size: clamp(36px, calc(12.75vw / var(--zoom)), 54px);
   }
   .course-detail-excerpt {
     font-size: 17px;
@@ -662,7 +662,7 @@
 .course-detail-hero {
   display: block;
   min-height: 430px;
-  padding: 70px max(5vw, 24px) 132px;
+  padding: 70px max(calc(5vw / var(--zoom)), 24px) 132px;
   background: var(--navy);
 }
 .course-detail-hero-bg {
@@ -687,7 +687,7 @@
 .course-detail-copy h1 {
   margin: 16px 0 12px;
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(37px, 4.42vw, 63px);
+  font-size: clamp(37px, calc(4.42vw / var(--zoom)), 63px);
   font-weight: 900;
   line-height: 1.02;
   letter-spacing: -0.045em;
@@ -820,7 +820,7 @@
   z-index: 5;
   max-width: 1430px;
   margin: -64px auto 0;
-  padding: 0 max(3vw, 22px);
+  padding: 0 max(calc(3vw / var(--zoom)), 22px);
   background: transparent;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 18px;
@@ -904,7 +904,7 @@
 .course-detail-story-card h2,
 .course-detail-section-heading h2 {
   font-family: 'Inter Tight', sans-serif;
-  font-size: clamp(29px, 3.06vw, 46px);
+  font-size: clamp(29px, calc(3.06vw / var(--zoom)), 46px);
   letter-spacing: -0.04em;
 }
 .course-detail-story-grid {
@@ -916,11 +916,11 @@
 .course-detail-brochure-cta {
   display: grid;
   grid-template-columns: auto 1fr auto;
-  gap: clamp(18px, 3vw, 36px);
+  gap: clamp(18px, calc(3vw / var(--zoom)), 36px);
   align-items: center;
   width: min(1430px, calc(100% - 40px));
-  margin: clamp(26px, 4vw, 48px) auto;
-  padding: clamp(26px, 3.5vw, 42px) clamp(24px, 4vw, 54px);
+  margin: clamp(26px, calc(4vw / var(--zoom)), 48px) auto;
+  padding: clamp(26px, calc(3.5vw / var(--zoom)), 42px) clamp(24px, calc(4vw / var(--zoom)), 54px);
   border-radius: 8px;
   background: linear-gradient(135deg, var(--accent-soft), var(--accent));
   box-shadow: 0 18px 44px rgba(255, 182, 6, 0.32);
@@ -937,7 +937,7 @@
 }
 .course-detail-brochure-cta h2 {
   margin: 0 0 6px;
-  font-size: clamp(22px, 2.55vw, 34px);
+  font-size: clamp(22px, calc(2.55vw / var(--zoom)), 34px);
   line-height: 1.05;
   letter-spacing: -0.03em;
 }
@@ -1130,7 +1130,7 @@
 .course-detail-reviews {
   max-width: 1430px;
   margin: 0 auto 56px;
-  padding: 0 max(3vw, 22px);
+  padding: 0 max(calc(3vw / var(--zoom)), 22px);
 }
 .course-detail-reviews-list {
   display: grid;

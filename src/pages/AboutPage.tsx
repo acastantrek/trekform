@@ -1,6 +1,5 @@
 ﻿import {
   ArrowRight,
-  Award,
   BriefcaseBusiness,
   Building2,
   CalendarClock,
@@ -49,9 +48,6 @@ const strengths = [
   },
 ]
 
-/** One icon per figure in `trekformStats`, in the same order (years, students, companies, courses). */
-const proofStripIcons = [Award, HardHat, Building2, ShieldCheck]
-
 export function AboutPage() {
   useScrollReveal()
   const isMobile = useMediaQuery('(max-width: 640px)')
@@ -90,8 +86,7 @@ export function AboutPage() {
       </section>
 
       <section className="about-proof-strip" data-reveal>
-        {trekformStats.map((stat, index) => {
-          const Icon = proofStripIcons[index]
+        {trekformStats.map(({ icon: Icon, ...stat }, index) => {
           return (
             <article key={stat.label} data-reveal data-reveal-delay={0.04 * (index + 1)}>
               <Icon />
