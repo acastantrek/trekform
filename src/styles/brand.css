@@ -36,7 +36,7 @@
 .mobile-cta {
   background: linear-gradient(135deg, var(--accent), var(--accent-soft)) !important;
   color: var(--navy) !important;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
 }
 .nav-cta:hover {
   background: linear-gradient(135deg, var(--accent-soft), var(--accent-soft));
@@ -47,7 +47,7 @@
 .primary {
   background: linear-gradient(135deg, var(--accent), var(--accent));
   color: var(--navy);
-  border-radius: 999px;
+  border-radius: var(--radius-button);
 }
 .primary:hover {
   background: linear-gradient(135deg, var(--accent), var(--accent));
@@ -64,7 +64,7 @@
 .lead-form button {
   background: linear-gradient(135deg, var(--accent), var(--accent));
   color: var(--navy);
-  border-radius: 999px;
+  border-radius: var(--radius-button);
 }
 .course-image > span {
   background: linear-gradient(135deg, var(--accent), var(--accent-soft)) !important;

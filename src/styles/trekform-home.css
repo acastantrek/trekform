@@ -331,7 +331,7 @@
 .home-hero-submit {
   min-height: 42px;
   border: 0;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -536,7 +536,7 @@
 .home-hero-submit {
   min-height: 52px;
   margin-top: 4px;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   background: var(--navy);
   color: #fff;
   box-shadow: 0 16px 30px rgba(46, 46, 46, 0.28);

@@ -2,17 +2,21 @@ import {
   ArrowRight,
   BellRing,
   BriefcaseBusiness,
+  CalendarCheck,
   CalendarDays,
+  Download,
   Check,
   ChevronDown,
   Clock3,
   MapPin,
+  Pencil,
   RotateCcw,
   Search,
+  ShieldCheck,
   SlidersHorizontal,
   Star,
 } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { CategoryChips } from '../components/courses/CategoryChips'
 import { TrekformLoader } from '../components/common/TrekformLoader'
@@ -24,6 +28,24 @@ import { useRegistrationSessions } from '../hooks/useRegistrationSessions'
 import { categoryOrder } from '../lib/courseCategories'
 import { spanishProvinces } from '../lib/provinces'
 import type { RegistrationSession } from '../services/registrations'
+
+/** PDF with the full course calendar, hosted on Google Drive. */
+const CALENDAR_PDF_URL =
+  'https://drive.google.com/file/d/0B7Ghcuo4WDYtYTlrWGxtXzhnNTg/view?resourcekey=0-M3q-VqD92HG26e_bJn9KTw'
+
+/** How to enroll, shown next to the hero title. */
+const enrollmentSteps = [
+  { icon: Search, text: 'Utiliza los filtros de abajo para encontrar tu curso.' },
+  {
+    icon: Pencil,
+    text: 'Inscríbete en tu curso y rellena tus datos para realizar la inscripción.',
+  },
+  { icon: ShieldCheck, text: 'Sigue las indicaciones para realizar el pago de forma 100% segura.' },
+  {
+    icon: CalendarCheck,
+    text: 'Recibirás por e-mail la confirmación del curso con dirección y horario.',
+  },
+]
 
 const pageSize = 15
 
@@ -261,8 +283,45 @@ export function RegistrationPage() {
       <section className="courses-page-hero registration-page-hero">
         <div className="courses-hero-content courses-hero-animate">
           <h1 className="courses-hero-enter courses-hero-enter--1">
-            Inscripciones <span>abiertas</span>
+            Inscripciones
+            <br />
+            <span>abiertas</span>
           </h1>
+          <div className="registration-calendar-row courses-hero-enter courses-hero-enter--2">
+            <a
+              className="registration-calendar-pdf"
+              href={CALENDAR_PDF_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Download size={18} /> Calendario cursos
+            </a>
+            <p>Descarga nuestro calendario de cursos abiertos</p>
+          </div>
+        </div>
+        <div className="registration-steps-wrap">
+          <p className="registration-steps-intro">
+            Sigue estos sencillos pasos para inscribirte en uno de nuestros cursos abiertos:
+          </p>
+          <ol className="registration-steps" aria-label="Pasos para inscribirte">
+            {enrollmentSteps.map(({ icon: Icon, text }, index) => (
+              <li key={text} style={{ '--step': index } as CSSProperties}>
+                <span className="registration-step-number">
+                  {index + 1}
+                  <span className="registration-step-icon" aria-hidden="true">
+                    <Icon size={12} strokeWidth={2.5} />
+                  </span>
+                </span>
+                <p>{text}</p>
+                {index < enrollmentSteps.length - 1 && (
+                  <svg className="registration-step-arrow" viewBox="0 0 40 12" aria-hidden="true">
+                    <path d="M2 6h32" strokeDasharray="3 4" />
+                    <path d="M30 2l5 4-5 4" />
+                  </svg>
+                )}
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
@@ -361,15 +420,15 @@ export function RegistrationPage() {
               ) : null}
             </div>
           </div>
+          {isMobile ? null : (
+            <CategoryChips
+              categories={categoryOptions}
+              active={appliedCategory}
+              onSelect={updateCategory}
+              labelFor={(item) => (item === categoryOptions[0] ? 'Todas' : item)}
+            />
+          )}
         </div>
-        {isMobile ? null : (
-          <CategoryChips
-            categories={categoryOptions}
-            active={appliedCategory}
-            onSelect={updateCategory}
-            labelFor={(item) => (item === categoryOptions[0] ? 'Todas' : item)}
-          />
-        )}
       </section>
 
       <section className="registration-results-area">

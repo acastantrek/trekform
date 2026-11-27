@@ -58,7 +58,7 @@
 .contact-v2-company a {
   min-height: 52px;
   padding: 0 24px;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   display: inline-flex;
   align-items: center;
   justify-content: center;

@@ -111,7 +111,7 @@
 .cookie-banner__btn {
   padding: 11px 20px;
   border: 1px solid var(--accent);
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   background: var(--accent);
   color: var(--navy);
   font: inherit;

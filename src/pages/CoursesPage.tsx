@@ -350,15 +350,15 @@ export function CoursesPage() {
               ) : null}
             </div>
           ) : null}
+          {isMobile ? null : (
+            <CategoryChips
+              categories={catalogCategories}
+              active={appliedCategory}
+              onSelect={applyCategoryChip}
+              labelFor={(item) => (item === 'Todos' ? 'Todas' : item)}
+            />
+          )}
         </div>
-        {isMobile ? null : (
-          <CategoryChips
-            categories={catalogCategories}
-            active={appliedCategory}
-            onSelect={applyCategoryChip}
-            labelFor={(item) => (item === 'Todos' ? 'Todas' : item)}
-          />
-        )}
       </section>
 
       <section className="catalog-section">

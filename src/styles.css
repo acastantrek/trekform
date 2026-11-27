@@ -1,6 +1,8 @@
 @import './styles/fonts.css';
 
 :root {
+  /* Shared radius for every button on the public site (same pill as the navbar CTA). */
+  --radius-button: 999px;
   font-family: 'Inter Tight', sans-serif;
   color: var(--navy);
   background:
@@ -181,7 +183,7 @@ a {
   display: flex;
   align-items: center;
   gap: 16px;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   box-shadow: var(--shadow);
 }
 .nav-cta:hover,
@@ -474,7 +476,7 @@ h2 em {
 .tabs button.active {
   background: linear-gradient(135deg, var(--navy), #1b2740);
   color: white;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
 }
 .search {
   display: flex;

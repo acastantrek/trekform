@@ -96,7 +96,7 @@
   gap: 10px;
   min-height: 48px;
   padding: 0 22px;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   background: var(--accent);
   color: var(--navy);
   font-size: 14px;
@@ -271,7 +271,7 @@
   height: 42px;
   padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -496,7 +496,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 18px;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.28);
   color: #fff;
@@ -610,7 +610,7 @@
   align-items: center;
   gap: 12px;
   padding: 14px 22px;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.28);
   color: #fff;
@@ -764,7 +764,7 @@
   gap: 12px;
   min-height: 48px;
   padding: 0 22px;
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   background: var(--accent);
   color: var(--navy);
   font-weight: 900;
@@ -852,7 +852,7 @@
   border-radius: 5px;
 }
 .home-news-list span {
-  font-weight: 900;
+  font-weight: 400;
   line-height: 1.2;
 }
 .home-news-list small {
@@ -860,7 +860,7 @@
   align-items: center;
   gap: 6px;
   color: var(--navy);
-  font-weight: 900;
+  font-weight: 400;
 }
 .home-cta-banner {
   display: flex;
@@ -900,7 +900,7 @@
   align-items: center;
   gap: 12px;
   padding: 16px 26px;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   background: var(--navy);
   color: #fff;
   font-size: 13px;

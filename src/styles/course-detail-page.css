@@ -421,7 +421,7 @@
 .course-detail-hero-actions button {
   min-height: 54px;
   padding: 0 22px;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   font-size: 11px;
   letter-spacing: 0.08em;
 }
@@ -566,7 +566,7 @@
   justify-content: space-between;
   padding: 0 18px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
 }
 .course-detail-sidebar-links {
   display: grid;
@@ -607,7 +607,7 @@
 .course-detail-final-cta a {
   min-height: 54px;
   padding: 0 22px;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
 }
 .course-detail-loading,
 .course-detail-missing {
@@ -728,7 +728,7 @@
   min-width: 220px;
   min-height: 56px;
   padding: 0 22px;
-  border-radius: 5px;
+  border-radius: var(--radius-button);
   font-size: 13px;
   font-weight: 900;
   letter-spacing: 0;
@@ -953,7 +953,7 @@
   gap: 12px;
   min-height: 62px;
   padding: 0 32px;
-  border-radius: 8px;
+  border-radius: var(--radius-button);
   background: var(--navy);
   color: #fff;
   font-size: 18px;
@@ -1043,7 +1043,7 @@
 .course-detail-sidebar > a,
 .course-detail-sidebar > .course-detail-enroll-button {
   border: 0;
-  border-radius: 5px;
+  border-radius: var(--radius-button);
   background: linear-gradient(135deg, var(--accent-soft), var(--accent));
   color: var(--navy);
 }
@@ -1090,7 +1090,7 @@
   margin-top: 6px;
   padding: 14px 16px;
   border: 2px solid var(--navy);
-  border-radius: 6px;
+  border-radius: var(--radius-button);
   background: transparent;
   color: var(--navy);
   font-size: 12px;
@@ -1123,7 +1123,7 @@
   font-family: 'Inter Tight', sans-serif;
 }
 .course-detail-final-cta a {
-  border-radius: 5px;
+  border-radius: var(--radius-button);
   background: linear-gradient(135deg, var(--accent-soft), var(--accent));
   color: var(--navy);
 }

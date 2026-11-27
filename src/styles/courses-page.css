@@ -15,8 +15,7 @@
       rgba(0, 0, 0, 0.72) 42%,
       rgba(0, 0, 0, 0.15) 100%
     ),
-    url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=2200&q=90')
-      center 42% / cover;
+    url('/imagenes/carretilla-trekform-2.jpg') center 42% / cover;
 }
 .courses-hero-enter {
   opacity: 0;
@@ -440,7 +439,7 @@
   isolation: isolate;
   height: 42px;
   border: 0;
-  border-radius: 999px;
+  border-radius: var(--radius-button);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -536,7 +535,7 @@
 }
 .catalog-company-cta {
   margin-top: 16px;
-  min-height: 132px;
+  min-height: 200px;
   display: grid;
   grid-template-columns: 380px 1fr 230px 320px;
   gap: 24px;
@@ -578,7 +577,7 @@
   align-items: center;
   justify-content: center;
   gap: 18px;
-  border-radius: 5px;
+  border-radius: var(--radius-button);
   background: linear-gradient(135deg, var(--accent-soft), var(--accent));
   color: var(--navy);
   font-size: 13px;
@@ -654,7 +653,7 @@
   min-width: 36px;
   height: 36px;
   border: 1px solid #d5d5d2;
-  border-radius: 4px;
+  border-radius: var(--radius-button);
   background: #fff;
   font-size: 12px;
   font-weight: 800;
@@ -677,7 +676,7 @@
   }
   .catalog-company-cta {
     grid-template-columns: 260px 1fr;
-    padding: 0 24px 20px 0;
+    padding: 0 24px 32px 0;
   }
   .catalog-company-cta span,
   .catalog-company-cta a {
@@ -717,7 +716,7 @@
     flex-direction: column;
   }
   .catalog-company-cta {
-    padding: 0 18px 18px;
+    padding: 0 18px 32px;
   }
   .catalog-company-cta > div {
     min-height: 130px;
@@ -796,4 +795,7 @@
 .catalog-suggestion button:hover,
 .catalog-suggestion button:focus-visible {
   color: #b37f00;
+}
+.courses-hero-enter--2 {
+  animation-delay: 0.16s;
 }
