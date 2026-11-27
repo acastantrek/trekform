@@ -1590,3 +1590,33 @@
     padding-block: 6px;
   }
 }
+
+/* Mobile: the "Calendario cursos" button sits beside the two-line title, smaller, and its
+   caption is dropped to leave room. */
+@media (max-width: 680px) {
+  .registration-page-hero .courses-hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .registration-page-hero .courses-hero-content h1 {
+    margin-bottom: 0;
+  }
+  .registration-calendar-row {
+    flex: none;
+  }
+  .registration-calendar-row p {
+    display: none;
+  }
+  .registration-calendar-pdf {
+    min-height: 36px;
+    padding: 0 14px;
+    gap: 6px;
+    font-size: 12px;
+  }
+  .registration-calendar-pdf svg {
+    width: 15px;
+    height: 15px;
+  }
+}
