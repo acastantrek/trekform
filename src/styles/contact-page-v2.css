@@ -3,7 +3,7 @@
   color: var(--navy);
 }
 .contact-v2-hero {
-  min-height: 560px;
+  min-height: 460px;
   display: grid;
   grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
   align-items: stretch;
@@ -13,7 +13,7 @@
 }
 .contact-v2-hero-copy {
   max-width: 760px;
-  padding: 78px 0 70px max(6vw, 38px);
+  padding: 60px 0 54px max(6vw, 38px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,7 +31,7 @@
   text-transform: uppercase;
 }
 .contact-v2-hero h1 {
-  margin: 14px 0 20px;
+  margin: 10px 0 14px;
   font-family: 'Inter Tight', sans-serif;
   font-size: clamp(37px, 4.42vw, 63px);
   font-weight: 900;
@@ -50,7 +50,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
-  margin-top: 30px;
+  margin-top: 22px;
 }
 .contact-v2-hero-actions a,
 .contact-v2-submit,
@@ -79,10 +79,13 @@
   color: var(--navy);
 }
 .contact-v2-hero-image {
-  min-height: 560px;
+  min-height: 460px;
+  position: relative;
   clip-path: polygon(16% 0, 100% 0, 100% 100%, 2% 100%);
 }
 .contact-v2-hero-image img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -400,10 +403,10 @@
     grid-template-columns: 1fr;
   }
   .contact-v2-hero-copy {
-    padding: 64px 5vw 36px;
+    padding: 40px 5vw 28px;
   }
   .contact-v2-hero-image {
-    min-height: 380px;
+    min-height: 240px;
     clip-path: none;
   }
   .contact-v2-office-grid {
