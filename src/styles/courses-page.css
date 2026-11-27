@@ -799,3 +799,24 @@
 .courses-hero-enter--2 {
   animation-delay: 0.16s;
 }
+
+/* Wide screens: a slim hero and tighter toolbar so the first row of course cards fits whole on
+   first load, even on a ~730px-tall laptop viewport. Inscripciones shares .courses-page-hero but
+   has its own sizing, so it is excluded. */
+@media (min-width: 1181px) {
+  .courses-page-hero:not(.registration-page-hero) {
+    min-height: 0;
+    padding-top: 72px;
+    padding-bottom: 96px;
+  }
+  .courses-page-hero:not(.registration-page-hero) .courses-hero-content h1 {
+    margin-bottom: 0;
+  }
+  .registration-toolbar.courses-toolbar {
+    padding: 10px;
+    gap: 8px;
+  }
+  .catalog-layout {
+    padding-top: 12px;
+  }
+}

@@ -1359,13 +1359,6 @@
   color: var(--navy);
 }
 
-/* Wide screens: trim the hero's vertical padding so it is about as tall as the Cursos hero. */
-@media (min-width: 1181px) {
-  .registration-page-hero {
-    padding-block: 40px 64px;
-  }
-}
-
 /* "Calendario cursos" button with its short explanation beside it. */
 .registration-calendar-row {
   display: flex;
@@ -1563,5 +1556,37 @@
   .registration-steps-intro,
   .registration-steps-intro::after {
     animation: none;
+  }
+}
+
+/* Wide screens: everything above the sessions list is tightened (the step cards keep their size)
+   so at least three session rows show on first load, even on a ~730px-tall laptop viewport. */
+@media (min-width: 1181px) {
+  .registration-page-hero {
+    padding-block: 12px 52px;
+  }
+  .registration-steps-intro {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+  }
+  .registration-toolbar.calendar-toolbar {
+    padding: 10px;
+    gap: 8px;
+  }
+  .registration-toolbar > .courses-category-chips {
+    padding-top: 8px;
+  }
+  .registration-toolbar .courses-category-chips-list button {
+    min-height: 32px;
+  }
+  .registration-results-area {
+    padding-top: 14px;
+  }
+  .registration-session-list {
+    margin-top: 0;
+    gap: 6px;
+  }
+  .registration-session-card {
+    padding-block: 6px;
   }
 }
