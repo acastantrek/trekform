@@ -980,3 +980,63 @@
 .stats-dossier .kicker {
   color: var(--accent);
 }
+
+/* Desktop: every home section shares the same left/right edges as the boxed sections
+   (max-width: min(1430px, 100% - 72px)). Full-width sections keep their background but pad
+   their content to those same edges. */
+@media (min-width: 1021px) {
+  section.home-slider,
+  section.course-section,
+  section.category-section,
+  section.stats-section {
+    padding-left: max(calc((100% - 1430px) / 2), 36px);
+    padding-right: max(calc((100% - 1430px) / 2), 36px);
+  }
+}
+
+/* Desktop: "Nuestros logros" is a full-width dark band (edge to edge, like the hero background);
+   its content still lines up with the other sections' edges via the padding above. */
+@media (min-width: 1021px) {
+  section.stats-section {
+    max-width: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .stats-dossier {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .stats-grid > div:first-child {
+    padding-left: 0;
+  }
+  .stats-grid > div:last-child {
+    padding-right: 0;
+  }
+}
+
+/* Home bands: every section below the stats sits in a full-width band that alternates white and a
+   soft warm tone, so it is clear where each section starts and ends. The sections inside drop
+   their own outer spacing and background; the band provides the same vertical rhythm for all. */
+.home-band {
+  padding-block: 64px;
+  background: #fff;
+}
+.home-band--soft {
+  background: #f6f4ef;
+  border-block: 1px solid #ece8de;
+}
+.home-band > section {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.home-band > section.course-section,
+.home-band > section.category-section {
+  padding-top: 0;
+  padding-bottom: 0;
+  background: transparent;
+}
+@media (max-width: 680px) {
+  .home-band {
+    padding-block: 40px;
+  }
+}
